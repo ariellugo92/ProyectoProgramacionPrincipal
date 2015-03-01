@@ -19,20 +19,6 @@ public class Empleados {
     public Empleados() {
     }
 
-    public Empleados(int id, String nombre, String apellido, String cedula, String telefono, 
-                     String celular, double salario, Departamentos departamentos, String sexo, String fecha) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.cedula = cedula;
-        this.telefono = telefono;
-        this.celular = celular;
-        this.salario = salario;
-        this.departamentos = departamentos;
-        this.sexo = sexo;
-        this.fecha = fecha;
-    }
-
     public int getId() {
         return id;
     }

@@ -2,14 +2,14 @@ package Pojos;
 
 /**
  *
- * @author ariellugo92
+ * @author arielLugo
  */
-public class Departamentos {
+public class CategoriaProductos {
     private int id;
     private String nombre;
-    private String Descripcion;
+    private String descripcion;
 
-    public Departamentos() {
+    public CategoriaProductos() {
     }
 
     public int getId() {
@@ -29,12 +29,10 @@ public class Departamentos {
     }
 
     public String getDescripcion() {
-        return Descripcion;
+        return descripcion;
     }
 
-    public void setDescripcion(String Descripcion) {
-        this.Descripcion = Descripcion;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
-    
-    
 }
