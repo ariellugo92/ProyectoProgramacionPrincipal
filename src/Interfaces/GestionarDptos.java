@@ -8,6 +8,7 @@ package Interfaces;
 import Archivos.ArchivoDepartamentos;
 import Pojos.Departamentos;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,12 +25,21 @@ public final class GestionarDptos extends javax.swing.JDialog {
      * Creates new form GestionarDptos
      */
     DefaultTableModel modelo;
+    int var = 0;
 
     public GestionarDptos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         txtIdAgrega.setText(0 + "");
         tabla();
+        try {
+             ArchivoDepartamentos d = new ArchivoDepartamentos();
+             List<Departamentos> def = d.encontrar();
+            agregarDatostabla(def);//xq cuando entra x primera vez la tabla tiene q tener todo cargado.
+            
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void tabla() {
@@ -38,13 +48,24 @@ public final class GestionarDptos extends javax.swing.JDialog {
         modelo = new DefaultTableModel(datos, encabezados);
         TablaPrincipal.setModel(modelo);
     }
-
+    
+    
+    boolean flag = false;
+    
     public void agregarDpto() throws IOException {
 
         ArchivoDepartamentos ddao = new ArchivoDepartamentos();
         List<Departamentos> dpto = ddao.encontrar();
+        List<Integer> ids = new ArrayList<>();
+     
+        DefaultTableModel model = (DefaultTableModel) this.TablaPrincipal.getModel();
+        
+        for (int i = 0; i < model.getRowCount(); i++) {
+             ids.add((int)model.getValueAt(i, 0));//guardo lo q cargo todo en la tabla
+        }
+        
         Departamentos d = new Departamentos();
-
+        
         String id_incrementa = Integer.toString(dpto.size() + 1);
         txtIdAgrega.setText(id_incrementa);
         d.setId(dpto.size() + 1);
@@ -53,7 +74,13 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
         ddao.guardar(d);
         ddao.cerrar();
-
+        List<Departamentos> mandar = new ArrayList<>();//lista q voy a mandar
+        
+        if(!ids.isEmpty()){//veo si esta vacia la lista
+            mandar.add(d);
+        }
+        
+        this.agregarDatostabla(mandar);//cargo la tabla d nuevo.
     }
 
     public void limpiar() {
@@ -61,25 +88,26 @@ public final class GestionarDptos extends javax.swing.JDialog {
         txtDescripcionDpto.setText("");
     }
 
-    public void agregarDatostabla() throws IOException {
+    public void agregarDatostabla(List<Departamentos> dpto) throws IOException {
 
         ArchivoDepartamentos ddao = new ArchivoDepartamentos();
-        List<Departamentos> dpto = ddao.encontrar();
 
         if (dpto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Lo sentimeos, no hay empleados a mostrar",
+            JOptionPane.showMessageDialog(this, "Lo sentimos, no hay empleados a mostrar",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             TablaPrincipal.setVisible(true);
             for (Departamentos d : dpto) {
                 int id = d.getId();
-                String nombre = d.getNombre();
-                String descripcion = d.getDescripcion();
-
-                Object datos[] = {id, nombre, descripcion};
-                modelo.addRow(datos);
+   
+                 String nombre = d.getNombre();
+                 String descripcion = d.getDescripcion();
+                 Object datos[] = {id, nombre, descripcion};
+                 modelo.addRow(datos);
+                 
             }
         }
+ 
     }
 
     /**
@@ -254,6 +282,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private void botonAgregarDptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarDptoActionPerformed
         try {
             agregarDpto();
+            //agregarDatostabla();
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -264,11 +293,13 @@ public final class GestionarDptos extends javax.swing.JDialog {
     }//GEN-LAST:event_botonLimpiarVtnaAgregarActionPerformed
 
     private void botonMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMostrarActionPerformed
-        try {
-            agregarDatostabla();
-        } catch (IOException ex) {
-            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
+        int sel= this.TablaPrincipal.getSelectedRow();
+        DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
+        this.txtIdAgrega.setText(mod.getValueAt(sel, 0).toString());
+        this.txtNombreDpto.setText(mod.getValueAt(sel, 1).toString().trim());
+        this.txtDescripcionDpto.setText(mod.getValueAt(sel, 2).toString());
+        
     }//GEN-LAST:event_botonMostrarActionPerformed
 
     /**
