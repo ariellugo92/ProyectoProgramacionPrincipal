@@ -72,20 +72,28 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         btonDptos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/1425016208_companies.png"))); // NOI18N
         btonDptos.setText(" Gestionar departamentos");
+        btonDptos.setBorder(null);
+        btonDptos.setPreferredSize(new java.awt.Dimension(170, 70));
         btonDptos.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/1425016208_companies_precionado.png"))); // NOI18N
+        btonDptos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btonDptosActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 23;
-        gridBagConstraints.ipady = 6;
+        gridBagConstraints.ipadx = 57;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(200, 320, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(199, 316, 0, 0);
         panelPrin.add(btonDptos, gridBagConstraints);
 
         botonProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/productos.png"))); // NOI18N
         botonProductos.setText(" Gestionar productos");
         botonProductos.setBorder(null);
         botonProductos.setBorderPainted(false);
+        botonProductos.setPreferredSize(new java.awt.Dimension(170, 70));
         botonProductos.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/productos_precionado.png"))); // NOI18N
         botonProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,39 +106,43 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         gridBagConstraints.ipadx = 81;
         gridBagConstraints.ipady = 17;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 320, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(24, 316, 0, 0);
         panelPrin.add(botonProductos, gridBagConstraints);
 
         botonVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/ventas.png"))); // NOI18N
         botonVentas.setText(" Gestionar Ventas");
-        botonVentas.setRolloverEnabled(true);
+        botonVentas.setBorder(null);
+        botonVentas.setPreferredSize(new java.awt.Dimension(170, 70));
         botonVentas.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/ventas_precionado.png"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.ipadx = 60;
-        gridBagConstraints.ipady = 6;
+        gridBagConstraints.ipadx = 94;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 320, 172, 0);
+        gridBagConstraints.insets = new java.awt.Insets(24, 316, 165, 0);
         panelPrin.add(botonVentas, gridBagConstraints);
 
         botonCompras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/agregar cmpras.png"))); // NOI18N
         botonCompras.setText("Gestionar Compras");
+        botonCompras.setBorder(null);
+        botonCompras.setPreferredSize(new java.awt.Dimension(170, 70));
         botonCompras.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/agregar cmpras_precionado.png"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.ipadx = 55;
-        gridBagConstraints.ipady = 6;
+        gridBagConstraints.ipadx = 89;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 20, 0, 245);
+        gridBagConstraints.insets = new java.awt.Insets(24, 24, 0, 245);
         panelPrin.add(botonCompras, gridBagConstraints);
 
         botonEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/empleados.png"))); // NOI18N
         botonEmpleados.setText(" Gestionar empleados");
         botonEmpleados.setBorder(null);
         botonEmpleados.setBorderPainted(false);
-        botonEmpleados.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/empleados_60.png"))); // NOI18N
+        botonEmpleados.setPreferredSize(new java.awt.Dimension(170, 70));
+        botonEmpleados.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/empleados_precionado.png"))); // NOI18N
         botonEmpleados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonEmpleadosActionPerformed(evt);
@@ -142,19 +154,21 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         gridBagConstraints.ipadx = 77;
         gridBagConstraints.ipady = 16;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(200, 20, 0, 245);
+        gridBagConstraints.insets = new java.awt.Insets(199, 24, 0, 245);
         panelPrin.add(botonEmpleados, gridBagConstraints);
 
         botonRRHH.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/rrhh.png"))); // NOI18N
         botonRRHH.setText("Recursos humanos");
+        botonRRHH.setBorder(null);
+        botonRRHH.setPreferredSize(new java.awt.Dimension(170, 70));
         botonRRHH.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/rrhh_precionado.png"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.ipadx = 54;
-        gridBagConstraints.ipady = 6;
+        gridBagConstraints.ipadx = 88;
+        gridBagConstraints.ipady = 16;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(20, 20, 172, 245);
+        gridBagConstraints.insets = new java.awt.Insets(24, 24, 165, 245);
         panelPrin.add(botonRRHH, gridBagConstraints);
 
         getContentPane().add(panelPrin, java.awt.BorderLayout.CENTER);
@@ -169,6 +183,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void botonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonProductosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botonProductosActionPerformed
+
+    private void btonDptosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btonDptosActionPerformed
+        GestionarDptos dialog = new GestionarDptos(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btonDptosActionPerformed
 
     /**
      * @param args the command line arguments

@@ -5,18 +5,81 @@
  */
 package Interfaces;
 
+import Archivos.ArchivoDepartamentos;
+import Pojos.Departamentos;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author IaraDenisse
  */
-public class GestionarDptos extends javax.swing.JDialog {
+public final class GestionarDptos extends javax.swing.JDialog {
 
     /**
      * Creates new form GestionarDptos
      */
+    DefaultTableModel modelo;
+
     public GestionarDptos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        txtIdAgrega.setText(0 + "");
+        tabla();
+    }
+
+    public void tabla() {
+        String encabezados[] = {"Id", "Nombre", "Descripcion"};
+        String datos[][] = {};
+        modelo = new DefaultTableModel(datos, encabezados);
+        TablaPrincipal.setModel(modelo);
+    }
+
+    public void agregarDpto() throws IOException {
+
+        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+        List<Departamentos> dpto = ddao.encontrar();
+        Departamentos d = new Departamentos();
+
+        String id_incrementa = Integer.toString(dpto.size() + 1);
+        txtIdAgrega.setText(id_incrementa);
+        d.setId(dpto.size() + 1);
+        d.setNombre(txtNombreDpto.getText());
+        d.setDescripcion(txtDescripcionDpto.getText());
+
+        ddao.guardar(d);
+        ddao.cerrar();
+
+    }
+
+    public void limpiar() {
+        txtNombreDpto.setText("");
+        txtDescripcionDpto.setText("");
+    }
+
+    public void agregarDatostabla() throws IOException {
+
+        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+        List<Departamentos> dpto = ddao.encontrar();
+
+        if (dpto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Lo sentimeos, no hay empleados a mostrar",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            TablaPrincipal.setVisible(true);
+            for (Departamentos d : dpto) {
+                int id = d.getId();
+                String nombre = d.getNombre();
+                String descripcion = d.getDescripcion();
+
+                Object datos[] = {id, nombre, descripcion};
+                modelo.addRow(datos);
+            }
+        }
     }
 
     /**
@@ -29,8 +92,26 @@ public class GestionarDptos extends javax.swing.JDialog {
     private void initComponents() {
 
         jcMousePanel1 = new jcMousePanel.jcMousePanel();
-        panelAvatarChooser1 = new org.edisoncor.gui.panel.PanelAvatarChooser();
-        buttonTask1 = new org.edisoncor.gui.button.ButtonTask();
+        tabbedSelector21 = new org.edisoncor.gui.tabbedPane.TabbedSelector2();
+        panelNice1 = new org.edisoncor.gui.panel.PanelNice();
+        labelTask1 = new org.edisoncor.gui.label.LabelTask();
+        txtNombreDpto = new org.edisoncor.gui.textField.TextFieldRectBackground();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtDescripcionDpto = new org.jdesktop.swingx.JXTextArea();
+        botonAgregarDpto = new org.edisoncor.gui.button.ButtonTask();
+        botonLimpiarVtnaAgregar = new org.edisoncor.gui.button.ButtonTask();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        botonMostrar = new org.edisoncor.gui.button.ButtonTask();
+        jLabel3 = new javax.swing.JLabel();
+        txtIdAgrega = new javax.swing.JTextField();
+        panelNice2 = new org.edisoncor.gui.panel.PanelNice();
+        panelNice3 = new org.edisoncor.gui.panel.PanelNice();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TablaPrincipal = new org.jdesktop.swingx.JXTable();
+        botonReporte = new org.edisoncor.gui.button.ButtonTask();
+        botonRegresar = new org.edisoncor.gui.button.ButtonTask();
+        botonExportarExcel = new org.edisoncor.gui.button.ButtonTask();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -40,18 +121,155 @@ public class GestionarDptos extends javax.swing.JDialog {
         jcMousePanel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Fondos/fondoPrincipal.jpeg"))); // NOI18N
         jcMousePanel1.setVisibleLogo(false);
         jcMousePanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jcMousePanel1.add(panelAvatarChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 340));
 
-        buttonTask1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/regresar.png"))); // NOI18N
-        buttonTask1.setText("Regresar");
-        buttonTask1.setDescription(" ");
-        jcMousePanel1.add(buttonTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 350, -1, -1));
+        tabbedSelector21.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
-        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 440));
+        panelNice1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        labelTask1.setForeground(new java.awt.Color(255, 255, 255));
+        labelTask1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/add departamento.png"))); // NOI18N
+        labelTask1.setText("Agregando Departamentos");
+        labelTask1.setDescription("Llene los datos del nuevo departamento");
+        panelNice1.add(labelTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 60));
+
+        txtNombreDpto.setColorDeTextoBackground(new java.awt.Color(0, 0, 0));
+        txtNombreDpto.setDescripcion("Ingrese el nombre del departamento");
+        txtNombreDpto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        panelNice1.add(txtNombreDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 270, 30));
+
+        txtDescripcionDpto.setColumns(20);
+        txtDescripcionDpto.setRows(5);
+        jScrollPane2.setViewportView(txtDescripcionDpto);
+
+        panelNice1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 270, 70));
+
+        botonAgregarDpto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonAgregarDpto.setForeground(new java.awt.Color(255, 255, 255));
+        botonAgregarDpto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/agregarBoton.png"))); // NOI18N
+        botonAgregarDpto.setText("Agregar");
+        botonAgregarDpto.setDescription("Departamento");
+        botonAgregarDpto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonAgregarDptoActionPerformed(evt);
+            }
+        });
+        panelNice1.add(botonAgregarDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 30, 180, -1));
+
+        botonLimpiarVtnaAgregar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        botonLimpiarVtnaAgregar.setForeground(new java.awt.Color(255, 255, 255));
+        botonLimpiarVtnaAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
+        botonLimpiarVtnaAgregar.setText("Limpiar");
+        botonLimpiarVtnaAgregar.setDescription("Ventanas");
+        botonLimpiarVtnaAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonLimpiarVtnaAgregarActionPerformed(evt);
+            }
+        });
+        panelNice1.add(botonLimpiarVtnaAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 100, 180, -1));
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Nombre");
+        panelNice1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 100, 25));
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Descripcion");
+        panelNice1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
+
+        botonMostrar.setForeground(new java.awt.Color(255, 255, 255));
+        botonMostrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/mostrarTabla.png"))); // NOI18N
+        botonMostrar.setText("Mostrar");
+        botonMostrar.setDescription("Empleados");
+        botonMostrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonMostrarActionPerformed(evt);
+            }
+        });
+        panelNice1.add(botonMostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 170, 180, -1));
+
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("ID");
+        panelNice1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 80, 20));
+
+        txtIdAgrega.setEditable(false);
+        panelNice1.add(txtIdAgrega, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 20));
+
+        tabbedSelector21.addTab("Agregar", panelNice1);
+        tabbedSelector21.addTab("Modificar", panelNice2);
+        tabbedSelector21.addTab("Borrar", panelNice3);
+
+        jcMousePanel1.add(tabbedSelector21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 780, 280));
+
+        TablaPrincipal.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        TablaPrincipal.setEditable(false);
+        jScrollPane1.setViewportView(TablaPrincipal);
+
+        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 780, 210));
+
+        botonReporte.setForeground(new java.awt.Color(255, 255, 255));
+        botonReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
+        botonReporte.setText("Reporte");
+        botonReporte.setDescription("Departamentos");
+        jcMousePanel1.add(botonReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 540, 170, -1));
+
+        botonRegresar.setForeground(new java.awt.Color(255, 255, 255));
+        botonRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/regresar.png"))); // NOI18N
+        botonRegresar.setText("Regresar");
+        botonRegresar.setDescription(" ");
+        botonRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegresarActionPerformed(evt);
+            }
+        });
+        jcMousePanel1.add(botonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 540, 170, -1));
+
+        botonExportarExcel.setForeground(new java.awt.Color(255, 255, 255));
+        botonExportarExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/excel.png"))); // NOI18N
+        botonExportarExcel.setText("Exportar");
+        botonExportarExcel.setDescription("a Microsoft Excel");
+        jcMousePanel1.add(botonExportarExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 540, 180, -1));
+
+        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 620));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_botonRegresarActionPerformed
+
+    private void botonAgregarDptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarDptoActionPerformed
+        try {
+            agregarDpto();
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botonAgregarDptoActionPerformed
+
+    private void botonLimpiarVtnaAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarVtnaAgregarActionPerformed
+        limpiar();
+    }//GEN-LAST:event_botonLimpiarVtnaAgregarActionPerformed
+
+    private void botonMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMostrarActionPerformed
+        try {
+            agregarDatostabla();
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botonMostrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -96,8 +314,26 @@ public class GestionarDptos extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.button.ButtonTask buttonTask1;
+    private org.jdesktop.swingx.JXTable TablaPrincipal;
+    private org.edisoncor.gui.button.ButtonTask botonAgregarDpto;
+    private org.edisoncor.gui.button.ButtonTask botonExportarExcel;
+    private org.edisoncor.gui.button.ButtonTask botonLimpiarVtnaAgregar;
+    private org.edisoncor.gui.button.ButtonTask botonMostrar;
+    private org.edisoncor.gui.button.ButtonTask botonRegresar;
+    private org.edisoncor.gui.button.ButtonTask botonReporte;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private jcMousePanel.jcMousePanel jcMousePanel1;
-    private org.edisoncor.gui.panel.PanelAvatarChooser panelAvatarChooser1;
+    private org.edisoncor.gui.label.LabelTask labelTask1;
+    private org.edisoncor.gui.panel.PanelNice panelNice1;
+    private org.edisoncor.gui.panel.PanelNice panelNice2;
+    private org.edisoncor.gui.panel.PanelNice panelNice3;
+    private org.edisoncor.gui.tabbedPane.TabbedSelector2 tabbedSelector21;
+    private org.jdesktop.swingx.JXTextArea txtDescripcionDpto;
+    private javax.swing.JTextField txtIdAgrega;
+    private org.edisoncor.gui.textField.TextFieldRectBackground txtNombreDpto;
     // End of variables declaration//GEN-END:variables
 }
