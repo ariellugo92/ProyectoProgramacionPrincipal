@@ -101,6 +101,12 @@ public final class GestionarDptos extends javax.swing.JDialog {
         txtDescripcionDpto.setText("");
         }
     }
+    
+    public void limpiarMod(){
+        txtIdModifica.setText("");
+        txtNombre_a_ModificarDpto.setText("");
+        txtDescripcion_a_ModificarDpto.setText("");
+    }
 
     public void agregarDatostabla(List<Departamentos> dpto) throws IOException {
 
@@ -158,6 +164,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         botonModificar = new org.edisoncor.gui.button.ButtonTask();
         jLabel6 = new javax.swing.JLabel();
         txtIdModifica = new javax.swing.JTextField();
+        botonLimpiar = new org.edisoncor.gui.button.ButtonTask();
         PanelBorrar = new org.edisoncor.gui.panel.PanelNice();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaPrincipal = new org.jdesktop.swingx.JXTable();
@@ -297,6 +304,15 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
         txtIdModifica.setEditable(false);
         PanelModifica.add(txtIdModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 30));
+
+        botonLimpiar.setText("Limpiar");
+        botonLimpiar.setDescription("Ventana");
+        botonLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonLimpiarActionPerformed(evt);
+            }
+        });
+        PanelModifica.add(botonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 80, 190, -1));
 
         panelNice2.add(PanelModifica, java.awt.BorderLayout.CENTER);
 
@@ -442,6 +458,10 @@ public final class GestionarDptos extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_botonExportarExcelActionPerformed
 
+    private void botonLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarActionPerformed
+        limpiarMod();
+    }//GEN-LAST:event_botonLimpiarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -491,6 +511,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private org.jdesktop.swingx.JXTable TablaPrincipal;
     private org.edisoncor.gui.button.ButtonTask botonAgregarDpto;
     private org.edisoncor.gui.button.ButtonTask botonExportarExcel;
+    private org.edisoncor.gui.button.ButtonTask botonLimpiar;
     private org.edisoncor.gui.button.ButtonTask botonLimpiarVtnaAgregar;
     private org.edisoncor.gui.button.ButtonTask botonModificar;
     private org.edisoncor.gui.button.ButtonTask botonMostrar;
