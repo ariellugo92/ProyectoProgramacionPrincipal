@@ -9,6 +9,7 @@ import Archivos.ArchivoCuentas;
 import Pojos.Cuentas;
 import com.sun.awt.AWTUtilities;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -47,7 +48,7 @@ public class LoginDeInicio extends javax.swing.JFrame {
      */
     public LoginDeInicio() {
         initComponents();
-        BusyGif.setVisible(false);
+        this.BusyGif.setVisible(false);
     }
     
     private void inicioHilo(){
@@ -182,6 +183,11 @@ public class LoginDeInicio extends javax.swing.JFrame {
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 100, 25));
 
         txtContraseñaLogin.setDescripcion("ingrese su contraseña aqui");
+        txtContraseñaLogin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtContraseñaLoginKeyPressed(evt);
+            }
+        });
         jPanel3.add(txtContraseñaLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, 200, 25));
 
         txtUsuarioLogin.setToolTipText("");
@@ -281,6 +287,16 @@ public class LoginDeInicio extends javax.swing.JFrame {
             Logger.getLogger(LoginDeInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonRegistrarActionPerformed
+
+    private void txtContraseñaLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseñaLoginKeyPressed
+         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+             try {
+                 ingresar();
+             } catch (IOException ex) {
+                 Logger.getLogger(LoginDeInicio.class.getName()).log(Level.SEVERE, null, ex);
+             }
+        }
+    }//GEN-LAST:event_txtContraseñaLoginKeyPressed
 
     /**
      * @param args the command line arguments

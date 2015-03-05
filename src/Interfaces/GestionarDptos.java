@@ -36,22 +36,22 @@ public final class GestionarDptos extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         /*-----------------------------------
-        Componentes para el panel de agregar
-        ------------------------------------*/
+         Componentes para el panel de agregar
+         ------------------------------------*/
         txtNombreDpto.requestFocus();
         tabla();
         try {
             ArchivoDepartamentos d = new ArchivoDepartamentos();
             List<Departamentos> def = d.encontrar();
             agregarDatostabla(def);
-            txtIdAgrega.setText(def.size()+1 + "");
+            txtIdAgrega.setText(def.size() + 1 + "");
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
         /*-------------------------------------
-        Componentes para el panel de modificar
-        --------------------------------------*/
-        
+         Componentes para el panel de modificar
+         --------------------------------------*/
+        this.botonModificar.setVisible(false);
     }
 
     public void tabla() {
@@ -67,13 +67,6 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
         ArchivoDepartamentos ddao = new ArchivoDepartamentos();
         List<Departamentos> dpto = ddao.encontrar();
-        List<Integer> ids = new ArrayList<>();
-
-        DefaultTableModel model = (DefaultTableModel) this.TablaPrincipal.getModel();
-
-        for (int i = 0; i < model.getRowCount(); i++) {
-            ids.add((int) model.getValueAt(i, 0));
-        }
 
         Departamentos d = new Departamentos();
 
@@ -83,26 +76,30 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
         ddao.guardar(d);
         ddao.cerrar();
+        
         List<Departamentos> mandar = new ArrayList<>();
-
-        if (!ids.isEmpty()) {
             mandar.add(d);
-        }
 
         this.agregarDatostabla(mandar);
     }
 
     public void limpiar() {
         if (txtNombreDpto.getText().length() == 0 && txtDescripcionDpto.getText().length() == 0) {
-            JOptionPane.showMessageDialog(this, "Los campos ya estan vacios","Aviso",
+            JOptionPane.showMessageDialog(this, "Los campos ya estan vacios", "Aviso",
                     JOptionPane.INFORMATION_MESSAGE);
-        }else{
-        txtNombreDpto.setText("");
-        txtDescripcionDpto.setText("");
+        } else {
+            txtNombreDpto.setText("");
+            txtDescripcionDpto.setText("");
+            txtNombreDpto.requestFocus();
         }
     }
-    
-    public void limpiarMod(){
+
+    public void limpiarMod() {
+        if (txtIdModifica.getText().length() == 0 && txtNombre_a_ModificarDpto.getText().length() == 0
+            && txtDescripcion_a_ModificarDpto.getText().length() == 0) {
+            JOptionPane.showMessageDialog(null, "Los campos ya estan vacios");
+            return;
+        }
         txtIdModifica.setText("");
         txtNombre_a_ModificarDpto.setText("");
         txtDescripcion_a_ModificarDpto.setText("");
@@ -111,23 +108,16 @@ public final class GestionarDptos extends javax.swing.JDialog {
     public void agregarDatostabla(List<Departamentos> dpto) throws IOException {
 
         ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+        
+        for (Departamentos d : dpto) {
+            
+            int id = d.getId();
+            String nombre = d.getNombre().trim();
+            String descripcion = d.getDescripcion().trim();
+            Object datos[] = {id, nombre, descripcion};
+            modelo.addRow(datos);
 
-        if (dpto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Lo sentimos, no hay empleados a mostrar",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            TablaPrincipal.setVisible(true);
-            for (Departamentos d : dpto) {
-                int id = d.getId();
-
-                String nombre = d.getNombre().trim();
-                String descripcion = d.getDescripcion().trim();
-                Object datos[] = {id, nombre, descripcion};
-                modelo.addRow(datos);
-
-            }
         }
-
     }
 
     /**
@@ -150,7 +140,6 @@ public final class GestionarDptos extends javax.swing.JDialog {
         botonLimpiarVtnaAgregar = new org.edisoncor.gui.button.ButtonTask();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        botonMostrar = new org.edisoncor.gui.button.ButtonTask();
         jLabel3 = new javax.swing.JLabel();
         txtIdAgrega = new javax.swing.JTextField();
         panelNice2 = new org.edisoncor.gui.panel.PanelNice();
@@ -212,7 +201,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonAgregarDptoActionPerformed(evt);
             }
         });
-        PanelAgrega.add(botonAgregarDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 30, 180, -1));
+        PanelAgrega.add(botonAgregarDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 100, 180, -1));
 
         botonLimpiarVtnaAgregar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         botonLimpiarVtnaAgregar.setForeground(new java.awt.Color(255, 255, 255));
@@ -224,7 +213,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonLimpiarVtnaAgregarActionPerformed(evt);
             }
         });
-        PanelAgrega.add(botonLimpiarVtnaAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 100, 180, -1));
+        PanelAgrega.add(botonLimpiarVtnaAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 170, 180, -1));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -235,17 +224,6 @@ public final class GestionarDptos extends javax.swing.JDialog {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Descripcion");
         PanelAgrega.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
-
-        botonMostrar.setForeground(new java.awt.Color(255, 255, 255));
-        botonMostrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/mostrarTabla.png"))); // NOI18N
-        botonMostrar.setText("Mostrar");
-        botonMostrar.setDescription("Departamentos");
-        botonMostrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonMostrarActionPerformed(evt);
-            }
-        });
-        PanelAgrega.add(botonMostrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 170, 180, -1));
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -260,7 +238,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         PanelModifica.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelTask2.setForeground(new java.awt.Color(255, 255, 255));
-        labelTask2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/add departamento.png"))); // NOI18N
+        labelTask2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/update departamentos.png"))); // NOI18N
         labelTask2.setText("Modificar Departamentos");
         labelTask2.setDescription("Seleccione en la tabla el departamento a modificar");
         PanelModifica.add(labelTask2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 60));
@@ -287,7 +265,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         PanelModifica.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
 
         botonModificar.setForeground(new java.awt.Color(255, 255, 255));
-        botonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/mostrarTabla.png"))); // NOI18N
+        botonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/Modificar.png"))); // NOI18N
         botonModificar.setText("Modificar");
         botonModificar.setDescription("Departamentos");
         botonModificar.addActionListener(new java.awt.event.ActionListener() {
@@ -305,6 +283,8 @@ public final class GestionarDptos extends javax.swing.JDialog {
         txtIdModifica.setEditable(false);
         PanelModifica.add(txtIdModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 30));
 
+        botonLimpiar.setForeground(new java.awt.Color(255, 255, 255));
+        botonLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
         botonLimpiar.setText("Limpiar");
         botonLimpiar.setDescription("Ventana");
         botonLimpiar.addActionListener(new java.awt.event.ActionListener() {
@@ -312,7 +292,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonLimpiarActionPerformed(evt);
             }
         });
-        PanelModifica.add(botonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 80, 190, -1));
+        PanelModifica.add(botonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 180, -1));
 
         panelNice2.add(PanelModifica, java.awt.BorderLayout.CENTER);
 
@@ -346,7 +326,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         botonReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
         botonReporte.setText("Reporte");
         botonReporte.setDescription("Departamentos");
-        jcMousePanel1.add(botonReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 540, 170, -1));
+        jcMousePanel1.add(botonReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 170, -1));
 
         botonRegresar.setForeground(new java.awt.Color(255, 255, 255));
         botonRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/regresar.png"))); // NOI18N
@@ -357,7 +337,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonRegresarActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 540, 170, -1));
+        jcMousePanel1.add(botonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 540, 170, -1));
 
         botonExportarExcel.setForeground(new java.awt.Color(255, 255, 255));
         botonExportarExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/excel.png"))); // NOI18N
@@ -368,7 +348,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonExportarExcelActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonExportarExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 540, 180, -1));
+        jcMousePanel1.add(botonExportarExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 540, 180, -1));
 
         getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 620));
 
@@ -384,18 +364,19 @@ public final class GestionarDptos extends javax.swing.JDialog {
         try {
             if (txtNombreDpto.getText().length() == 0 && txtDescripcionDpto.getText().length() == 0) {
                 JOptionPane.showMessageDialog(null, "No ha agregado ningun dato");
-            }else{
-            if (txtNombreDpto.getText().length() == 0) {
-                JOptionPane.showMessageDialog(null, "No ha ingresado un nombre al departamento");
-                txtNombreDpto.requestFocus();
-            }else if (txtDescripcionDpto.getText().length() == 0) {
-                    JOptionPane.showMessageDialog(null, "Descripcion vacia");
+            } else {
+                if (txtNombreDpto.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "No ha ingresado un nombre al departamento");
+                    txtNombreDpto.requestFocus();
+                } else if (txtDescripcionDpto.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "No ha ingresado una descripcion al departamento");
                     txtDescripcionDpto.requestFocus();
-            }else{
-            agregarDpto();
-            JOptionPane.showMessageDialog(this, "El departamento se agrego correctamente", "Mensaje",
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
+                } else {
+                    agregarDpto();
+                    JOptionPane.showMessageDialog(this, "El departamento se agrego correctamente", "Mensaje",
+                            JOptionPane.INFORMATION_MESSAGE);
+                            txtNombreDpto.requestFocus();
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
@@ -406,22 +387,13 @@ public final class GestionarDptos extends javax.swing.JDialog {
         limpiar();
     }//GEN-LAST:event_botonLimpiarVtnaAgregarActionPerformed
 
-    private void botonMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMostrarActionPerformed
-
-        int sel = this.TablaPrincipal.getSelectedRow();
-        DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
-        this.txtIdAgrega.setText(mod.getValueAt(sel, 0).toString());
-        this.txtNombreDpto.setText(mod.getValueAt(sel, 1).toString().trim());
-        this.txtDescripcionDpto.setText(mod.getValueAt(sel, 2).toString());
-
-    }//GEN-LAST:event_botonMostrarActionPerformed
-
     private void botonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonModificarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botonModificarActionPerformed
 
     private void TablaPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaPrincipalMouseClicked
         // TODO add your handling code here:
+        this.botonModificar.setVisible(true);
         int sel = this.TablaPrincipal.getSelectedRow();
         DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
         this.txtIdModifica.setText(mod.getValueAt(sel, 0).toString());
@@ -430,12 +402,12 @@ public final class GestionarDptos extends javax.swing.JDialog {
     }//GEN-LAST:event_TablaPrincipalMouseClicked
 
     private void botonExportarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonExportarExcelActionPerformed
-        
+
         if (this.TablaPrincipal.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "No hay datos en la tabla para expotar a excel");
             return;
         }
-        
+
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de excel", "xls");
         chooser.setFileFilter(filtro);
@@ -445,7 +417,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
             List<JTable> tb = new ArrayList<>();
             List<String> nom = new ArrayList<>();
             tb.add(TablaPrincipal);
-            nom.add("Prueba");
+            nom.add("Departamentos");
             String file = chooser.getSelectedFile().toString().concat(".xls");
             try {
                 Pojos.ExportarExcel e = new ExportarExcel(new File(file), tb, nom);
@@ -460,6 +432,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
     private void botonLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarActionPerformed
         limpiarMod();
+        this.botonModificar.setVisible(false);
     }//GEN-LAST:event_botonLimpiarActionPerformed
 
     /**
@@ -514,7 +487,6 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonTask botonLimpiar;
     private org.edisoncor.gui.button.ButtonTask botonLimpiarVtnaAgregar;
     private org.edisoncor.gui.button.ButtonTask botonModificar;
-    private org.edisoncor.gui.button.ButtonTask botonMostrar;
     private org.edisoncor.gui.button.ButtonTask botonRegresar;
     private org.edisoncor.gui.button.ButtonTask botonReporte;
     private javax.swing.JLabel jLabel1;
