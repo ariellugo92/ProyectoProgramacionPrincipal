@@ -14,11 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -44,7 +56,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
             ArchivoDepartamentos d = new ArchivoDepartamentos();
             List<Departamentos> def = d.encontrar();
             agregarDatostabla(def);
-            txtIdAgrega.setText(def.size() + 1 + "");
+            txtIdAgrega.setText((def.size() + 1) + "");
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -116,7 +128,57 @@ public final class GestionarDptos extends javax.swing.JDialog {
             String descripcion = d.getDescripcion().trim();
             Object datos[] = {id, nombre, descripcion};
             modelo.addRow(datos);
+        }
+    }
+    
+    public void generarReporte() throws IOException{
+    
+        try {
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            
+            JDialog verReporte = new JDialog(new javax.swing.JFrame(),"Visualizando reportes", true);
+            verReporte.setSize(1000, 750);
+            verReporte.setLocationRelativeTo(null);
+            
+            JasperReport reporte = (JasperReport) JRLoader.loadObject(new File("src/Reportes/ReporteDepartamentos.jasper"));
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, new JRBeanCollectionDataSource(dpto));
+            JasperViewer ventana = new JasperViewer(jasperPrint, false);
+            ventana.setTitle("Reporte de departamentos");
+            verReporte.getContentPane().add(ventana.getContentPane());
+            verReporte.setVisible(true);
+            
+//            Exporter exporter = new JRPdfExporter();
+//            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+//            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("Reporte de departamentos.pdf"));
+//            exporter.exportReport();
+                    } catch (JRException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void modificarDpto() throws IOException{
+    
+        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+        List<Departamentos> dpto = ddao.encontrar();
+        
+        for (Departamentos d : dpto) {
+            int tablaClick = this.TablaPrincipal.getSelectedRow();
+            DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
+            String nombreElegido = mod.getValueAt(tablaClick, 1).toString();
+            String nombreDpto = d.getNombre().trim();
+            if (nombreDpto.equals(nombreElegido)) {
+                d.setId(d.getId());
+                d.setNombre(txtNombre_a_ModificarDpto.getText());
+                d.setDescripcion(txtDescripcion_a_ModificarDpto.getText());
+                
+                ddao.modificar(d);
+                List<Departamentos> mandar = new ArrayList<>();
+                mandar.add(d);
 
+                this.agregarDatostabla(mandar);
+                JOptionPane.showMessageDialog(null, "El departamento se ha modificado");
+            }
         }
     }
 
@@ -301,18 +363,6 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
         jcMousePanel1.add(tabbedSelector21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 780, 280));
 
-        TablaPrincipal.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        TablaPrincipal.setEditable(false);
         TablaPrincipal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TablaPrincipalMouseClicked(evt);
@@ -326,6 +376,11 @@ public final class GestionarDptos extends javax.swing.JDialog {
         botonReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
         botonReporte.setText("Reporte");
         botonReporte.setDescription("Departamentos");
+        botonReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonReporteActionPerformed(evt);
+            }
+        });
         jcMousePanel1.add(botonReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 170, -1));
 
         botonRegresar.setForeground(new java.awt.Color(255, 255, 255));
@@ -388,17 +443,40 @@ public final class GestionarDptos extends javax.swing.JDialog {
     }//GEN-LAST:event_botonLimpiarVtnaAgregarActionPerformed
 
     private void botonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonModificarActionPerformed
-        // TODO add your handling code here:
+        
+        try {
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            
+            if (dpto.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Lo sentimos, el reporte no se puede generar ya que no hay departamentos toadavia",
+                        "Error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            modificarDpto();
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonModificarActionPerformed
 
     private void TablaPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaPrincipalMouseClicked
-        // TODO add your handling code here:
-        this.botonModificar.setVisible(true);
-        int sel = this.TablaPrincipal.getSelectedRow();
-        DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
-        this.txtIdModifica.setText(mod.getValueAt(sel, 0).toString());
-        this.txtNombre_a_ModificarDpto.setText(mod.getValueAt(sel, 1).toString().trim());
-        this.txtDescripcion_a_ModificarDpto.setText(mod.getValueAt(sel, 2).toString().trim());
+        try {
+            // TODO add your handling code here:
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            
+            if (dpto.isEmpty()) {
+                return;
+            }
+            this.botonModificar.setVisible(true);
+            int sel = this.TablaPrincipal.getSelectedRow();
+            DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
+            this.txtIdModifica.setText(mod.getValueAt(sel, 0).toString());
+            this.txtNombre_a_ModificarDpto.setText(mod.getValueAt(sel, 1).toString().trim());
+            this.txtDescripcion_a_ModificarDpto.setText(mod.getValueAt(sel, 2).toString().trim());
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_TablaPrincipalMouseClicked
 
     private void botonExportarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonExportarExcelActionPerformed
@@ -434,6 +512,22 @@ public final class GestionarDptos extends javax.swing.JDialog {
         limpiarMod();
         this.botonModificar.setVisible(false);
     }//GEN-LAST:event_botonLimpiarActionPerformed
+
+    private void botonReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonReporteActionPerformed
+        try {
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            
+            if (dpto.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Lo sentimos, el reporte no se puede generar ya que no hay departamentos toadavia",
+                        "Error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            generarReporte();
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botonReporteActionPerformed
 
     /**
      * @param args the command line arguments

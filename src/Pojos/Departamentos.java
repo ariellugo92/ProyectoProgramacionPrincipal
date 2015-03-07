@@ -7,7 +7,7 @@ package Pojos;
 public class Departamentos {
     private int id;
     private String nombre;
-    private String Descripcion;
+    private String descripcion;
 
     public Departamentos() {
     }
@@ -29,11 +29,11 @@ public class Departamentos {
     }
 
     public String getDescripcion() {
-        return Descripcion;
+        return descripcion;
     }
 
     public void setDescripcion(String Descripcion) {
-        this.Descripcion = Descripcion;
+        this.descripcion = Descripcion;
     }
     
     
