@@ -181,6 +181,27 @@ public final class GestionarDptos extends javax.swing.JDialog {
             }
         }
     }
+    
+    public void borrarDpto() throws IOException{
+    
+        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+        List<Departamentos> dpto = ddao.encontrar();
+        
+        for (Departamentos d : dpto) {
+            int tablaClick = this.TablaPrincipal.getSelectedRow();
+            DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
+            String nombreElegido = mod.getValueAt(tablaClick, 1).toString();
+            String nombreDpto = d.getNombre().trim();
+            if (nombreDpto.equals(nombreElegido)) {
+                d.getId();
+                d.getNombre();
+                d.getDescripcion();
+                
+                dpto.remove(d);
+            }
+            List<Departamentos> dpto2 = dpto;
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -217,6 +238,17 @@ public final class GestionarDptos extends javax.swing.JDialog {
         txtIdModifica = new javax.swing.JTextField();
         botonLimpiar = new org.edisoncor.gui.button.ButtonTask();
         PanelBorrar = new org.edisoncor.gui.panel.PanelNice();
+        PanelModifica1 = new org.edisoncor.gui.panel.PanelNice();
+        labelTask3 = new org.edisoncor.gui.label.LabelTask();
+        txtNombre_a_Borrar = new org.edisoncor.gui.textField.TextFieldRectBackground();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txtDescripcion_a_Borrar = new org.jdesktop.swingx.JXTextArea();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        botonBorrar = new org.edisoncor.gui.button.ButtonTask();
+        jLabel9 = new javax.swing.JLabel();
+        txtIdBorrar = new javax.swing.JTextField();
+        botonLimpiarBorrar = new org.edisoncor.gui.button.ButtonTask();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaPrincipal = new org.jdesktop.swingx.JXTable();
         botonReporte = new org.edisoncor.gui.button.ButtonTask();
@@ -359,7 +391,69 @@ public final class GestionarDptos extends javax.swing.JDialog {
         panelNice2.add(PanelModifica, java.awt.BorderLayout.CENTER);
 
         tabbedSelector21.addTab("Modificar", panelNice2);
-        tabbedSelector21.addTab("Borrar", PanelBorrar);
+
+        PanelModifica1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        labelTask3.setForeground(new java.awt.Color(255, 255, 255));
+        labelTask3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/botonborrar.png"))); // NOI18N
+        labelTask3.setText("Borrar Departamentos");
+        labelTask3.setDescription("Seleccione en la tabla el departamento a borrar");
+        PanelModifica1.add(labelTask3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 60));
+
+        txtNombre_a_Borrar.setColorDeTextoBackground(new java.awt.Color(0, 0, 0));
+        txtNombre_a_Borrar.setDescripcion("Ingrese el nombre del departamento");
+        txtNombre_a_Borrar.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        PanelModifica1.add(txtNombre_a_Borrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 270, 30));
+
+        txtDescripcion_a_Borrar.setColumns(20);
+        txtDescripcion_a_Borrar.setRows(5);
+        jScrollPane4.setViewportView(txtDescripcion_a_Borrar);
+
+        PanelModifica1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 270, 70));
+
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Nombre");
+        PanelModifica1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 100, 25));
+
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Descripcion");
+        PanelModifica1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
+
+        botonBorrar.setForeground(new java.awt.Color(255, 255, 255));
+        botonBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/borrar.png"))); // NOI18N
+        botonBorrar.setText("Borrar");
+        botonBorrar.setDescription("Departamentos");
+        botonBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonBorrarActionPerformed(evt);
+            }
+        });
+        PanelModifica1.add(botonBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, 180, -1));
+
+        jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("ID");
+        PanelModifica1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 80, 20));
+
+        txtIdBorrar.setEditable(false);
+        PanelModifica1.add(txtIdBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 30));
+
+        botonLimpiarBorrar.setForeground(new java.awt.Color(255, 255, 255));
+        botonLimpiarBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
+        botonLimpiarBorrar.setText("Limpiar");
+        botonLimpiarBorrar.setDescription("Ventana");
+        botonLimpiarBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonLimpiarBorrarActionPerformed(evt);
+            }
+        });
+        PanelModifica1.add(botonLimpiarBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 180, -1));
+
+        PanelBorrar.add(PanelModifica1, java.awt.BorderLayout.CENTER);
+
+        tabbedSelector21.addTab("Eliminar", PanelBorrar);
 
         jcMousePanel1.add(tabbedSelector21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 780, 280));
 
@@ -474,6 +568,10 @@ public final class GestionarDptos extends javax.swing.JDialog {
             this.txtIdModifica.setText(mod.getValueAt(sel, 0).toString());
             this.txtNombre_a_ModificarDpto.setText(mod.getValueAt(sel, 1).toString().trim());
             this.txtDescripcion_a_ModificarDpto.setText(mod.getValueAt(sel, 2).toString().trim());
+            //----------------------------------------------------------
+            this.txtIdBorrar.setText(mod.getValueAt(sel, 0).toString());
+            this.txtNombre_a_Borrar.setText(mod.getValueAt(sel, 1).toString().trim());
+            this.txtDescripcion_a_Borrar.setText(mod.getValueAt(sel, 2).toString().trim());
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -529,6 +627,17 @@ public final class GestionarDptos extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_botonReporteActionPerformed
 
+    private void botonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBorrarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonBorrarActionPerformed
+
+    private void botonLimpiarBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarBorrarActionPerformed
+        // TODO add your handling code here:
+        txtIdBorrar.setText("");
+        txtNombre_a_Borrar.setText("");
+        txtDescripcion_a_Borrar.setText("");
+    }//GEN-LAST:event_botonLimpiarBorrarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -575,10 +684,13 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private org.edisoncor.gui.panel.PanelNice PanelAgrega;
     private org.edisoncor.gui.panel.PanelNice PanelBorrar;
     private org.edisoncor.gui.panel.PanelNice PanelModifica;
+    private org.edisoncor.gui.panel.PanelNice PanelModifica1;
     private org.jdesktop.swingx.JXTable TablaPrincipal;
     private org.edisoncor.gui.button.ButtonTask botonAgregarDpto;
+    private org.edisoncor.gui.button.ButtonTask botonBorrar;
     private org.edisoncor.gui.button.ButtonTask botonExportarExcel;
     private org.edisoncor.gui.button.ButtonTask botonLimpiar;
+    private org.edisoncor.gui.button.ButtonTask botonLimpiarBorrar;
     private org.edisoncor.gui.button.ButtonTask botonLimpiarVtnaAgregar;
     private org.edisoncor.gui.button.ButtonTask botonModificar;
     private org.edisoncor.gui.button.ButtonTask botonRegresar;
@@ -589,19 +701,27 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private jcMousePanel.jcMousePanel jcMousePanel1;
     private org.edisoncor.gui.label.LabelTask labelTask1;
     private org.edisoncor.gui.label.LabelTask labelTask2;
+    private org.edisoncor.gui.label.LabelTask labelTask3;
     private org.edisoncor.gui.panel.PanelNice panelNice2;
     private org.edisoncor.gui.tabbedPane.TabbedSelector2 tabbedSelector21;
     private org.jdesktop.swingx.JXTextArea txtDescripcionDpto;
+    private org.jdesktop.swingx.JXTextArea txtDescripcion_a_Borrar;
     private org.jdesktop.swingx.JXTextArea txtDescripcion_a_ModificarDpto;
     private javax.swing.JTextField txtIdAgrega;
+    private javax.swing.JTextField txtIdBorrar;
     private javax.swing.JTextField txtIdModifica;
     private org.edisoncor.gui.textField.TextFieldRectBackground txtNombreDpto;
+    private org.edisoncor.gui.textField.TextFieldRectBackground txtNombre_a_Borrar;
     private org.edisoncor.gui.textField.TextFieldRectBackground txtNombre_a_ModificarDpto;
     // End of variables declaration//GEN-END:variables
 }
