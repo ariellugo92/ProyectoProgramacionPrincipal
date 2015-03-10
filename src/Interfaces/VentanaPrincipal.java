@@ -5,6 +5,12 @@
  */
 package Interfaces;
 
+import Archivos.ArchivoDepartamentos;
+import Pojos.Departamentos;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -177,8 +183,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEmpleadosActionPerformed
-        GestionarEmpleados dialog = new GestionarEmpleados(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
+        try {
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            
+            if (dpto.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Primero introduzca departmaentos para ubicar a sus empleados");
+                return;
+            }
+            
+            GestionarEmpleados dialog = new GestionarEmpleados(new javax.swing.JFrame(), true);
+            dialog.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonEmpleadosActionPerformed
 
     private void botonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonProductosActionPerformed
