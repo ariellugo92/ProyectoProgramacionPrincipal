@@ -35,6 +35,4 @@ public class Departamentos {
     public void setDescripcion(String Descripcion) {
         this.descripcion = Descripcion;
     }
-    
-    
 }

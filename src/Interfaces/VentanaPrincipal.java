@@ -173,11 +173,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(panelPrin, java.awt.BorderLayout.CENTER);
 
-        setLocation(new java.awt.Point(0, 0));
+        setBounds(0, 0, 841, 550);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEmpleadosActionPerformed
-       
+        GestionarEmpleados dialog = new GestionarEmpleados(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
     }//GEN-LAST:event_botonEmpleadosActionPerformed
 
     private void botonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonProductosActionPerformed

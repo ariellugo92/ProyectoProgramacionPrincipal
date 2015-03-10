@@ -173,11 +173,11 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 d.setDescripcion(txtDescripcion_a_ModificarDpto.getText());
                 
                 ddao.modificar(d);
-                List<Departamentos> mandar = new ArrayList<>();
-                mandar.add(d);
-
-                this.agregarDatostabla(mandar);
-                JOptionPane.showMessageDialog(null, "El departamento se ha modificado");
+//                List<Departamentos> mandar = new ArrayList<>();
+//                mandar.add(d);
+//
+//                this.agregarDatostabla(mandar);
+                JOptionPane.showMessageDialog(null, "Se ha modificado el Departamento, por favor actualize la tabla");
             }
         }
     }
@@ -202,6 +202,13 @@ public final class GestionarDptos extends javax.swing.JDialog {
             List<Departamentos> dpto2 = dpto;
         }
     }
+    
+    private void limpiarTabla(){
+       for (int i = 0; i < TablaPrincipal.getRowCount(); i++) {
+           modelo.removeRow(i);
+           i-=1;
+             }
+   }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -237,6 +244,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         txtIdModifica = new javax.swing.JTextField();
         botonLimpiar = new org.edisoncor.gui.button.ButtonTask();
+        botonActualizarTabla = new org.edisoncor.gui.button.ButtonTask();
         PanelBorrar = new org.edisoncor.gui.panel.PanelNice();
         PanelModifica1 = new org.edisoncor.gui.panel.PanelNice();
         labelTask3 = new org.edisoncor.gui.label.LabelTask();
@@ -359,7 +367,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         PanelModifica.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
 
         botonModificar.setForeground(new java.awt.Color(255, 255, 255));
-        botonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/Modificar.png"))); // NOI18N
+        botonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/modificarDpto.png"))); // NOI18N
         botonModificar.setText("Modificar");
         botonModificar.setDescription("Departamentos");
         botonModificar.addActionListener(new java.awt.event.ActionListener() {
@@ -367,7 +375,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonModificarActionPerformed(evt);
             }
         });
-        PanelModifica.add(botonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, 180, -1));
+        PanelModifica.add(botonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 20, 180, -1));
 
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -386,7 +394,18 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonLimpiarActionPerformed(evt);
             }
         });
-        PanelModifica.add(botonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 180, -1));
+        PanelModifica.add(botonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 100, 180, -1));
+
+        botonActualizarTabla.setForeground(new java.awt.Color(255, 255, 255));
+        botonActualizarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/Modificar.png"))); // NOI18N
+        botonActualizarTabla.setText("Actualizar");
+        botonActualizarTabla.setDescription("Tabla");
+        botonActualizarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonActualizarTablaActionPerformed(evt);
+            }
+        });
+        PanelModifica.add(botonActualizarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 180, 180, -1));
 
         panelNice2.add(PanelModifica, java.awt.BorderLayout.CENTER);
 
@@ -499,7 +518,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         });
         jcMousePanel1.add(botonExportarExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 540, 180, -1));
 
-        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 620));
+        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 620));
 
         pack();
         setLocationRelativeTo(null);
@@ -548,6 +567,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 return;
             }
             modificarDpto();
+            botonModificar.setVisible(false);
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -638,6 +658,17 @@ public final class GestionarDptos extends javax.swing.JDialog {
         txtDescripcion_a_Borrar.setText("");
     }//GEN-LAST:event_botonLimpiarBorrarActionPerformed
 
+    private void botonActualizarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarTablaActionPerformed
+        try {
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            limpiarTabla();
+            agregarDatostabla(dpto);
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botonActualizarTablaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -686,6 +717,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private org.edisoncor.gui.panel.PanelNice PanelModifica;
     private org.edisoncor.gui.panel.PanelNice PanelModifica1;
     private org.jdesktop.swingx.JXTable TablaPrincipal;
+    private org.edisoncor.gui.button.ButtonTask botonActualizarTabla;
     private org.edisoncor.gui.button.ButtonTask botonAgregarDpto;
     private org.edisoncor.gui.button.ButtonTask botonBorrar;
     private org.edisoncor.gui.button.ButtonTask botonExportarExcel;
