@@ -48,6 +48,7 @@ public class LoginDeInicio extends javax.swing.JFrame {
      */
     public LoginDeInicio() {
         initComponents();
+        txtUsuarioLogin.requestFocus();
         this.BusyGif.setVisible(false);
     }
     

@@ -7,10 +7,15 @@ package Interfaces;
 
 import Archivos.ArchivoDepartamentos;
 import Archivos.ArchivoEmpleados;
+import Pojos.CopiarImagenes;
 import Pojos.Departamentos;
 import Pojos.Empleados;
+import Pojos.ExportarExcel;
 import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,6 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -29,12 +35,13 @@ import javax.swing.table.TableColumnModel;
  */
 public class GestionarEmpleados extends javax.swing.JDialog {
 
-    /**
-     * Creates new form GestionarEmpleados
-     */
+    Path p = null;
     DefaultTableModel modelo;
     private FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivo de imagen", "jpg");
     String ruta;
+    CopiarImagenes c = new CopiarImagenes();
+    List<Empleados> empleados;
+    ArchivoEmpleados cc;
     
     public void cargar(JComboBox jcbElegir) throws IOException {
         
@@ -78,9 +85,15 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             List<Empleados> emp = edao.encontrar();
             agregarDatostabla(emp);
             cargar(this.comboListaDptos);
+             cc  = new ArchivoEmpleados();
+            empleados = cc.encontrar();
+            for (int i = 0; i < empleados.size(); i++) {
+                jcbEmpleados.addItem(empleados.get(i).getNombre().trim()+" "+empleados.get(i).getApellido().trim()+"|"+empleados.get(i).getCedula().trim());
+            }
         } catch (IOException ex) {
             Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
     }
     
     public void limpiarAgrega(){
@@ -124,7 +137,9 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             e.setSexo(itemMujerElegidoEmp.getLabel());
         }
         e.setFecha(txtFechaIngresoEmp.getText());
+//        e.setFoto(labelFotoEmp.getIcon().toString());
         
+        c.copy(p, txtCedulaEmp.getText());
         edao.guardar(e);
         edao.cerrar();
         
@@ -201,6 +216,9 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         botonSubirFotoEmp = new javax.swing.JButton();
         botonAgregarEmp = new org.edisoncor.gui.button.ButtonTask();
         jPanel2 = new javax.swing.JPanel();
+        labelCargaImagen = new javax.swing.JLabel();
+        botonMostrarImagen = new javax.swing.JButton();
+        jcbEmpleados = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(810, 700));
@@ -391,6 +409,20 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         jTabbedPane1.addTab("Agregar Empleados", jPanel1);
 
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        labelCargaImagen.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel2.add(labelCargaImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 180, 160));
+
+        botonMostrarImagen.setText("Mostrar imagen");
+        botonMostrarImagen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonMostrarImagenActionPerformed(evt);
+            }
+        });
+        jPanel2.add(botonMostrarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 130, -1, -1));
+
+        jPanel2.add(jcbEmpleados, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 70, 240, 30));
+
         jTabbedPane1.addTab("Modificar Empleados", jPanel2);
 
         jcMousePanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 790, 370));
@@ -414,7 +446,32 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     }//GEN-LAST:event_botonRegresarActionPerformed
 
     private void botonExportarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonExportarExcelActionPerformed
+        
+        if (this.TablaEmpleados.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "No hay datos en la tabla para expotar a excel");
+            return;
+        }
 
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filt = new FileNameExtensionFilter("Archivos de excel", "xls");
+        chooser.setFileFilter(filt);
+        chooser.setDialogTitle("Guardar Archivo");
+        chooser.setMultiSelectionEnabled(false);
+        if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            List<JTable> tb = new ArrayList<>();
+            List<String> nom = new ArrayList<>();
+            tb.add(TablaEmpleados);
+            nom.add("Empleados");
+            String file = chooser.getSelectedFile().toString().concat(".xls");
+            try {
+                Pojos.ExportarExcel e = new ExportarExcel(new File(file), tb, nom);
+                if (e.export()) {
+                    JOptionPane.showMessageDialog(null, "La tabla fue guardada en excel");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Hubo un error " + e.getMessage());
+            }
+        }
     }//GEN-LAST:event_botonExportarExcelActionPerformed
 
     private void botonLimpiarAgregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarAgregaActionPerformed
@@ -430,32 +487,46 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     }//GEN-LAST:event_botonAgregarEmpActionPerformed
 
     private void botonSubirFotoEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSubirFotoEmpActionPerformed
-        //crear un objeto de JFileChooser
         JFileChooser chooser = new JFileChooser();
-        //del objeto creado vamos a llamar al metodo setFIleFilter
         chooser.setFileFilter(filtro);
-        //abrir una ventana del chooser
         int foto = chooser.showOpenDialog(this);
-        //validaciones
         if (foto == JFileChooser.APPROVE_OPTION) {
-            //obtener el nombre del archivo seleccionado
             String file = chooser.getSelectedFile().getPath();
             //obtener la direccion de la imagen
             String files = chooser.getSelectedFile().toString();
             labelFotoEmp.setIcon(new ImageIcon(file));
-            //modificando la imagen
             ImageIcon icon = new ImageIcon(file);
             //extraer la imagen del icon
             Image img = icon.getImage();
+           
             //cambiando el tamaño d ela imagen
             Image nuevaImg = img.getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
             //se genera el imageicon cn la nueva imagen
             ImageIcon nuevoIcono = new ImageIcon(nuevaImg);
             labelFotoEmp.setIcon(nuevoIcono);
-            ruta = "";
+            p = Paths.get(file);
         }
         
     }//GEN-LAST:event_botonSubirFotoEmpActionPerformed
+
+    private void botonMostrarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMostrarImagenActionPerformed
+        // TODO add your handling code here:
+        String empleado = jcbEmpleados.getSelectedItem().toString();
+        int letra =0;
+        char[] letras = empleado.toCharArray();
+        for (int i = 0; i < letras.length; i++) {
+            if (letras[i]== '|') {
+                letra = i;
+            }
+        }
+        String cedula = empleado.substring(letra+1);
+         ImageIcon icon = new ImageIcon("src/Empleados_Image/" + cedula + ".jpeg");
+         Image img = icon.getImage();
+         Image newImg = img.getScaledInstance(250, 250, java.awt.Image.SCALE_SMOOTH);
+         ImageIcon newIcon = new ImageIcon(newImg);
+         labelCargaImagen.setIcon(newIcon);
+         
+    }//GEN-LAST:event_botonMostrarImagenActionPerformed
 
     /**
      * @param args the command line arguments
@@ -504,6 +575,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonTask botonAgregarEmp;
     private org.edisoncor.gui.button.ButtonTask botonExportarExcel;
     private org.edisoncor.gui.button.ButtonTask botonLimpiarAgrega;
+    private javax.swing.JButton botonMostrarImagen;
     private org.edisoncor.gui.button.ButtonTask botonRegresar;
     private org.edisoncor.gui.button.ButtonTask botonReporte;
     private javax.swing.JButton botonSubirFotoEmp;
@@ -528,6 +600,8 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private jcMousePanel.jcMousePanel jcMousePanel1;
+    private javax.swing.JComboBox jcbEmpleados;
+    private javax.swing.JLabel labelCargaImagen;
     private javax.swing.JLabel labelFotoEmp;
     private javax.swing.ButtonGroup sexoItem;
     private javax.swing.JTextField txtApellidoEmp;

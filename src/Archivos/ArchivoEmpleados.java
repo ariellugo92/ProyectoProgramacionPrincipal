@@ -39,6 +39,7 @@ public class ArchivoEmpleados {
         raf.writeInt(e.getDepartamentos().getId());
         raf.writeUTF(e.getSexo());
         raf.writeUTF(e.getFecha());
+//        raf.writeUTF(e.getFoto());
         
         raf.seek(0);
         raf.writeInt(n + 1);
@@ -75,6 +76,7 @@ public class ArchivoEmpleados {
             e.setDepartamentos(d);
             e.setSexo(raf.readUTF());
             e.setFecha(raf.readUTF());
+//            e.setFoto(raf.readUTF());
             
             emp.add(e);
         }
@@ -97,6 +99,7 @@ public class ArchivoEmpleados {
         raf.writeInt(e.getDepartamentos().getId());
         raf.writeUTF(e.getSexo());
         raf.writeUTF(e.getFecha());
+//        raf.writeUTF(e.getFoto());
     }
     
     public Empleados buscarNombre(String nombre) throws IOException {
@@ -133,6 +136,7 @@ public class ArchivoEmpleados {
         e.setSalario(raf.readDouble());
         e.setSexo(raf.readUTF());
         e.setFecha(raf.readUTF());
+//        e.setFoto(raf.readUTF());
         
         return e;
     }

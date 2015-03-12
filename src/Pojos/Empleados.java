@@ -15,6 +15,7 @@ public class Empleados {
     private Departamentos departamentos;
     private String sexo;
     private String fecha;
+    private String foto;
 
     public Empleados() {
     }
@@ -98,4 +99,13 @@ public class Empleados {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+    
 }
