@@ -36,6 +36,7 @@ import javax.swing.table.TableColumnModel;
 public class GestionarEmpleados extends javax.swing.JDialog {
 
     Path p = null;
+    Path p2 = null;
     DefaultTableModel modelo;
     private FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivo de imagen", "jpg");
     String ruta;
@@ -80,7 +81,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         ruta = "";
         txtNombreEmp.requestFocus();
         botonModificarEmp.setVisible(false);
-        botonActualizarTabla.setVisible(false);
+        botonLimpiarModifica.setVisible(false);
         tabla();
         try {
             ArchivoEmpleados edao = new ArchivoEmpleados();
@@ -241,8 +242,8 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                     e.setSexo(itemMujerElegidoEmp_Modicando.getLabel());
                 }
                 e.setFecha(txtFechaEmp_Modifica.getText());
-
-                c.copy(p, txtCedulaEmp_Modifica.getText());
+                
+                c.copy(p2, txtCedulaEmp_Modifica.getText());
                 edao.modificar(e);
                 JOptionPane.showMessageDialog(this, "Por favor presione el boton de actualizar la tabla",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -326,16 +327,15 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         labelFotoEmp1 = new javax.swing.JLabel();
         botonElegirFotoModificando = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        botonLimpiarModifica = new org.edisoncor.gui.button.ButtonTask();
         botonModificarEmp = new org.edisoncor.gui.button.ButtonTask();
         jPanel9 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         txtSalarioEmp_Modicando = new javax.swing.JTextField();
-        botonActualizarTabla = new org.edisoncor.gui.button.ButtonTask();
         txtFechaEmp_Modifica = new org.jdesktop.swingx.JXFormattedTextField();
         comboDptoModifica = new javax.swing.JComboBox();
+        botonLimpiarModifica = new org.edisoncor.gui.button.ButtonTask();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(810, 700));
@@ -353,7 +353,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(TablaEmpleados);
 
-        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 790, 210));
+        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 790, 210));
 
         botonReporte.setForeground(new java.awt.Color(255, 255, 255));
         botonReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
@@ -621,16 +621,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
         jPanel6.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 170, 240, 220));
 
-        botonLimpiarModifica.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
-        botonLimpiarModifica.setText("Limpiar");
-        botonLimpiarModifica.setDescription("Ventanas");
-        botonLimpiarModifica.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonLimpiarModificaActionPerformed(evt);
-            }
-        });
-        jPanel6.add(botonLimpiarModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 410, 140, -1));
-
         botonModificarEmp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/EmpModificado.png"))); // NOI18N
         botonModificarEmp.setText("Modificar");
         botonModificarEmp.setDescription("Empleados");
@@ -639,7 +629,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                 botonModificarEmpActionPerformed(evt);
             }
         });
-        jPanel6.add(botonModificarEmp, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 490, 150, -1));
+        jPanel6.add(botonModificarEmp, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 410, 150, -1));
 
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Laborales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12))); // NOI18N
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -659,21 +649,21 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         txtSalarioEmp_Modicando.setToolTipText("Ingrese el salario en moneda nacional");
         jPanel9.add(txtSalarioEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 200, 25));
 
-        botonActualizarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/Modificar.png"))); // NOI18N
-        botonActualizarTabla.setText("Actualizar");
-        botonActualizarTabla.setDescription("Tabla");
-        botonActualizarTabla.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonActualizarTablaActionPerformed(evt);
-            }
-        });
-        jPanel9.add(botonActualizarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 50, 170, -1));
-
         txtFechaEmp_Modifica.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
         jPanel9.add(txtFechaEmp_Modifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 200, 25));
 
         comboDptoModifica.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Departamentos --" }));
         jPanel9.add(comboDptoModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 200, 25));
+
+        botonLimpiarModifica.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
+        botonLimpiarModifica.setText("Limpiar");
+        botonLimpiarModifica.setDescription("Ventanas");
+        botonLimpiarModifica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonLimpiarModificaActionPerformed(evt);
+            }
+        });
+        jPanel9.add(botonLimpiarModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 50, 140, -1));
 
         jPanel6.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 520, 150));
 
@@ -719,6 +709,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                     txtFechaEmp_Modifica.setText(e.getFecha());
                     mostrarFotoEmp();
                     botonModificarEmp.setVisible(true);
+                    botonLimpiarModifica.setVisible(true);
                 }
             }
         } catch (IOException ex) {
@@ -800,34 +791,23 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
     private void botonLimpiarModificaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarModificaActionPerformed
         limpiarModifica();
+        botonLimpiarModifica.setVisible(false);
         botonModificarEmp.setVisible(false);
     }//GEN-LAST:event_botonLimpiarModificaActionPerformed
 
     private void botonModificarEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonModificarEmpActionPerformed
         try {
             modificarEmp();
-            botonActualizarTabla.setVisible(true);
+            limpiarTabla();
+            ArchivoEmpleados edao = new ArchivoEmpleados();
+            List<Empleados> emp = edao.encontrar();
+            agregarDatostabla(emp);
             botonModificarEmp.setVisible(false);
-            botonLimpiarModifica.setVisible(false);
-            TablaEmpleados.setEnabled(false);
+            botonLimpiarModifica.setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonModificarEmpActionPerformed
-
-    private void botonActualizarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarTablaActionPerformed
-        try {
-            ArchivoEmpleados edao = new ArchivoEmpleados();
-            List<Empleados> emp = edao.encontrar();
-            limpiarTabla();
-            agregarDatostabla(emp);
-            botonActualizarTabla.setVisible(false);
-            botonLimpiarModifica.setVisible(true);
-            TablaEmpleados.setEnabled(true);
-        } catch (IOException ex) {
-            Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_botonActualizarTablaActionPerformed
 
     private void botonElegirFotoModificandoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonElegirFotoModificandoActionPerformed
         
@@ -847,7 +827,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             //se genera el imageicon cn la nueva imagen
             ImageIcon nuevoIcono = new ImageIcon(nuevaImg);
             labelFotoEmp1.setIcon(nuevoIcono);
-            p = Paths.get(file);
+            p2 = Paths.get(file);
         }
     }//GEN-LAST:event_botonElegirFotoModificandoActionPerformed
 
@@ -896,7 +876,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup GrupoSexoModifica;
     private org.jdesktop.swingx.JXTable TablaEmpleados;
-    private org.edisoncor.gui.button.ButtonTask botonActualizarTabla;
     private org.edisoncor.gui.button.ButtonTask botonAgregarEmp;
     private javax.swing.JButton botonElegirFotoModificando;
     private org.edisoncor.gui.button.ButtonTask botonExportarExcel;

@@ -63,7 +63,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="10" y="400" width="790" height="210"/>
+              <AbsoluteConstraints x="10" y="390" width="790" height="210"/>
             </Constraint>
           </Constraints>
 
@@ -861,23 +861,6 @@
                             </Component>
                           </SubComponents>
                         </Container>
-                        <Component class="org.edisoncor.gui.button.ButtonTask" name="botonLimpiarModifica">
-                          <Properties>
-                            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/Imagenes/Iconos/limpiarBoton.png"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Limpiar"/>
-                            <Property name="description" type="java.lang.String" value="Ventanas"/>
-                          </Properties>
-                          <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonLimpiarModificaActionPerformed"/>
-                          </Events>
-                          <Constraints>
-                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                              <AbsoluteConstraints x="590" y="410" width="140" height="-1"/>
-                            </Constraint>
-                          </Constraints>
-                        </Component>
                         <Component class="org.edisoncor.gui.button.ButtonTask" name="botonModificarEmp">
                           <Properties>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -891,7 +874,7 @@
                           </Events>
                           <Constraints>
                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                              <AbsoluteConstraints x="290" y="490" width="150" height="-1"/>
+                              <AbsoluteConstraints x="580" y="410" width="150" height="-1"/>
                             </Constraint>
                           </Constraints>
                         </Component>
@@ -964,23 +947,6 @@
                                 </Constraint>
                               </Constraints>
                             </Component>
-                            <Component class="org.edisoncor.gui.button.ButtonTask" name="botonActualizarTabla">
-                              <Properties>
-                                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                                  <Image iconType="3" name="/Imagenes/Iconos/Modificar.png"/>
-                                </Property>
-                                <Property name="text" type="java.lang.String" value="Actualizar"/>
-                                <Property name="description" type="java.lang.String" value="Tabla"/>
-                              </Properties>
-                              <Events>
-                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonActualizarTablaActionPerformed"/>
-                              </Events>
-                              <Constraints>
-                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                                  <AbsoluteConstraints x="340" y="50" width="170" height="-1"/>
-                                </Constraint>
-                              </Constraints>
-                            </Component>
                             <Component class="org.jdesktop.swingx.JXFormattedTextField" name="txtFechaEmp_Modifica">
                               <Properties>
                                 <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
@@ -1004,6 +970,23 @@
                               <Constraints>
                                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
                                   <AbsoluteConstraints x="130" y="30" width="200" height="25"/>
+                                </Constraint>
+                              </Constraints>
+                            </Component>
+                            <Component class="org.edisoncor.gui.button.ButtonTask" name="botonLimpiarModifica">
+                              <Properties>
+                                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                  <Image iconType="3" name="/Imagenes/Iconos/limpiarBoton.png"/>
+                                </Property>
+                                <Property name="text" type="java.lang.String" value="Limpiar"/>
+                                <Property name="description" type="java.lang.String" value="Ventanas"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonLimpiarModificaActionPerformed"/>
+                              </Events>
+                              <Constraints>
+                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                                  <AbsoluteConstraints x="360" y="50" width="140" height="-1"/>
                                 </Constraint>
                               </Constraints>
                             </Component>
