@@ -42,17 +42,17 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     CopiarImagenes c = new CopiarImagenes();
     List<Empleados> empleados;
     ArchivoEmpleados cc;
-    
-    public void cargar(JComboBox jcbElegir) throws IOException {
-        
-            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
-            List<Departamentos> dpto = ddao.encontrar();
 
-            for (Departamentos d : dpto) {
-                jcbElegir.addItem(d.getNombre().trim());
-            }
+    public void cargar(JComboBox jcbElegir) throws IOException {
+
+        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+        List<Departamentos> dpto = ddao.encontrar();
+
+        for (Departamentos d : dpto) {
+            jcbElegir.addItem(d.getNombre().trim());
+        }
     }
-    
+
     public void tabla() {
         String encabezados[] = {"Id", "Nombre", "Apellido", "Cedula", "Salario", "Departamento", "Sexo", "Fecha de ingresp"};
         String datos[][] = {};
@@ -60,44 +60,47 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         TablaEmpleados.setModel(modelo);
         tamañoColumnas();
     }
-    
-    public void tamañoColumnas(){
-    
+
+    public void tamañoColumnas() {
+
         TableColumnModel columnas = TablaEmpleados.getColumnModel();
-            columnas.getColumn(0).setPreferredWidth(15);
-            columnas.getColumn(1).setPreferredWidth(100);
-            columnas.getColumn(2).setPreferredWidth(100);
-            columnas.getColumn(3).setPreferredWidth(100);
-            columnas.getColumn(4).setPreferredWidth(40);
-            columnas.getColumn(5).setPreferredWidth(110);
-            columnas.getColumn(6).setPreferredWidth(40);
-            columnas.getColumn(0).setPreferredWidth(25);
+        columnas.getColumn(0).setPreferredWidth(15);
+        columnas.getColumn(1).setPreferredWidth(100);
+        columnas.getColumn(2).setPreferredWidth(100);
+        columnas.getColumn(3).setPreferredWidth(100);
+        columnas.getColumn(4).setPreferredWidth(40);
+        columnas.getColumn(5).setPreferredWidth(110);
+        columnas.getColumn(6).setPreferredWidth(40);
+        columnas.getColumn(0).setPreferredWidth(25);
     }
-    
+
     public GestionarEmpleados(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         ruta = "";
         txtNombreEmp.requestFocus();
+        botonModificarEmp.setVisible(false);
+        botonActualizarTabla.setVisible(false);
         tabla();
         try {
             ArchivoEmpleados edao = new ArchivoEmpleados();
             List<Empleados> emp = edao.encontrar();
             agregarDatostabla(emp);
             cargar(this.comboListaDptos);
-             cc  = new ArchivoEmpleados();
-            empleados = cc.encontrar();
-            for (int i = 0; i < empleados.size(); i++) {
-                jcbEmpleados.addItem(empleados.get(i).getNombre().trim()+" "+empleados.get(i).getApellido().trim()+"|"+empleados.get(i).getCedula().trim());
-            }
+            cargar(this.comboDptoModifica);
+//             cc  = new ArchivoEmpleados();
+//            empleados = cc.encontrar();
+//            for (int i = 0; i < empleados.size(); i++) {
+//                jcbEmpleados.addItem(empleados.get(i).getNombre().trim()+" "+empleados.get(i).getApellido().trim()+"|"+empleados.get(i).getCedula().trim());
+//            }
         } catch (IOException ex) {
             Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
     }
-    
-    public void limpiarAgrega(){
-    
+
+    public void limpiarAgrega() {
+
         txtNombreEmp.setText("");
         txtApellidoEmp.setText("");
         txtCedulaEmp.setText("");
@@ -108,15 +111,31 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         comboListaDptos.setSelectedIndex(0);
         txtNombreEmp.requestFocus();
         sexoItem.clearSelection();
+        ImageIcon iconOriginal = new ImageIcon("src/Imagenes/Iconos/fotoEmp.png");
+        labelFotoEmp.setIcon(iconOriginal);
     }
-    
-    public void agregarEmpleados() throws IOException{
-    
+
+    public void limpiarModifica() {
+
+        txtNombreEmp_Modicando.setText("");
+        txtApellidoEmp_Modicando.setText("");
+        txtCedulaEmp_Modifica.setText("");
+        txtTelefonoEmp_Modicando.setText("");
+        txtCelularEmp_Modicando.setText("");
+        comboDptoModifica.setSelectedIndex(0);
+        txtSalarioEmp_Modicando.setText("");
+        txtFechaEmp_Modifica.setText("");
+        ImageIcon iconOriginal = new ImageIcon("src/Imagenes/Iconos/fotoEmp.png");
+        labelFotoEmp1.setIcon(iconOriginal);
+    }
+
+    public void agregarEmpleados() throws IOException {
+
         ArchivoEmpleados edao = new ArchivoEmpleados();
         ArchivoDepartamentos ddao = new ArchivoDepartamentos();
         List<Empleados> emp = edao.encontrar();
         Empleados e = new Empleados();
-        
+
         e.setId(emp.size() + 1);
         e.setNombre(txtNombreEmp.getText());
         e.setApellido(txtApellidoEmp.getText());
@@ -133,29 +152,28 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         e.setDepartamentos(d);
         if (itemHombreElegidoEmp.isSelected()) {
             e.setSexo(itemHombreElegidoEmp.getLabel());
-        }else if (itemMujerElegidoEmp.isSelected()) {
+        } else if (itemMujerElegidoEmp.isSelected()) {
             e.setSexo(itemMujerElegidoEmp.getLabel());
         }
         e.setFecha(txtFechaIngresoEmp.getText());
-//        e.setFoto(labelFotoEmp.getIcon().toString());
-        
+
         c.copy(p, txtCedulaEmp.getText());
         edao.guardar(e);
         edao.cerrar();
-        
+
         List<Empleados> agrega = new ArrayList<>();
         agrega.add(e);
-        
+
         JOptionPane.showMessageDialog(null, "El empleado se ha agregado correctamente");
         agregarDatostabla(agrega);
     }
-    
+
     public void agregarDatostabla(List<Empleados> emp) throws IOException {
 
         ArchivoEmpleados edao = new ArchivoEmpleados();
-        
+
         for (Empleados e : emp) {
-            
+
             int id = e.getId();
             String nombre = e.getNombre().trim();
             String apellido = e.getApellido().trim();
@@ -164,22 +182,92 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             String dpto = e.getDepartamentos().getNombre().trim();
             String sexo = e.getSexo();
             String fecha = e.getFecha();
-            
+
             Object datos[] = {id, nombre, apellido, cedula, salario, dpto, sexo, fecha};
             modelo.addRow(datos);
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    public void mostrarFotoEmp() {
+
+        int sel = this.TablaEmpleados.getSelectedRow();
+        DefaultTableModel mod = (DefaultTableModel) this.TablaEmpleados.getModel();
+
+        String cedula = mod.getValueAt(sel, 3).toString().trim();
+//        int letra =0;
+//        char[] letras = empleado.toCharArray();
+//        for (int i = 0; i < letras.length; i++) {
+//            if (letras[i]== '|') {
+//                letra = i;
+//            }
+//        }
+//        String cedula = empleado.substring(letra+1);
+        ImageIcon icon = new ImageIcon("src/Empleados_Image/" + cedula + ".jpeg");
+        Image img = icon.getImage();
+        Image newImg = img.getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
+        ImageIcon newIcon = new ImageIcon(newImg);
+        labelFotoEmp1.setIcon(newIcon);
+    }
+
+    public void modificarEmp() throws IOException {
+
+        ArchivoEmpleados edao = new ArchivoEmpleados();
+        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+        List<Empleados> emp = edao.encontrar();
+        List<Departamentos> dpto = ddao.encontrar();
+
+        int sel = this.TablaEmpleados.getSelectedRow();
+        DefaultTableModel mod = (DefaultTableModel) this.TablaEmpleados.getModel();
+        String nombre = mod.getValueAt(sel, 1).toString();
+        for (Empleados e : emp) {
+            String nombreEmp = e.getNombre().trim();
+            if (nombre.equals(nombreEmp)) {
+                e.setId(e.getId());
+                e.setNombre(txtNombreEmp_Modicando.getText());
+                e.setApellido(txtApellidoEmp_Modicando.getText());
+                e.setCedula(txtCedulaEmp_Modifica.getText());
+                e.setTelefono(txtTelefonoEmp_Modicando.getText());
+                e.setCelular(txtCelularEmp_Modicando.getText());
+                e.setSalario(Double.parseDouble(txtSalarioEmp_Modicando.getText()));
+                Departamentos d = ddao.buscarNombre(this.comboDptoModifica.getSelectedItem().toString().trim());
+                if (comboDptoModifica.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(null, "Lo sentimos ese no es un departamento");
+                    return;
+                }
+                e.setDepartamentos(d);
+                if (itemHombreElegidoEmp_Modicando.isSelected()) {
+                    e.setSexo(itemHombreElegidoEmp_Modicando.getLabel());
+                } else if (itemMujerElegidoEmp_Modicando.isSelected()) {
+                    e.setSexo(itemMujerElegidoEmp_Modicando.getLabel());
+                }
+                e.setFecha(txtFechaEmp_Modifica.getText());
+
+                c.copy(p, txtCedulaEmp_Modifica.getText());
+                edao.modificar(e);
+                JOptionPane.showMessageDialog(this, "Por favor presione el boton de actualizar la tabla",
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    private void limpiarTabla() {
+        for (int i = 0; i < TablaEmpleados.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i -= 1;
+        }
+    }
+    
+    public void agregarFotoModifica(){
+    
+        
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         sexoItem = new javax.swing.ButtonGroup();
+        GrupoSexoModifica = new javax.swing.ButtonGroup();
         jcMousePanel1 = new jcMousePanel.jcMousePanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaEmpleados = new org.jdesktop.swingx.JXTable();
@@ -216,9 +304,38 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         botonSubirFotoEmp = new javax.swing.JButton();
         botonAgregarEmp = new org.edisoncor.gui.button.ButtonTask();
         jPanel2 = new javax.swing.JPanel();
-        labelCargaImagen = new javax.swing.JLabel();
-        botonMostrarImagen = new javax.swing.JButton();
-        jcbEmpleados = new javax.swing.JComboBox();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel6 = new javax.swing.JPanel();
+        labelTask1 = new org.edisoncor.gui.label.LabelTask();
+        jLabel10 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        txtApellidoEmp_Modicando = new javax.swing.JTextField();
+        txtCelularEmp_Modicando = new javax.swing.JTextField();
+        txtNombreEmp_Modicando = new javax.swing.JTextField();
+        txtTelefonoEmp_Modicando = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        itemHombreElegidoEmp_Modicando = new javax.swing.JRadioButton();
+        itemMujerElegidoEmp_Modicando = new javax.swing.JRadioButton();
+        txtCedulaEmp_Modifica = new org.jdesktop.swingx.JXFormattedTextField();
+        jPanel8 = new javax.swing.JPanel();
+        labelFotoEmp1 = new javax.swing.JLabel();
+        botonElegirFotoModificando = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        botonLimpiarModifica = new org.edisoncor.gui.button.ButtonTask();
+        botonModificarEmp = new org.edisoncor.gui.button.ButtonTask();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        txtSalarioEmp_Modicando = new javax.swing.JTextField();
+        botonActualizarTabla = new org.edisoncor.gui.button.ButtonTask();
+        txtFechaEmp_Modifica = new org.jdesktop.swingx.JXFormattedTextField();
+        comboDptoModifica = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(810, 700));
@@ -236,7 +353,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(TablaEmpleados);
 
-        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 790, 210));
+        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 790, 210));
 
         botonReporte.setForeground(new java.awt.Color(255, 255, 255));
         botonReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
@@ -410,18 +527,159 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        labelCargaImagen.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel2.add(labelCargaImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 180, 160));
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        botonMostrarImagen.setText("Mostrar imagen");
-        botonMostrarImagen.addActionListener(new java.awt.event.ActionListener() {
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        labelTask1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/EditarEmpleado.png"))); // NOI18N
+        labelTask1.setText("Editar Empleados");
+        labelTask1.setDescription("Por favor!, Elija en la tabla el empleado que va a modificar");
+        jPanel6.add(labelTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 520, 60));
+
+        jLabel10.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel10.setText("    Edite los campos a modificar, una vez realizado los cambios seleccione el boton de modificar y siga las istrucciones");
+        jLabel10.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel6.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 660, 40));
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Personales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12))); // NOI18N
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel11.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel11.setText("Apellido");
+        jPanel7.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, 75, 25));
+
+        jLabel12.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel12.setText("Sexo");
+        jPanel7.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 120, 75, 25));
+
+        jLabel13.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel13.setText("Nombre");
+        jPanel7.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 75, 25));
+
+        txtApellidoEmp_Modicando.setToolTipText("Agregue un apellido al empleado");
+        jPanel7.add(txtApellidoEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 40, 150, 25));
+
+        txtCelularEmp_Modicando.setToolTipText("Celular movil");
+        jPanel7.add(txtCelularEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 150, 25));
+
+        txtNombreEmp_Modicando.setToolTipText("Agregue un nombre al empleado");
+        jPanel7.add(txtNombreEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 150, 25));
+
+        txtTelefonoEmp_Modicando.setToolTipText("Telefono convencional");
+        jPanel7.add(txtTelefonoEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 80, 150, 25));
+
+        jLabel14.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel14.setText("Celular");
+        jPanel7.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 75, 25));
+
+        jLabel15.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel15.setText("Cedula");
+        jPanel7.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 75, 25));
+
+        jLabel16.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel16.setText("Telefono");
+        jPanel7.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 80, 75, 25));
+
+        GrupoSexoModifica.add(itemHombreElegidoEmp_Modicando);
+        itemHombreElegidoEmp_Modicando.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        itemHombreElegidoEmp_Modicando.setText("Hombre");
+        jPanel7.add(itemHombreElegidoEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 120, -1, -1));
+
+        GrupoSexoModifica.add(itemMujerElegidoEmp_Modicando);
+        itemMujerElegidoEmp_Modicando.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        itemMujerElegidoEmp_Modicando.setText("Mujer");
+        jPanel7.add(itemMujerElegidoEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 120, -1, -1));
+
+        try {
+            txtCedulaEmp_Modifica.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###-######-####U")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        jPanel7.add(txtCedulaEmp_Modifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 150, 25));
+
+        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 520, 160));
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Foto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12))); // NOI18N
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        labelFotoEmp1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/fotoEmp.png"))); // NOI18N
+        labelFotoEmp1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel8.add(labelFotoEmp1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 150, 150));
+
+        botonElegirFotoModificando.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/subirPic.png"))); // NOI18N
+        botonElegirFotoModificando.setText(" Elegir Foto");
+        botonElegirFotoModificando.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonMostrarImagenActionPerformed(evt);
+                botonElegirFotoModificandoActionPerformed(evt);
             }
         });
-        jPanel2.add(botonMostrarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 130, -1, -1));
+        jPanel8.add(botonElegirFotoModificando, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, -1, -1));
 
-        jPanel2.add(jcbEmpleados, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 70, 240, 30));
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/camara.png"))); // NOI18N
+        jButton2.setText(" Tomar Foto");
+        jPanel8.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 180, -1, -1));
+
+        jPanel6.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 170, 240, 220));
+
+        botonLimpiarModifica.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
+        botonLimpiarModifica.setText("Limpiar");
+        botonLimpiarModifica.setDescription("Ventanas");
+        botonLimpiarModifica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonLimpiarModificaActionPerformed(evt);
+            }
+        });
+        jPanel6.add(botonLimpiarModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 410, 140, -1));
+
+        botonModificarEmp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/EmpModificado.png"))); // NOI18N
+        botonModificarEmp.setText("Modificar");
+        botonModificarEmp.setDescription("Empleados");
+        botonModificarEmp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonModificarEmpActionPerformed(evt);
+            }
+        });
+        jPanel6.add(botonModificarEmp, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 490, 150, -1));
+
+        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Laborales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12))); // NOI18N
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel17.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel17.setText("Fecha de ingreso");
+        jPanel9.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 120, 25));
+
+        jLabel18.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel18.setText("Salario");
+        jPanel9.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 75, 25));
+
+        jLabel19.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel19.setText("Departamento");
+        jPanel9.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 110, 25));
+
+        txtSalarioEmp_Modicando.setToolTipText("Ingrese el salario en moneda nacional");
+        jPanel9.add(txtSalarioEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 200, 25));
+
+        botonActualizarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/Modificar.png"))); // NOI18N
+        botonActualizarTabla.setText("Actualizar");
+        botonActualizarTabla.setDescription("Tabla");
+        botonActualizarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonActualizarTablaActionPerformed(evt);
+            }
+        });
+        jPanel9.add(botonActualizarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 50, 170, -1));
+
+        txtFechaEmp_Modifica.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+        jPanel9.add(txtFechaEmp_Modifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 200, 25));
+
+        comboDptoModifica.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Departamentos --" }));
+        jPanel9.add(comboDptoModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 200, 25));
+
+        jPanel6.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 520, 150));
+
+        jScrollPane2.setViewportView(jPanel6);
+
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 350));
 
         jTabbedPane1.addTab("Modificar Empleados", jPanel2);
 
@@ -434,11 +692,42 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void TablaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaEmpleadosMouseClicked
-        
+
+        try {
+            ArchivoEmpleados edao = new ArchivoEmpleados();
+            List<Empleados> emp = edao.encontrar();
+
+            int sel = this.TablaEmpleados.getSelectedRow();
+            DefaultTableModel mod = (DefaultTableModel) this.TablaEmpleados.getModel();
+
+            String nombre = mod.getValueAt(sel, 1).toString();
+
+            for (Empleados e : emp) {
+                String nombreEmp = e.getNombre().trim();
+                if (nombre.equals(nombreEmp)) {
+                    txtNombreEmp_Modicando.setText(e.getNombre().trim());
+                    txtApellidoEmp_Modicando.setText(e.getApellido().trim());
+                    txtCedulaEmp_Modifica.setText(e.getCedula());
+                    txtTelefonoEmp_Modicando.setText(e.getTelefono());
+                    txtCelularEmp_Modicando.setText(e.getCelular());
+                    if (e.getSexo().equals(itemHombreElegidoEmp.getLabel())) {
+                        itemHombreElegidoEmp_Modicando.getSelectedIcon();
+                    } else if (e.getSexo().equals(itemMujerElegidoEmp.getLabel())) {
+                        itemMujerElegidoEmp_Modicando.getSelectedIcon();
+                    }
+                    txtSalarioEmp_Modicando.setText(Double.toString(e.getSalario()));
+                    txtFechaEmp_Modifica.setText(e.getFecha());
+                    mostrarFotoEmp();
+                    botonModificarEmp.setVisible(true);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_TablaEmpleadosMouseClicked
 
     private void botonReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonReporteActionPerformed
-        
+
     }//GEN-LAST:event_botonReporteActionPerformed
 
     private void botonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarActionPerformed
@@ -446,7 +735,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     }//GEN-LAST:event_botonRegresarActionPerformed
 
     private void botonExportarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonExportarExcelActionPerformed
-        
+
         if (this.TablaEmpleados.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "No hay datos en la tabla para expotar a excel");
             return;
@@ -498,7 +787,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             ImageIcon icon = new ImageIcon(file);
             //extraer la imagen del icon
             Image img = icon.getImage();
-           
+
             //cambiando el tamaño d ela imagen
             Image nuevaImg = img.getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
             //se genera el imageicon cn la nueva imagen
@@ -506,27 +795,61 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             labelFotoEmp.setIcon(nuevoIcono);
             p = Paths.get(file);
         }
-        
+
     }//GEN-LAST:event_botonSubirFotoEmpActionPerformed
 
-    private void botonMostrarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMostrarImagenActionPerformed
-        // TODO add your handling code here:
-        String empleado = jcbEmpleados.getSelectedItem().toString();
-        int letra =0;
-        char[] letras = empleado.toCharArray();
-        for (int i = 0; i < letras.length; i++) {
-            if (letras[i]== '|') {
-                letra = i;
-            }
+    private void botonLimpiarModificaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarModificaActionPerformed
+        limpiarModifica();
+        botonModificarEmp.setVisible(false);
+    }//GEN-LAST:event_botonLimpiarModificaActionPerformed
+
+    private void botonModificarEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonModificarEmpActionPerformed
+        try {
+            modificarEmp();
+            botonActualizarTabla.setVisible(true);
+            botonModificarEmp.setVisible(false);
+            botonLimpiarModifica.setVisible(false);
+            TablaEmpleados.setEnabled(false);
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String cedula = empleado.substring(letra+1);
-         ImageIcon icon = new ImageIcon("src/Empleados_Image/" + cedula + ".jpeg");
-         Image img = icon.getImage();
-         Image newImg = img.getScaledInstance(250, 250, java.awt.Image.SCALE_SMOOTH);
-         ImageIcon newIcon = new ImageIcon(newImg);
-         labelCargaImagen.setIcon(newIcon);
-         
-    }//GEN-LAST:event_botonMostrarImagenActionPerformed
+    }//GEN-LAST:event_botonModificarEmpActionPerformed
+
+    private void botonActualizarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarTablaActionPerformed
+        try {
+            ArchivoEmpleados edao = new ArchivoEmpleados();
+            List<Empleados> emp = edao.encontrar();
+            limpiarTabla();
+            agregarDatostabla(emp);
+            botonActualizarTabla.setVisible(false);
+            botonLimpiarModifica.setVisible(true);
+            TablaEmpleados.setEnabled(true);
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botonActualizarTablaActionPerformed
+
+    private void botonElegirFotoModificandoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonElegirFotoModificandoActionPerformed
+        
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(filtro);
+        int foto = chooser.showOpenDialog(this);
+        if (foto == JFileChooser.APPROVE_OPTION) {
+            String file = chooser.getSelectedFile().getPath();
+            //obtener la direccion de la imagen
+            String files = chooser.getSelectedFile().toString();
+            labelFotoEmp1.setIcon(new ImageIcon(file));
+            ImageIcon icon = new ImageIcon(file);
+            //extraer la imagen del icon
+            Image img = icon.getImage();
+            //cambiando el tamaño d ela imagen
+            Image nuevaImg = img.getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
+            //se genera el imageicon cn la nueva imagen
+            ImageIcon nuevoIcono = new ImageIcon(nuevaImg);
+            labelFotoEmp1.setIcon(nuevoIcono);
+            p = Paths.get(file);
+        }
+    }//GEN-LAST:event_botonElegirFotoModificandoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -571,19 +894,37 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup GrupoSexoModifica;
     private org.jdesktop.swingx.JXTable TablaEmpleados;
+    private org.edisoncor.gui.button.ButtonTask botonActualizarTabla;
     private org.edisoncor.gui.button.ButtonTask botonAgregarEmp;
+    private javax.swing.JButton botonElegirFotoModificando;
     private org.edisoncor.gui.button.ButtonTask botonExportarExcel;
     private org.edisoncor.gui.button.ButtonTask botonLimpiarAgrega;
-    private javax.swing.JButton botonMostrarImagen;
+    private org.edisoncor.gui.button.ButtonTask botonLimpiarModifica;
+    private org.edisoncor.gui.button.ButtonTask botonModificarEmp;
     private org.edisoncor.gui.button.ButtonTask botonRegresar;
     private org.edisoncor.gui.button.ButtonTask botonReporte;
     private javax.swing.JButton botonSubirFotoEmp;
     private javax.swing.JButton botonTomarFotoEmp;
+    private javax.swing.JComboBox comboDptoModifica;
     private javax.swing.JComboBox comboListaDptos;
     private javax.swing.JRadioButton itemHombreElegidoEmp;
+    private javax.swing.JRadioButton itemHombreElegidoEmp_Modicando;
     private javax.swing.JRadioButton itemMujerElegidoEmp;
+    private javax.swing.JRadioButton itemMujerElegidoEmp_Modicando;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -597,19 +938,31 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private jcMousePanel.jcMousePanel jcMousePanel1;
-    private javax.swing.JComboBox jcbEmpleados;
-    private javax.swing.JLabel labelCargaImagen;
     private javax.swing.JLabel labelFotoEmp;
+    private javax.swing.JLabel labelFotoEmp1;
+    private org.edisoncor.gui.label.LabelTask labelTask1;
     private javax.swing.ButtonGroup sexoItem;
     private javax.swing.JTextField txtApellidoEmp;
+    private javax.swing.JTextField txtApellidoEmp_Modicando;
     private org.jdesktop.swingx.JXFormattedTextField txtCedulaEmp;
+    private org.jdesktop.swingx.JXFormattedTextField txtCedulaEmp_Modifica;
     private javax.swing.JTextField txtCelularEmp;
+    private javax.swing.JTextField txtCelularEmp_Modicando;
+    private org.jdesktop.swingx.JXFormattedTextField txtFechaEmp_Modifica;
     private org.jdesktop.swingx.JXFormattedTextField txtFechaIngresoEmp;
     private javax.swing.JTextField txtNombreEmp;
+    private javax.swing.JTextField txtNombreEmp_Modicando;
     private javax.swing.JTextField txtSalarioEmp;
+    private javax.swing.JTextField txtSalarioEmp_Modicando;
     private javax.swing.JTextField txtTelefonoEmp;
+    private javax.swing.JTextField txtTelefonoEmp_Modicando;
     // End of variables declaration//GEN-END:variables
 }
