@@ -1,6 +1,5 @@
 package Archivos;
 
-import Pojos.CategoriaProductos;
 import Pojos.Productos;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -16,11 +15,9 @@ public class ArchivoProductos {
     
     private final RandomAccessFile raf;
     private static final int LENGTH = 1024;
-    private final ArchivoCategoriaProducto cpdao;
     
     public ArchivoProductos() throws IOException{
         raf = RandomConector.buildRandom("productos.dat").getRandomAccessFile();
-        cpdao = new ArchivoCategoriaProducto();
     }
     
     public void guardar(Productos p) throws IOException{
@@ -31,7 +28,10 @@ public class ArchivoProductos {
         raf.seek(pos);
         raf.writeInt(n + 1);
         raf.writeUTF(limitString(p.getNombre(),20));
-        raf.writeInt(p.getCategoriaProductos().getId());
+        raf.writeUTF(limitString(p.getCategoriaProductos(), 30));
+        raf.writeUTF(limitString(p.getMarca(), 20));
+        raf.writeDouble(p.getCantidad());
+        raf.writeUTF(p.getUnidadMedida());
         
         raf.seek(0);
         raf.writeInt(n + 1);
@@ -59,8 +59,10 @@ public class ArchivoProductos {
             raf.seek(pos);
             p.setId(raf.readInt());
             p.setNombre(raf.readUTF());
-            CategoriaProductos cp = cpdao.buscarId(raf.readInt());
-            p.setCategoriaProductos(cp);
+            p.setCategoriaProductos(raf.readUTF());
+            p.setMarca(raf.readUTF());
+            p.setCantidad(raf.readDouble());
+            p.setUnidadMedida(raf.readUTF());
             
             prod.add(p);
         }
@@ -75,7 +77,10 @@ public class ArchivoProductos {
         raf.seek(pos);
         raf.writeInt(p.getId());
         raf.writeUTF(limitString(p.getNombre(),20));
-        raf.writeInt(p.getCategoriaProductos().getId());
+        raf.writeUTF(limitString(p.getCategoriaProductos(), 30));
+        raf.writeUTF(limitString(p.getMarca(), 20));
+        raf.writeDouble(p.getCantidad());
+        raf.writeUTF(p.getUnidadMedida());
     }
     
     public Productos buscarNombre(String nombre) throws IOException {
@@ -103,8 +108,10 @@ public class ArchivoProductos {
         raf.seek(pos);
         p.setId(raf.readInt());
         p.setNombre(raf.readUTF());
-        CategoriaProductos cp = cpdao.buscarId(raf.readInt());
-        p.setCategoriaProductos(cp);
+        p.setCategoriaProductos(raf.readUTF());
+        p.setMarca(raf.readUTF());
+        p.setCantidad(raf.readDouble());
+        p.setUnidadMedida(raf.readUTF());
         
         return p;
     }

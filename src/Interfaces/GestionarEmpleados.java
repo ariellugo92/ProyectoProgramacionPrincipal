@@ -11,6 +11,7 @@ import Pojos.CopiarImagenes;
 import Pojos.Departamentos;
 import Pojos.Empleados;
 import Pojos.ExportarExcel;
+import Validaciones.Validador;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -82,7 +83,12 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         txtNombreEmp.requestFocus();
         botonModificarEmp.setVisible(false);
         botonLimpiarModifica.setVisible(false);
+        labelInform.setVisible(false);
         tabla();
+        //-------validador----------
+        Validador v = new Validador();
+        v.soloLetras(txtNombreEmp);
+        //--------------------------
         try {
             ArchivoEmpleados edao = new ArchivoEmpleados();
             List<Empleados> emp = edao.encontrar();
@@ -245,7 +251,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                 
                 c.copy(p2, txtCedulaEmp_Modifica.getText());
                 edao.modificar(e);
-                JOptionPane.showMessageDialog(this, "Por favor presione el boton de actualizar la tabla",
+                JOptionPane.showMessageDialog(this, "El empleado se ha modificado correctamente!!!",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
         }
@@ -256,11 +262,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             modelo.removeRow(i);
             i -= 1;
         }
-    }
-    
-    public void agregarFotoModifica(){
-    
-        
     }
 
     @SuppressWarnings("unchecked")
@@ -299,6 +300,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         txtSalarioEmp = new javax.swing.JTextField();
         txtFechaIngresoEmp = new org.jdesktop.swingx.JXFormattedTextField();
         botonLimpiarAgrega = new org.edisoncor.gui.button.ButtonTask();
+        labelInform = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         labelFotoEmp = new javax.swing.JLabel();
         botonTomarFotoEmp = new javax.swing.JButton();
@@ -487,7 +489,12 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                 botonLimpiarAgregaActionPerformed(evt);
             }
         });
-        jPanel4.add(botonLimpiarAgrega, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 160, -1));
+        jPanel4.add(botonLimpiarAgrega, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 30, 160, -1));
+
+        labelInform.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
+        labelInform.setForeground(new java.awt.Color(204, 0, 0));
+        labelInform.setText("Dato incorrecto");
+        jPanel4.add(labelInform, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 100, 120, 20));
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 520, 150));
 
@@ -778,7 +785,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             ImageIcon icon = new ImageIcon(file);
             //extraer la imagen del icon
             Image img = icon.getImage();
-
             //cambiando el tamaño d ela imagen
             Image nuevaImg = img.getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
             //se genera el imageicon cn la nueva imagen
@@ -927,6 +933,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private jcMousePanel.jcMousePanel jcMousePanel1;
     private javax.swing.JLabel labelFotoEmp;
     private javax.swing.JLabel labelFotoEmp1;
+    private javax.swing.JLabel labelInform;
     private org.edisoncor.gui.label.LabelTask labelTask1;
     private javax.swing.ButtonGroup sexoItem;
     private javax.swing.JTextField txtApellidoEmp;

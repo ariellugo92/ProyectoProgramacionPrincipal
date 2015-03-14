@@ -200,7 +200,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEmpleadosActionPerformed
 
     private void botonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonProductosActionPerformed
-        // TODO add your handling code here:
+        GestionarProductos dialog = new GestionarProductos(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
     }//GEN-LAST:event_botonProductosActionPerformed
 
     private void btonDptosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btonDptosActionPerformed
