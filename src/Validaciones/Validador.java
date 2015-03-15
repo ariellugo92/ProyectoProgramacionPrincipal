@@ -1,7 +1,9 @@
 package Validaciones;
 
+import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 /**
@@ -10,26 +12,55 @@ import javax.swing.JTextField;
  */
 public class Validador {
 
-    public void soloLetras(JTextField a) {
+    public void soloLetras(JTextField a, final JLabel s) {
         a.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
                 if (Character.isDigit(c)) {
+                    Toolkit.getDefaultToolkit().beep();
                     e.consume();
+                    s.setVisible(true);
+                } else {
+                    s.setVisible(false);
                 }
             }
         });
     }
 
-    public void soloNumeros(JTextField a) {
+    public void soloNumeros(JTextField a, final JLabel s) {
         a.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-                if (Character.isDigit(c)) {
+                if (Character.isLetter(c)) {
+                    Toolkit.getDefaultToolkit().beep();
                     e.consume();
+                    s.setVisible(true);
+                } else {
+                    s.setVisible(false);
                 }
             }
         });
     }
 
+    public boolean validarTel(JTextField a) {
+        String tel = a.getText();
+        char[] numeros = tel.toCharArray();
+
+        if (numeros[0] != '2' || numeros.length != 8) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean validarCel(JTextField a) {
+        String cel = a.getText();
+        char[] numeros = cel.toCharArray();
+
+        if (numeros[0] != '8' || numeros.length != 8) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

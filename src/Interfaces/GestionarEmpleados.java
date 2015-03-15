@@ -12,6 +12,7 @@ import Pojos.Departamentos;
 import Pojos.Empleados;
 import Pojos.ExportarExcel;
 import Validaciones.Validador;
+import Validaciones.limitarCaracter;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -79,16 +80,13 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     public GestionarEmpleados(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        ruta = "";
         txtNombreEmp.requestFocus();
+        validaciones();
+        ruta = "";
         botonModificarEmp.setVisible(false);
         botonLimpiarModifica.setVisible(false);
         labelInform.setVisible(false);
         tabla();
-        //-------validador----------
-        Validador v = new Validador();
-        v.soloLetras(txtNombreEmp);
-        //--------------------------
         try {
             ArchivoEmpleados edao = new ArchivoEmpleados();
             List<Empleados> emp = edao.encontrar();
@@ -104,6 +102,26 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public void validaciones() {
+        Validador v = new Validador();
+        v.soloLetras(txtNombreEmp, labelInform);
+        v.soloLetras(txtApellidoEmp, labelInform);
+        v.soloNumeros(txtTelefonoEmp, labelInform);
+        v.soloNumeros(txtCelularEmp, labelInform);
+        v.soloNumeros(txtSalarioEmp, labelInform);
+        //---------------------------------------
+        v.soloLetras(txtNombreEmp_Modicando, labelInform);
+        v.soloLetras(txtApellidoEmp_Modicando, labelInform);
+        v.soloNumeros(txtTelefonoEmp_Modicando, labelInform);
+        v.soloNumeros(txtCelularEmp_Modicando, labelInform);
+        v.soloNumeros(txtSalarioEmp_Modicando, labelInform);
+        //---------------------------------------
+        txtTelefonoEmp.setDocument(new limitarCaracter(txtTelefonoEmp, 8));
+        txtCelularEmp.setDocument(new limitarCaracter(txtCelularEmp, 8));
+        txtCelularEmp_Modicando.setDocument(new limitarCaracter(txtCelularEmp_Modicando, 8));
+        txtTelefonoEmp_Modicando.setDocument(new limitarCaracter(txtTelefonoEmp_Modicando, 8));
     }
 
     public void limpiarAgrega() {
@@ -142,13 +160,28 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         ArchivoDepartamentos ddao = new ArchivoDepartamentos();
         List<Empleados> emp = edao.encontrar();
         Empleados e = new Empleados();
+        Validador v = new Validador();
 
         e.setId(emp.size() + 1);
         e.setNombre(txtNombreEmp.getText());
         e.setApellido(txtApellidoEmp.getText());
         e.setCedula(txtCedulaEmp.getText());
-        e.setTelefono(txtTelefonoEmp.getText());
-        e.setCelular(txtCelularEmp.getText());
+        if (v.validarTel(txtTelefonoEmp)) {
+            JOptionPane.showMessageDialog(null, "Numero de telefono ingresado, incorrecto!");
+            txtTelefonoEmp.setText("");
+            txtTelefonoEmp.requestFocus();
+            return;
+        } else {
+            e.setTelefono(txtTelefonoEmp.getText());
+        }
+        if (v.validarCel(txtCelularEmp)) {
+            JOptionPane.showMessageDialog(null, "Numero de celular ingresado, incorrecto!");
+            txtCelularEmp.setText("");
+            txtCelularEmp.requestFocus();
+            return;
+        } else {
+            e.setCelular(txtCelularEmp.getText());
+        }
         e.setSalario(Double.parseDouble(txtSalarioEmp.getText()));
         Departamentos d = ddao.buscarNombre(this.comboListaDptos.getSelectedItem().toString().trim());
         if (comboListaDptos.getSelectedIndex() == 0) {
@@ -165,14 +198,32 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         e.setFecha(txtFechaIngresoEmp.getText());
 
         c.copy(p, txtCedulaEmp.getText());
-        edao.guardar(e);
-        edao.cerrar();
 
-        List<Empleados> agrega = new ArrayList<>();
-        agrega.add(e);
+        boolean flag = false;
+        for (Empleados e2 : emp) {
+            String cedulaE = e.getCedula();
+            String cedulaE2 = e2.getCedula().trim();
+            if (cedulaE.equals(cedulaE2)) {
+                JOptionPane.showMessageDialog(this, "Lo sentimos esta cedula ya pertenece a un empleado, le recordamos que este dato es unico e irrepetible");
+                txtCedulaEmp.setText("");
+                txtCedulaEmp.requestFocus();
+                flag = false;
+                break;
+            } else {
+                flag = true;
+            }
+        }
 
-        JOptionPane.showMessageDialog(null, "El empleado se ha agregado correctamente");
-        agregarDatostabla(agrega);
+        if (flag) {
+            edao.guardar(e);
+            edao.cerrar();
+
+            List<Empleados> agrega = new ArrayList<>();
+            agrega.add(e);
+
+            JOptionPane.showMessageDialog(null, "El empleado se ha agregado correctamente");
+            agregarDatostabla(agrega);
+        }
     }
 
     public void agregarDatostabla(List<Empleados> emp) throws IOException {
@@ -248,7 +299,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                     e.setSexo(itemMujerElegidoEmp_Modicando.getLabel());
                 }
                 e.setFecha(txtFechaEmp_Modifica.getText());
-                
+
                 c.copy(p2, txtCedulaEmp_Modifica.getText());
                 edao.modificar(e);
                 JOptionPane.showMessageDialog(this, "El empleado se ha modificado correctamente!!!",
@@ -816,7 +867,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     }//GEN-LAST:event_botonModificarEmpActionPerformed
 
     private void botonElegirFotoModificandoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonElegirFotoModificandoActionPerformed
-        
+
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(filtro);
         int foto = chooser.showOpenDialog(this);
