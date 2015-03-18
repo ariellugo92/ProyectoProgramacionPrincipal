@@ -37,8 +37,11 @@ import javax.swing.table.TableColumnModel;
  */
 public class GestionarEmpleados extends javax.swing.JDialog {
 
-    Path p = null;
-    Path p2 = null;
+    ImageIcon iconOriginal = new ImageIcon("src/Imagenes/Iconos/fotoEmp.png");
+    String foto = iconOriginal.toString();
+    Path p = Paths.get(foto);
+    Path p2 = Paths.get(foto);
+    
     DefaultTableModel modelo;
     private FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivo de imagen", "jpg");
     String ruta;
@@ -162,7 +165,8 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         Empleados e = new Empleados();
         Validador v = new Validador();
 
-        e.setId(emp.size() + 1);
+        JOptionPane.showMessageDialog(this, "Paso 1");
+
         e.setNombre(txtNombreEmp.getText());
         e.setApellido(txtApellidoEmp.getText());
         e.setCedula(txtCedulaEmp.getText());
@@ -183,13 +187,15 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             e.setCelular(txtCelularEmp.getText());
         }
         e.setSalario(Double.parseDouble(txtSalarioEmp.getText()));
+        
         Departamentos d = ddao.buscarNombre(this.comboListaDptos.getSelectedItem().toString().trim());
         if (comboListaDptos.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "Lo sentimos ese no es un departamento");
             System.out.println(comboListaDptos.getSelectedIndex());
             return;
+        } else {
+            e.setDepartamentos(d);
         }
-        e.setDepartamentos(d);
         if (itemHombreElegidoEmp.isSelected()) {
             e.setSexo(itemHombreElegidoEmp.getLabel());
         } else if (itemMujerElegidoEmp.isSelected()) {
@@ -199,22 +205,8 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
         c.copy(p, txtCedulaEmp.getText());
 
-        boolean flag = false;
-        for (Empleados e2 : emp) {
-            String cedulaE = e.getCedula();
-            String cedulaE2 = e2.getCedula().trim();
-            if (cedulaE.equals(cedulaE2)) {
-                JOptionPane.showMessageDialog(this, "Lo sentimos esta cedula ya pertenece a un empleado, le recordamos que este dato es unico e irrepetible");
-                txtCedulaEmp.setText("");
-                txtCedulaEmp.requestFocus();
-                flag = false;
-                break;
-            } else {
-                flag = true;
-            }
-        }
+        if (emp.isEmpty()) {
 
-        if (flag) {
             edao.guardar(e);
             edao.cerrar();
 
@@ -223,6 +215,33 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
             JOptionPane.showMessageDialog(null, "El empleado se ha agregado correctamente");
             agregarDatostabla(agrega);
+        } else {
+            boolean flag = false;
+            for (Empleados e2 : emp) {
+                String cedulaE = e.getCedula();
+                String cedulaE2 = e2.getCedula().trim();
+                if (cedulaE.equals(cedulaE2)) {
+                    JOptionPane.showMessageDialog(this, "Lo sentimos esta cedula ya pertenece a un empleado, le recordamos que este dato es unico e irrepetible");
+                    txtCedulaEmp.setText("");
+                    txtCedulaEmp.requestFocus();
+                    flag = false;
+                    break;
+                } else {
+                    flag = true;
+                }
+            }
+
+            if (flag) {
+
+                edao.guardar(e);
+                edao.cerrar();
+
+                List<Empleados> agrega = new ArrayList<>();
+                agrega.add(e);
+
+                JOptionPane.showMessageDialog(null, "El empleado se ha agregado correctamente");
+                agregarDatostabla(agrega);
+            }
         }
     }
 
@@ -820,7 +839,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         try {
             agregarEmpleados();
         } catch (IOException ex) {
-            Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error " + ex);
         }
     }//GEN-LAST:event_botonAgregarEmpActionPerformed
 
