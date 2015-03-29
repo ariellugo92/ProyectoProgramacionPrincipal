@@ -29,6 +29,7 @@ public class ArchivoCuentas {
         raf.writeInt(n + 1);
         raf.writeUTF(limitString(c.getUsuario(),30));
         raf.writeUTF(limitString(c.getContraseña(),50));
+        raf.writeUTF(limitString(c.getTipo(), 20));
         
         raf.seek(0);
         raf.writeInt(n + 1);
@@ -57,10 +58,23 @@ public class ArchivoCuentas {
             c.setId(raf.readInt());
             c.setUsuario(raf.readUTF());
             c.setContraseña(raf.readUTF());
+            c.setTipo(raf.readUTF());
             
             cta.add(c);
         }
         return cta;
+    }
+    
+    public void modificar(Cuentas c) throws IOException {
+        int id = c.getId();
+
+        long pos = 4 + (id - 1) * LENGTH;
+        
+        raf.seek(pos);
+        raf.writeInt(c.getId());
+        raf.writeUTF(limitString(c.getUsuario(),30));
+        raf.writeUTF(limitString(c.getContraseña(),50));
+        raf.writeUTF(limitString(c.getTipo(), 20));
     }
     
     public void cerrar() throws IOException{

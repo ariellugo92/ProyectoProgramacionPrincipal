@@ -47,6 +47,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
     public GestionarDptos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        agregarCombobox();
         /*-----------------------------------
          Componentes para el panel de agregar
          ------------------------------------*/
@@ -57,6 +58,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
             List<Departamentos> def = d.encontrar();
             agregarDatostabla(def);
             txtIdAgrega.setText((def.size() + 1) + "");
+            d.cerrar();
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -93,6 +95,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
             mandar.add(d);
 
         this.agregarDatostabla(mandar);
+        ddao.cerrar();
     }
 
     public void limpiar() {
@@ -129,6 +132,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
             Object datos[] = {id, nombre, descripcion};
             modelo.addRow(datos);
         }
+        ddao.cerrar();
     }
     
     public void generarReporte() throws IOException{
@@ -152,6 +156,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
 //            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 //            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("Reporte de departamentos.pdf"));
 //            exporter.exportReport();
+            ddao.cerrar();
                     } catch (JRException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -180,28 +185,45 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Se ha modificado el Departamento, por favor actualize la tabla");
             }
         }
+        ddao.cerrar();
     }
     
-    public void borrarDpto() throws IOException{
-    
-        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
-        List<Departamentos> dpto = ddao.encontrar();
+    public void agregarCombobox(){
         
-        for (Departamentos d : dpto) {
-            int tablaClick = this.TablaPrincipal.getSelectedRow();
-            DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
-            String nombreElegido = mod.getValueAt(tablaClick, 1).toString();
-            String nombreDpto = d.getNombre().trim();
-            if (nombreDpto.equals(nombreElegido)) {
-                d.getId();
-                d.getNombre();
-                d.getDescripcion();
-                
-                dpto.remove(d);
+        try{
+            
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            
+            for (Departamentos d:dpto) {
+                AgregarBusqueda.addItem(d.getNombre());
             }
-            List<Departamentos> dpto2 = dpto;
-        }
+                ddao.cerrar();
+        }catch(Exception ex){}
+        
+        
     }
+    
+////    public void borrarDpto() throws IOException{
+////   
+////        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+////        List<Departamentos> dpto = ddao.encontrar();
+////        
+////        for (Departamentos d : dpto) {
+////            int tablaClick = this.TablaPrincipal.getSelectedRow();
+////            DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
+////            String nombreElegido = mod.getValueAt(tablaClick, 1).toString().trim();
+////            String nombreDpto = d.getNombre().trim();
+////            if (nombreDpto.equals(nombreElegido)) {
+////                d.getId();
+////                d.getNombre();
+////                d.getDescripcion();
+////                
+////                dpto.remove(d);
+////            }
+////            List<Departamentos> dpto2 = dpto;
+////        }
+////    }
     
     private void limpiarTabla(){
        for (int i = 0; i < TablaPrincipal.getRowCount(); i++) {
@@ -257,6 +279,8 @@ public final class GestionarDptos extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         txtIdBorrar = new javax.swing.JTextField();
         botonLimpiarBorrar = new org.edisoncor.gui.button.ButtonTask();
+        AgregarBusqueda = new org.edisoncor.gui.comboBox.ComboBoxRect();
+        jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaPrincipal = new org.jdesktop.swingx.JXTable();
         botonReporte = new org.edisoncor.gui.button.ButtonTask();
@@ -453,8 +477,8 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
         jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("ID");
-        PanelModifica1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 80, 20));
+        jLabel9.setText("Buscar");
+        PanelModifica1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 20, 80, 20));
 
         txtIdBorrar.setEditable(false);
         PanelModifica1.add(txtIdBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 30));
@@ -469,6 +493,12 @@ public final class GestionarDptos extends javax.swing.JDialog {
             }
         });
         PanelModifica1.add(botonLimpiarBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 180, -1));
+        PanelModifica1.add(AgregarBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 50, 160, -1));
+
+        jLabel10.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("ID");
+        PanelModifica1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 80, 20));
 
         PanelBorrar.add(PanelModifica1, java.awt.BorderLayout.CENTER);
 
@@ -557,17 +587,11 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
     private void botonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonModificarActionPerformed
         
-        try {
-            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
-            List<Departamentos> dpto = ddao.encontrar();
+        try {  
             
-            if (dpto.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Lo sentimos, el reporte no se puede generar ya que no hay departamentos toadavia",
-                        "Error",JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            modificarDpto();
+            modificarDpto();          
             botonModificar.setVisible(false);
+            
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -592,6 +616,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
             this.txtIdBorrar.setText(mod.getValueAt(sel, 0).toString());
             this.txtNombre_a_Borrar.setText(mod.getValueAt(sel, 1).toString().trim());
             this.txtDescripcion_a_Borrar.setText(mod.getValueAt(sel, 2).toString().trim());
+            ddao.cerrar();
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -642,13 +667,55 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 return;
             }
             generarReporte();
+            ddao.cerrar();
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonReporteActionPerformed
 
     private void botonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBorrarActionPerformed
-        // TODO add your handling code here:
+        
+        try{
+            
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            ddao.cerrar();
+            
+            File f = new File("departamentos.dat");
+          
+            int i=0;//buscar el indice
+            
+            for (Departamentos d:dpto) {
+                
+                if(d.getId() == Integer.parseInt(txtIdBorrar.getText().trim())){   //ver los ids               
+                    dpto.remove(i); //remover el q este en el indice i 
+                    System.out.println("entro");
+                    break;//salir dl bucle
+                }
+                
+                i++;//incremetar
+            }
+            
+            if(f.delete()){
+                System.out.println("yaaa");
+                System.out.println(f.length());
+            }
+            
+            ArchivoDepartamentos dd = new ArchivoDepartamentos();
+            
+            for (Departamentos d:dpto) {               
+                dd.guardar(d);     //guardar la nueva lista con los objetos        
+            }
+//            
+            dd.cerrar();
+            limpiarTabla();
+            agregarDatostabla(dpto);
+            //actualizar
+            
+            JOptionPane.showMessageDialog(this, "Borrado departamento","BORRADO"
+                    ,JOptionPane.INFORMATION_MESSAGE);
+            
+        }catch(Exception ex){}
     }//GEN-LAST:event_botonBorrarActionPerformed
 
     private void botonLimpiarBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarBorrarActionPerformed
@@ -712,6 +779,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.edisoncor.gui.comboBox.ComboBoxRect AgregarBusqueda;
     private org.edisoncor.gui.panel.PanelNice PanelAgrega;
     private org.edisoncor.gui.panel.PanelNice PanelBorrar;
     private org.edisoncor.gui.panel.PanelNice PanelModifica;
@@ -728,6 +796,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonTask botonRegresar;
     private org.edisoncor.gui.button.ButtonTask botonReporte;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

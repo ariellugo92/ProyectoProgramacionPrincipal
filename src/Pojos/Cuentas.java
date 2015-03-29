@@ -8,14 +8,9 @@ public class Cuentas {
     private int id;
     private String usuario;
     private String contraseña;
+    private String tipo;
 
     public Cuentas() {
-    }
-
-    public Cuentas(int id, String usuario, String contraseña) {
-        this.id = id;
-        this.usuario = usuario;
-        this.contraseña = contraseña;
     }
 
     public int getId() {
@@ -40,6 +35,14 @@ public class Cuentas {
 
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
     
 }

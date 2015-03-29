@@ -5,8 +5,11 @@
  */
 package Interfaces;
 
+import Archivos.ArchivoDepartamentos;
 import Archivos.ArchivoProductos;
+import Pojos.Departamentos;
 import Pojos.Productos;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +120,7 @@ public class GestionarProductos extends javax.swing.JDialog {
         txtUnidadMedidaProduct = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        botonBorrar = new org.edisoncor.gui.button.ButtonTask();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaProductos = new org.jdesktop.swingx.JXTable();
         botonReporteProductos = new org.edisoncor.gui.button.ButtonTask();
@@ -202,6 +206,17 @@ public class GestionarProductos extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Modificar Productos", jPanel2);
 
+        botonBorrar.setForeground(new java.awt.Color(255, 255, 255));
+        botonBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/borrar.png"))); // NOI18N
+        botonBorrar.setText("Borrar");
+        botonBorrar.setDescription("Departamentos");
+        botonBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonBorrarActionPerformed(evt);
+            }
+        });
+        jTabbedPane1.addTab("tab3", botonBorrar);
+
         jcMousePanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 770, 280));
 
         jScrollPane1.setViewportView(TablaProductos);
@@ -262,6 +277,42 @@ public class GestionarProductos extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_botonLimpiarProductActionPerformed
 
+    private void botonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBorrarActionPerformed
+
+        try{
+
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+
+            File f = new File("departamentos.dat");
+
+            f.delete();
+
+            //            int i=0;//buscar el indice
+            //
+            //            for (Departamentos d:dpto) {
+                //
+                //                if(d.getId() == Integer.parseInt(txtIdBorrar.getText().trim())){   //ver los ids
+                    //                    dpto.remove(i); //remover el q este en el indice i
+                    //                    break;//salir dl bucle
+                    //                }
+                //
+                //                i++;//incremetar
+                //            }
+            //
+            //            for (Departamentos d:dpto) {
+                //                ddao.guardar(d);     //guardar la nueva lista con los objetos
+                //            }
+            //
+           
+            //actualizar
+
+            JOptionPane.showMessageDialog(this, "Borrado departamento","BORRADO"
+                ,JOptionPane.INFORMATION_MESSAGE);
+
+        }catch(Exception ex){}
+    }//GEN-LAST:event_botonBorrarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -307,43 +358,22 @@ public class GestionarProductos extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdesktop.swingx.JXTable TablaProductos;
     private org.edisoncor.gui.button.ButtonTask botonAgregarProducto;
+    private org.edisoncor.gui.button.ButtonTask botonBorrar;
     private org.edisoncor.gui.button.ButtonTask botonExportar_a_ExcelProduct;
     private org.edisoncor.gui.button.ButtonTask botonLimpiarProduct;
     private org.edisoncor.gui.button.ButtonTask botonRegresarProducto;
     private org.edisoncor.gui.button.ButtonTask botonReporteProductos;
-    private org.edisoncor.gui.button.ButtonTask buttonTask4;
-    private org.edisoncor.gui.button.ButtonTask buttonTask5;
-    private org.edisoncor.gui.button.ButtonTask buttonTask6;
-    private org.edisoncor.gui.button.ButtonTask buttonTask7;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private jcMousePanel.jcMousePanel jcMousePanel1;
     private javax.swing.JTextField txtCategoriaProduct;
     private javax.swing.JTextField txtIDProduct;

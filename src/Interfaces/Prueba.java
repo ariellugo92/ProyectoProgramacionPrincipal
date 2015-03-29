@@ -28,184 +28,177 @@ public class Prueba extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jPanel6 = new javax.swing.JPanel();
-        labelTask1 = new org.edisoncor.gui.label.LabelTask();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txtApellidoEmp_Modicando = new javax.swing.JTextField();
-        txtCelularEmp_Modicando = new javax.swing.JTextField();
-        txtNombreEmp_Modicando = new javax.swing.JTextField();
-        txtTelefonoEmp_Modicando = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        itemHombreElegidoEmp_Modicando = new javax.swing.JRadioButton();
-        itemMujerElegidoEmp_Modicando = new javax.swing.JRadioButton();
-        jXFormattedTextField2 = new org.jdesktop.swingx.JXFormattedTextField();
-        jPanel5 = new javax.swing.JPanel();
-        labelFotoEmp = new javax.swing.JLabel();
-        botonElegirFotoModificando = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        txtSalarioEmp_Modicando = new javax.swing.JTextField();
-        botonActualizarTabla = new org.edisoncor.gui.button.ButtonTask();
-        jComboBox1 = new javax.swing.JComboBox();
-        jXFormattedTextField1 = new org.jdesktop.swingx.JXFormattedTextField();
-        botonLimpiarModifica = new org.edisoncor.gui.button.ButtonTask();
-        botonModificarEmp = new org.edisoncor.gui.button.ButtonTask();
+        jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea3 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
-        labelTask1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/EditarEmpleado.png"))); // NOI18N
-        labelTask1.setText("Editar Empleados");
-        labelTask1.setDescription("Por favor!, Elija en la tabla el empleado que va a modificar");
-        jPanel6.add(labelTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 520, 60));
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabel1.setText("    Edite los campos a modificar, una vez realizado los cambios seleccione el boton de modificar y siga las istrucciones");
-        jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel6.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 100, 660, 40));
+        jButton3.setText("jButton3");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Personales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12))); // NOI18N
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jLabel1.setText("jLabel1");
 
-        jLabel2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel2.setText("Apellido");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, 75, 25));
+        jTabbedPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jTabbedPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel3.setText("Sexo");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 120, 75, 25));
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Panel 1");
+        jScrollPane1.setViewportView(jTextArea1);
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel4.setText("Nombre");
-        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 75, 25));
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(47, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
-        txtApellidoEmp_Modicando.setToolTipText("Agregue un apellido al empleado");
-        jPanel3.add(txtApellidoEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 40, 150, 25));
+        jTabbedPane1.addTab("tab1", jPanel1);
 
-        txtCelularEmp_Modicando.setToolTipText("Celular movil");
-        jPanel3.add(txtCelularEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 120, 150, 25));
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jTextArea2.setText("panel 2");
+        jScrollPane2.setViewportView(jTextArea2);
 
-        txtNombreEmp_Modicando.setToolTipText("Agregue un nombre al empleado");
-        jPanel3.add(txtNombreEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 150, 25));
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
-        txtTelefonoEmp_Modicando.setToolTipText("Telefono convencional");
-        jPanel3.add(txtTelefonoEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 80, 150, 25));
+        jTabbedPane1.addTab("tab2", jPanel2);
 
-        jLabel5.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel5.setText("Celular");
-        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 75, 25));
+        jTextArea3.setColumns(20);
+        jTextArea3.setRows(5);
+        jTextArea3.setText("panel 3");
+        jScrollPane3.setViewportView(jTextArea3);
 
-        jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel6.setText("Cedula");
-        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 75, 25));
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(44, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
-        jLabel7.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel7.setText("Telefono");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 80, 75, 25));
-
-        itemHombreElegidoEmp_Modicando.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        itemHombreElegidoEmp_Modicando.setText("Hombre");
-        jPanel3.add(itemHombreElegidoEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 120, -1, -1));
-
-        itemMujerElegidoEmp_Modicando.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        itemMujerElegidoEmp_Modicando.setText("Mujer");
-        jPanel3.add(itemMujerElegidoEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 120, -1, -1));
-
-        jXFormattedTextField2.setText("jXFormattedTextField2");
-        jPanel3.add(jXFormattedTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, -1, -1));
-
-        jPanel6.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 520, 160));
-
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Foto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12))); // NOI18N
-        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        labelFotoEmp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/fotoEmp.png"))); // NOI18N
-        labelFotoEmp.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel5.add(labelFotoEmp, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 150, 150));
-
-        botonElegirFotoModificando.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/subirPic.png"))); // NOI18N
-        botonElegirFotoModificando.setText(" Elegir Foto");
-        jPanel5.add(botonElegirFotoModificando, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, -1, -1));
-
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/camara.png"))); // NOI18N
-        jButton2.setText(" Tomar Foto");
-        jPanel5.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 180, -1, -1));
-
-        jPanel6.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 170, 240, 220));
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Laborales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12))); // NOI18N
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel8.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel8.setText("Fecha de ingreso");
-        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 120, 25));
-
-        jLabel9.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel9.setText("Salario");
-        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 75, 25));
-
-        jLabel10.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel10.setText("Departamento");
-        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 110, 25));
-
-        txtSalarioEmp_Modicando.setToolTipText("Ingrese el salario en moneda nacional");
-        jPanel4.add(txtSalarioEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 200, 25));
-
-        botonActualizarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/Modificar.png"))); // NOI18N
-        botonActualizarTabla.setText("Actualizar");
-        botonActualizarTabla.setDescription("Tabla");
-        jPanel4.add(botonActualizarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 50, 170, -1));
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel4.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, -1, -1));
-
-        jXFormattedTextField1.setText("jXFormattedTextField1");
-        jPanel4.add(jXFormattedTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, -1, -1));
-
-        jPanel6.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 520, 150));
-
-        botonLimpiarModifica.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
-        botonLimpiarModifica.setText("Limpiar");
-        botonLimpiarModifica.setDescription("Ventanas");
-        jPanel6.add(botonLimpiarModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 410, 140, -1));
-
-        botonModificarEmp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/EmpModificado.png"))); // NOI18N
-        botonModificarEmp.setText("Modificar");
-        botonModificarEmp.setDescription("Empleados");
-        jPanel6.add(botonModificarEmp, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 510, 150, -1));
-
-        jScrollPane2.setViewportView(jPanel6);
+        jTabbedPane1.addTab("tab3", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 790, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2)
+                            .addComponent(jButton3))
+                        .addGap(52, 52, 52)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(320, 320, 320))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                .addGap(60, 60, 60)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(30, 30, 30)
+                        .addComponent(jButton2)
+                        .addGap(36, 36, 36)
+                        .addComponent(jButton3))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addComponent(jLabel1)
                 .addContainerGap())
         );
 
+        jTabbedPane1.getAccessibleContext().setAccessibleDescription("tabla uno");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.jPanel1.setVisible(true);
+        this.jPanel2.setVisible(false);
+        this.jPanel3.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.jPanel2.setVisible(true);
+        this.jPanel1.setVisible(false);
+        this.jPanel3.setVisible(false);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        this.jPanel3.setVisible(true);
+        this.jPanel1.setVisible(false);
+        this.jPanel2.setVisible(false);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,37 +243,19 @@ public class Prueba extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.edisoncor.gui.button.ButtonTask botonActualizarTabla;
-    private javax.swing.JButton botonElegirFotoModificando;
-    private org.edisoncor.gui.button.ButtonTask botonLimpiarModifica;
-    private org.edisoncor.gui.button.ButtonTask botonModificarEmp;
-    private javax.swing.JRadioButton itemHombreElegidoEmp_Modicando;
-    private javax.swing.JRadioButton itemMujerElegidoEmp_Modicando;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private org.jdesktop.swingx.JXFormattedTextField jXFormattedTextField1;
-    private org.jdesktop.swingx.JXFormattedTextField jXFormattedTextField2;
-    private javax.swing.JLabel labelFotoEmp;
-    private org.edisoncor.gui.label.LabelTask labelTask1;
-    private javax.swing.JTextField txtApellidoEmp_Modicando;
-    private javax.swing.JTextField txtCelularEmp_Modicando;
-    private javax.swing.JTextField txtNombreEmp_Modicando;
-    private javax.swing.JTextField txtSalarioEmp_Modicando;
-    private javax.swing.JTextField txtTelefonoEmp_Modicando;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea jTextArea3;
     // End of variables declaration//GEN-END:variables
 }
