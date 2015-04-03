@@ -50,6 +50,8 @@ public class LoginDeInicio extends javax.swing.JFrame {
      */
     public LoginDeInicio() {
         initComponents();
+        this.BusyGif.setVisible(false);
+        txtUsuarioLogin.requestFocus();
     }
 
     private void inicioHilo() {

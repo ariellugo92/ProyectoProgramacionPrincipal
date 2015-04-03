@@ -8,13 +8,17 @@ package Interfaces;
 import Archivos.ArchivoDepartamentos;
 import Pojos.Cuentas;
 import Pojos.Departamentos;
+import UpperEssential.UpperEssentialLookAndFeel;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -24,13 +28,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private LoginDeInicio GifProgreso;
     String user = LoginDeInicio.getUsuario().trim();
+
     /**
      * Creates new form VentanaPrincipal
      */
     public VentanaPrincipal() {
         initComponents();
-        
-        this.setExtendedState(VentanaPrincipal.MAXIMIZED_BOTH); 
+
+        this.setExtendedState(VentanaPrincipal.MAXIMIZED_BOTH);
         LoginDeInicio login = new LoginDeInicio();
     }
 
@@ -45,14 +50,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setLocationRelativeTo(null);
     }
-    
-    private void setProgreso(){
-          GifProgreso.getJBusy();
+
+    private void setProgreso() {
+        GifProgreso.getJBusy();
         try {
             Thread.sleep(1500);
         } catch (InterruptedException ex) {
             JOptionPane.showMessageDialog(null, "HUBO UN ERROR AL EJECUTAR LA APLICACION");
         }
+    }
+    
+    public JMenu getMenuUser(){
+        return menuUsuario;
     }
 
     /**
@@ -65,15 +74,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        panelPrin = new jcMousePanel.jcMousePanel();
-        jPanel1 = new javax.swing.JPanel();
-        btonDptos = new javax.swing.JButton();
-        botonProductos = new javax.swing.JButton();
-        botonVentas = new javax.swing.JButton();
-        botonEmpleados = new javax.swing.JButton();
-        botonCompras = new javax.swing.JButton();
-        botonRRHH = new javax.swing.JButton();
+        jDesktopPane1 = new javax.swing.JDesktopPane();
+        wPanel1 = new suavena.WPanel();
         labelLogeo = new javax.swing.JLabel();
+        btonDptos = new javax.swing.JButton();
+        botonEmpleados = new javax.swing.JButton();
+        botonProductos = new javax.swing.JButton();
+        botonCompras = new javax.swing.JButton();
+        botonVentas = new javax.swing.JButton();
+        botonRRHH = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuUsuario = new javax.swing.JMenu();
         menuUser_Ver = new javax.swing.JMenuItem();
@@ -86,13 +95,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana Principal");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/Iconos/iconoPrin.png")).getImage());
-        setPreferredSize(null);
 
-        panelPrin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Fondos/fondoPrincipal.jpeg"))); // NOI18N
-        panelPrin.setVisibleLogo(false);
-        panelPrin.setLayout(new java.awt.GridBagLayout());
+        jDesktopPane1.setLayout(new java.awt.GridBagLayout());
 
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        wPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        wPanel1.add(labelLogeo, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 30, 290, 30));
 
         btonDptos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/1425016208_companies.png"))); // NOI18N
         btonDptos.setText(" Gestionar departamentos");
@@ -104,27 +111,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 btonDptosActionPerformed(evt);
             }
         });
-        jPanel1.add(btonDptos, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 250, 80));
-
-        botonProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/productos.png"))); // NOI18N
-        botonProductos.setText(" Gestionar productos");
-        botonProductos.setBorder(null);
-        botonProductos.setBorderPainted(false);
-        botonProductos.setPreferredSize(new java.awt.Dimension(170, 70));
-        botonProductos.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/productos_precionado.png"))); // NOI18N
-        botonProductos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonProductosActionPerformed(evt);
-            }
-        });
-        jPanel1.add(botonProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 250, 80));
-
-        botonVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/ventas.png"))); // NOI18N
-        botonVentas.setText(" Gestionar Ventas");
-        botonVentas.setBorder(null);
-        botonVentas.setPreferredSize(new java.awt.Dimension(170, 70));
-        botonVentas.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/ventas_precionado.png"))); // NOI18N
-        jPanel1.add(botonVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 280, 250, 80));
+        wPanel1.add(btonDptos, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 250, 80));
 
         botonEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/empleados.png"))); // NOI18N
         botonEmpleados.setText(" Gestionar empleados");
@@ -137,41 +124,63 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 botonEmpleadosActionPerformed(evt);
             }
         });
-        jPanel1.add(botonEmpleados, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 250, 80));
+        wPanel1.add(botonEmpleados, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 80, 250, 80));
+
+        botonProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/productos.png"))); // NOI18N
+        botonProductos.setText(" Gestionar productos");
+        botonProductos.setBorder(null);
+        botonProductos.setBorderPainted(false);
+        botonProductos.setPreferredSize(new java.awt.Dimension(170, 70));
+        botonProductos.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/productos_precionado.png"))); // NOI18N
+        botonProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonProductosActionPerformed(evt);
+            }
+        });
+        wPanel1.add(botonProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, 250, 80));
 
         botonCompras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/agregar cmpras.png"))); // NOI18N
         botonCompras.setText("Gestionar Compras");
         botonCompras.setBorder(null);
         botonCompras.setPreferredSize(new java.awt.Dimension(170, 70));
         botonCompras.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/agregar cmpras_precionado.png"))); // NOI18N
-        jPanel1.add(botonCompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 170, 250, 80));
+        wPanel1.add(botonCompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 180, 250, 80));
+
+        botonVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/ventas.png"))); // NOI18N
+        botonVentas.setText(" Gestionar Ventas");
+        botonVentas.setBorder(null);
+        botonVentas.setPreferredSize(new java.awt.Dimension(170, 70));
+        botonVentas.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/ventas_precionado.png"))); // NOI18N
+        wPanel1.add(botonVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 290, 250, 80));
 
         botonRRHH.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/rrhh.png"))); // NOI18N
         botonRRHH.setText("Recursos humanos");
         botonRRHH.setBorder(null);
         botonRRHH.setPreferredSize(new java.awt.Dimension(170, 70));
         botonRRHH.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/rrhh_precionado.png"))); // NOI18N
-        jPanel1.add(botonRRHH, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 280, 250, 80));
-
-        labelLogeo.setText("jLabel1");
-        jPanel1.add(labelLogeo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 20, 290, 30));
+        wPanel1.add(botonRRHH, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 290, 250, 80));
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.ipadx = 70;
         gridBagConstraints.ipady = 30;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(100, 220, 3, 205);
-        panelPrin.add(jPanel1, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(50, 200, 33, 165);
+        jDesktopPane1.add(wPanel1, gridBagConstraints);
 
-        getContentPane().add(panelPrin, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jDesktopPane1, java.awt.BorderLayout.CENTER);
 
         menuUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/userMenu.png"))); // NOI18N
         menuUsuario.setText("Usuarios");
         menuUsuario.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
 
         menuUser_Ver.setText("Ver usuarios");
+        menuUser_Ver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuUser_VerActionPerformed(evt);
+            }
+        });
         menuUsuario.add(menuUser_Ver);
         menuUsuario.add(jSeparator1);
 
@@ -201,21 +210,27 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         try {
             ArchivoDepartamentos ddao = new ArchivoDepartamentos();
             List<Departamentos> dpto = ddao.encontrar();
-            
+
+            if (LoginDeInicio.getTipos().equals("Administrador")) {
+             
             if (dpto.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Primero introduzca departmaentos para ubicar a sus empleados");
                 return;
             }
-            
+
             GestionarEmpleados dialog = new GestionarEmpleados(new javax.swing.JFrame(), true);
             dialog.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(this, "Lo sentimos necesita permisos de administrador para acceder "
+                    + "a esta opcion", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonEmpleadosActionPerformed
 
     private void botonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonProductosActionPerformed
-        GestionarProductos dialog = new GestionarProductos(new javax.swing.JFrame(), true);
+        Productos dialog = new Productos(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
     }//GEN-LAST:event_botonProductosActionPerformed
 
@@ -223,11 +238,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         GestionarDptos dialog = new GestionarDptos(new javax.swing.JFrame(), true);
         if (LoginDeInicio.getTipos().equals("Administrador")) {
             dialog.setVisible(true);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "Lo sentimos necesita permisos de administrador para acceder "
                     + "a esta opcion", "Aviso", JOptionPane.INFORMATION_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btonDptosActionPerformed
 
     private void menuUser_CerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUser_CerrarActionPerformed
@@ -235,15 +250,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_menuUser_CerrarActionPerformed
 
+    private void menuUser_VerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUser_VerActionPerformed
+        verUsuarios verUser = new verUsuarios();
+        jDesktopPane1.add(verUser);
+        verUser.setVisible(true);
+    }//GEN-LAST:event_menuUser_VerActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+      
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -252,15 +269,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSplash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSplash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSplash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSplash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -277,9 +293,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton botonRRHH;
     private javax.swing.JButton botonVentas;
     private javax.swing.JButton btonDptos;
+    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JLabel labelLogeo;
@@ -287,6 +303,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuUser_Editar;
     private javax.swing.JMenuItem menuUser_Ver;
     private javax.swing.JMenu menuUsuario;
-    private jcMousePanel.jcMousePanel panelPrin;
+    private suavena.WPanel wPanel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -63,4 +63,15 @@ public class Validador {
             return false;
         }
     }
+
+    public void primerLetra(final JTextField a) {
+        a.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                String texto = a.getText();
+                if (texto.length() > 0) {
+                    String resultado = Character.toUpperCase(texto.charAt(0)) + texto.substring(1);
+                }
+            }
+        });
+    }
 }

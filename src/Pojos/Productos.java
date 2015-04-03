@@ -7,7 +7,7 @@ package Pojos;
 public class Productos {
     private int id;
     private String nombre;
-    private String categoriaProductos;
+    private CategoriaProd categoriaProd;
     private String marca;
     private double cantidad;
     private String unidadMedida;
@@ -31,14 +31,14 @@ public class Productos {
         this.nombre = nombre;
     }
 
-    public String getCategoriaProductos() {
-        return categoriaProductos;
+    public CategoriaProd getCategoriaProd() {
+        return categoriaProd;
     }
 
-    public void setCategoriaProductos(String categoriaProductos) {
-        this.categoriaProductos = categoriaProductos;
+    public void setCategoriaProd(CategoriaProd categoriaProd) {
+        this.categoriaProd = categoriaProd;
     }
-
+    
     public String getMarca() {
         return marca;
     }

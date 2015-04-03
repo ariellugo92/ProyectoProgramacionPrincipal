@@ -11,6 +11,7 @@ import Pojos.CopiarImagenes;
 import Pojos.Departamentos;
 import Pojos.Empleados;
 import Pojos.ExportarExcel;
+import UpperEssential.UpperEssentialLookAndFeel;
 import Validaciones.Validador;
 import Validaciones.limitarCaracter;
 import java.awt.Image;
@@ -27,6 +28,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -125,6 +128,8 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         txtCelularEmp.setDocument(new limitarCaracter(txtCelularEmp, 8));
         txtCelularEmp_Modicando.setDocument(new limitarCaracter(txtCelularEmp_Modicando, 8));
         txtTelefonoEmp_Modicando.setDocument(new limitarCaracter(txtTelefonoEmp_Modicando, 8));
+        //---------------------------------------
+//        v.primerLetra(txtNombreEmp);
     }
 
     public void limpiarAgrega() {
@@ -761,6 +766,13 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private void TablaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaEmpleadosMouseClicked
 
         try {
+            
+            if (this.TablaEmpleados.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Esta tabla no contiene ningun empleado",
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
             ArchivoEmpleados edao = new ArchivoEmpleados();
             List<Empleados> emp = edao.encontrar();
 
@@ -911,11 +923,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -924,16 +932,14 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GestionarEmpleados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSplash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GestionarEmpleados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSplash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GestionarEmpleados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSplash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GestionarEmpleados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSplash.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

@@ -1,5 +1,6 @@
 package Archivos;
 
+import Pojos.CategoriaProd;
 import Pojos.Productos;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -15,9 +16,11 @@ public class ArchivoProductos {
     
     private final RandomAccessFile raf;
     private static final int LENGTH = 1024;
+    private final ArchivoCategoriaProd cpdao;
     
     public ArchivoProductos() throws IOException{
         raf = RandomConector.buildRandom("productos.dat").getRandomAccessFile();
+        cpdao = new ArchivoCategoriaProd();
     }
     
     public void guardar(Productos p) throws IOException{
@@ -28,7 +31,7 @@ public class ArchivoProductos {
         raf.seek(pos);
         raf.writeInt(n + 1);
         raf.writeUTF(limitString(p.getNombre(),20));
-        raf.writeUTF(limitString(p.getCategoriaProductos(), 30));
+        raf.writeInt(p.getCategoriaProd().getId());
         raf.writeUTF(limitString(p.getMarca(), 20));
         raf.writeDouble(p.getCantidad());
         raf.writeUTF(p.getUnidadMedida());
@@ -59,7 +62,8 @@ public class ArchivoProductos {
             raf.seek(pos);
             p.setId(raf.readInt());
             p.setNombre(raf.readUTF());
-            p.setCategoriaProductos(raf.readUTF());
+            CategoriaProd cp = cpdao.buscarId(raf.readInt());
+            p.setCategoriaProd(cp);
             p.setMarca(raf.readUTF());
             p.setCantidad(raf.readDouble());
             p.setUnidadMedida(raf.readUTF());
@@ -77,7 +81,7 @@ public class ArchivoProductos {
         raf.seek(pos);
         raf.writeInt(p.getId());
         raf.writeUTF(limitString(p.getNombre(),20));
-        raf.writeUTF(limitString(p.getCategoriaProductos(), 30));
+        raf.writeInt(p.getCategoriaProd().getId());
         raf.writeUTF(limitString(p.getMarca(), 20));
         raf.writeDouble(p.getCantidad());
         raf.writeUTF(p.getUnidadMedida());
@@ -108,7 +112,8 @@ public class ArchivoProductos {
         raf.seek(pos);
         p.setId(raf.readInt());
         p.setNombre(raf.readUTF());
-        p.setCategoriaProductos(raf.readUTF());
+        CategoriaProd cp = cpdao.buscarId(raf.readInt());
+        p.setCategoriaProd(cp);
         p.setMarca(raf.readUTF());
         p.setCantidad(raf.readDouble());
         p.setUnidadMedida(raf.readUTF());

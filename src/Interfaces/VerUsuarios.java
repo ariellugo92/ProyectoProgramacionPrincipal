@@ -9,12 +9,12 @@ package Interfaces;
  *
  * @author IaraDenisse
  */
-public class VerUsuarios extends javax.swing.JInternalFrame {
+public class verUsuarios extends javax.swing.JInternalFrame {
 
     /**
-     * Creates new form VerUsuarios
+     * Creates new form verUsuarios
      */
-    public VerUsuarios() {
+    public verUsuarios() {
         initComponents();
     }
 
@@ -31,11 +31,11 @@ public class VerUsuarios extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGap(0, 394, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
+            .addGap(0, 274, Short.MAX_VALUE)
         );
 
         pack();
