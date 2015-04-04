@@ -1,9 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Interfaces;
+
+import Archivos.ArchivoCategoriaProd;
+import Archivos.ArchivoEmpleados;
+import Archivos.ArchivoProductos;
+import Archivos.ArchivoProveedores;
+import Pojos.CategoriaProd;
+import Pojos.Empleados;
+import Pojos.Productos;
+import Pojos.Proveedores;
+import java.awt.event.ItemEvent;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -11,12 +22,76 @@ package Interfaces;
  */
 public class GestionarCompras extends javax.swing.JDialog {
 
-    /**
-     * Creates new form GestionarCompras
-     */
+    public void cargarCategorias(JComboBox jcombo) {
+        try {
+            ArchivoCategoriaProd cpdao = new ArchivoCategoriaProd();
+            List<CategoriaProd> catgProd = cpdao.encontrar();
+            for (CategoriaProd cp : catgProd) {
+                jcombo.addItem(cp.getNombre().trim());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarCompras.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public String[] getCategorias(String categoria) {
+        String[] pro = null;
+        try {
+            ArchivoProductos pdao = new ArchivoProductos();
+            List<Productos> prod = pdao.encontrar();
+
+            pro = new String[prod.size()];
+            int j = 0;
+
+            for (Productos p : prod) {
+
+                String catg = p.getCategoriaProd().getNombre().trim();
+                if (categoria.equals(catg)) {
+                    String products = p.getNombre().trim();
+
+                    pro[j] = products;
+                    j++;
+                }
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarCompras.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pro;
+    }
+
+    public void cargarProveedores(JComboBox jcombo) {
+        try {
+            ArchivoProveedores pdao = new ArchivoProveedores();
+            List<Proveedores> prov = pdao.encontrar();
+            for (Proveedores p : prov) {
+                jcombo.addItem(p.getRazon_social().trim());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarCompras.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void cargarEmp(JComboBox jcombo){
+        try {
+            ArchivoEmpleados edao = new ArchivoEmpleados();
+            List<Empleados> emp = edao.encontrar();
+            for (Empleados e : emp) {
+                if (e.getDepartamentos().getNombre().trim().equals("compras")) {
+                    jcombo.addItem(e.getNombre().trim());
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarCompras.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public GestionarCompras(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        cargarCategorias(comboCategoriasProd);
+        cargarProveedores(comboProveedores);
+        cargarEmp(comboEmpleados);
     }
 
     /**
@@ -28,42 +103,146 @@ public class GestionarCompras extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        RadioTIpoDeCompra = new javax.swing.ButtonGroup();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jcMousePanel1 = new jcMousePanel.jcMousePanel();
         jPanel1 = new javax.swing.JPanel();
+        buttonTask1 = new org.edisoncor.gui.button.ButtonTask();
+        jPanel5 = new javax.swing.JPanel();
+        comboCategoriasProd = new javax.swing.JComboBox();
+        comboProductos = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        labelUnidad = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jTextField5 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jTextField6 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        buttonTask3 = new org.edisoncor.gui.button.ButtonTask();
         jPanel2 = new javax.swing.JPanel();
+        comboProveedores = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        comboEmpleados = new javax.swing.JComboBox();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        botonRegresarProducto = new org.edisoncor.gui.button.ButtonTask();
+        botonExportar_a_ExcelProduct = new org.edisoncor.gui.button.ButtonTask();
+        botonReporteProductos = new org.edisoncor.gui.button.ButtonTask();
+        jcMousePanel2 = new jcMousePanel.jcMousePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jcMousePanel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Fondos/fondoPrincipal.jpeg"))); // NOI18N
         jcMousePanel1.setVisibleLogo(false);
+        jcMousePanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del producto"));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 494, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 287, Short.MAX_VALUE)
-        );
+        buttonTask1.setText("Limpiar");
+        buttonTask1.setDescription("Ventana");
+        jPanel1.add(buttonTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 260, 176, -1));
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Agregue los datos de la compra"));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        comboCategoriasProd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--- Categoria del producto ---" }));
+        comboCategoriasProd.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboCategoriasProdItemStateChanged(evt);
+            }
+        });
+        jPanel5.add(comboCategoriasProd, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 180, 25));
+
+        comboProductos.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione el producto" }));
+        comboProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                comboProductosMouseClicked(evt);
+            }
+        });
+        jPanel5.add(comboProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 30, 180, 25));
+
+        jLabel6.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("Cantidad");
+        jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 100, 25));
+        jPanel5.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 75, 25));
+        jPanel5.add(labelUnidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 80, 65, 25));
+
+        jLabel8.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("Precio   C$");
+        jPanel5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, 100, 25));
+        jPanel5.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 75, 25));
+
+        jLabel9.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Monto de la factura");
+        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 108, 25));
+        jPanel5.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 75, 25));
+
+        jLabel10.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("Tipo de compra");
+        jPanel5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 100, 25));
+
+        RadioTIpoDeCompra.add(jRadioButton3);
+        jRadioButton3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButton3.setText("Credito");
+        jPanel5.add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 75, 25));
+
+        RadioTIpoDeCompra.add(jRadioButton4);
+        jRadioButton4.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButton4.setText("Contado");
+        jPanel5.add(jRadioButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 180, 75, 25));
+
+        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 420, 220));
+
+        buttonTask3.setText("Agregar");
+        buttonTask3.setDescription("a la factura");
+        jPanel1.add(buttonTask3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, 176, -1));
+
+        jcMousePanel1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 450, 330));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del proveedor"));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 276, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        comboProveedores.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Proveedor" }));
+        jPanel2.add(comboProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(47, 40, 230, 25));
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Factura");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 100, 25));
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Numero Ruc");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 100, 25));
+        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, 150, 25));
+
+        jTextField2.setEditable(false);
+        jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 90, 150, 25));
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Empleado que realizo la compra"));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        comboEmpleados.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione al empleado" }));
+        jPanel4.add(comboEmpleados, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 220, -1));
+
+        jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 310, 80));
+
+        jButton1.setText("Si es un nuevo proveedor, por favor presione aqui");
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 290, -1));
+
+        jcMousePanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(473, 12, 330, 330));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalle de la compra"));
 
@@ -71,43 +250,93 @@ public class GestionarCompras extends javax.swing.JDialog {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 781, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 219, Short.MAX_VALUE)
+            .addGap(0, 208, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout jcMousePanel1Layout = new javax.swing.GroupLayout(jcMousePanel1);
-        jcMousePanel1.setLayout(jcMousePanel1Layout);
-        jcMousePanel1Layout.setHorizontalGroup(
-            jcMousePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jcMousePanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jcMousePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jcMousePanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+        jcMousePanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 348, 791, 230));
+
+        botonRegresarProducto.setForeground(new java.awt.Color(255, 255, 255));
+        botonRegresarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/regresar.png"))); // NOI18N
+        botonRegresarProducto.setText("Regresar");
+        botonRegresarProducto.setDescription(" ");
+        botonRegresarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegresarProductoActionPerformed(evt);
+            }
+        });
+        jcMousePanel1.add(botonRegresarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 590, 200, -1));
+
+        botonExportar_a_ExcelProduct.setForeground(new java.awt.Color(255, 255, 255));
+        botonExportar_a_ExcelProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/excel.png"))); // NOI18N
+        botonExportar_a_ExcelProduct.setText("Exportar");
+        botonExportar_a_ExcelProduct.setDescription("a Miscrosoft Excel");
+        jcMousePanel1.add(botonExportar_a_ExcelProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 590, 200, -1));
+
+        botonReporteProductos.setForeground(new java.awt.Color(255, 255, 255));
+        botonReporteProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
+        botonReporteProductos.setText("Reporte");
+        botonReporteProductos.setDescription("de productos");
+        jcMousePanel1.add(botonReporteProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 590, 200, -1));
+
+        jTabbedPane1.addTab("tab1", jcMousePanel1);
+
+        javax.swing.GroupLayout jcMousePanel2Layout = new javax.swing.GroupLayout(jcMousePanel2);
+        jcMousePanel2.setLayout(jcMousePanel2Layout);
+        jcMousePanel2Layout.setHorizontalGroup(
+            jcMousePanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 815, Short.MAX_VALUE)
         );
-        jcMousePanel1Layout.setVerticalGroup(
-            jcMousePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jcMousePanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jcMousePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+        jcMousePanel2Layout.setVerticalGroup(
+            jcMousePanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 663, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 580));
+        jTabbedPane1.addTab("tab2", jcMousePanel2);
 
-        pack();
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 690));
+
+        setSize(new java.awt.Dimension(835, 729));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void comboCategoriasProdItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboCategoriasProdItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            if (this.comboCategoriasProd.getSelectedIndex() > 0) {
+                this.comboProductos.setModel(new DefaultComboBoxModel(getCategorias(this.comboCategoriasProd.getSelectedItem().toString())));
+            }
+        }
+    }//GEN-LAST:event_comboCategoriasProdItemStateChanged
+
+    private void comboProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboProductosMouseClicked
+        try {
+                ArchivoProductos pdao = new ArchivoProductos();
+                List<Productos> prod = pdao.encontrar();
+
+                String product = this.comboProductos.getSelectedItem().toString();
+                for (Productos p : prod) {
+                    String prodt = p.getNombre().trim();
+                    if (product.equals(prodt)) {
+                        if (p.getUnidadMedida().equals("unidad")) {
+                            this.labelUnidad.setText(p.getUnidadMedida().trim() + "es");
+                        } else if (p.getUnidadMedida().equals("libras")) {
+                            this.labelUnidad.setText(p.getUnidadMedida().trim());
+                        }
+                    }
+                }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarCompras.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_comboProductosMouseClicked
+
+    private void botonRegresarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarProductoActionPerformed
+        this.dispose();
+        Interfaces.ProductosDialog dialog = new Interfaces.ProductosDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_botonRegresarProductoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -152,9 +381,38 @@ public class GestionarCompras extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup RadioTIpoDeCompra;
+    private org.edisoncor.gui.button.ButtonTask botonExportar_a_ExcelProduct;
+    private org.edisoncor.gui.button.ButtonTask botonRegresarProducto;
+    private org.edisoncor.gui.button.ButtonTask botonReporteProductos;
+    private org.edisoncor.gui.button.ButtonTask buttonTask1;
+    private org.edisoncor.gui.button.ButtonTask buttonTask3;
+    private javax.swing.JComboBox comboCategoriasProd;
+    private javax.swing.JComboBox comboEmpleados;
+    private javax.swing.JComboBox comboProductos;
+    private javax.swing.JComboBox comboProveedores;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
     private jcMousePanel.jcMousePanel jcMousePanel1;
+    private jcMousePanel.jcMousePanel jcMousePanel2;
+    private javax.swing.JLabel labelUnidad;
     // End of variables declaration//GEN-END:variables
 }

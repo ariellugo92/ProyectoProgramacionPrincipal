@@ -230,7 +230,7 @@ public class CategoriaProductos extends javax.swing.JFrame {
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose();
-        Productos dialog = new Productos(new javax.swing.JFrame(), true);
+        ProductosDialog dialog = new ProductosDialog(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
     }//GEN-LAST:event_btnRegresarActionPerformed
 

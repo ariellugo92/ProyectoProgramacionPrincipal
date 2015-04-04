@@ -71,7 +71,6 @@ public class GestionarProductos extends javax.swing.JDialog {
         } catch (IOException ex) {
             Logger.getLogger(GestionarProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     public void agregarProductos() throws IOException {
@@ -480,7 +479,7 @@ public class GestionarProductos extends javax.swing.JDialog {
 
     private void botonRegresarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarProductoActionPerformed
         this.dispose();
-        Interfaces.Productos dialog = new Interfaces.Productos(new javax.swing.JFrame(), true);
+        Interfaces.ProductosDialog dialog = new Interfaces.ProductosDialog(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
     }//GEN-LAST:event_botonRegresarProductoActionPerformed
 

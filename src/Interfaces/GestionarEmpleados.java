@@ -170,8 +170,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         Empleados e = new Empleados();
         Validador v = new Validador();
 
-        JOptionPane.showMessageDialog(this, "Paso 1");
-
         e.setNombre(txtNombreEmp.getText());
         e.setApellido(txtApellidoEmp.getText());
         e.setCedula(txtCedulaEmp.getText());

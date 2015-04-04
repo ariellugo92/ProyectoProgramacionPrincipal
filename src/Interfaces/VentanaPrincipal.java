@@ -6,8 +6,10 @@
 package Interfaces;
 
 import Archivos.ArchivoDepartamentos;
+import Archivos.ArchivoEmpleados;
 import Pojos.Cuentas;
 import Pojos.Departamentos;
+import Pojos.Empleados;
 import UpperEssential.UpperEssentialLookAndFeel;
 import java.io.IOException;
 import java.util.List;
@@ -144,6 +146,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         botonCompras.setBorder(null);
         botonCompras.setPreferredSize(new java.awt.Dimension(170, 70));
         botonCompras.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/agregar cmpras_precionado.png"))); // NOI18N
+        botonCompras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonComprasActionPerformed(evt);
+            }
+        });
         wPanel1.add(botonCompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 180, 250, 80));
 
         botonVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/ventas.png"))); // NOI18N
@@ -230,7 +237,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEmpleadosActionPerformed
 
     private void botonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonProductosActionPerformed
-        Productos dialog = new Productos(new javax.swing.JFrame(), true);
+        ProductosDialog dialog = new ProductosDialog(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
     }//GEN-LAST:event_botonProductosActionPerformed
 
@@ -255,6 +262,31 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jDesktopPane1.add(verUser);
         verUser.setVisible(true);
     }//GEN-LAST:event_menuUser_VerActionPerformed
+
+    private void botonComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonComprasActionPerformed
+        try {
+            ArchivoEmpleados edao = new ArchivoEmpleados();
+            List<Empleados> emp = edao.encontrar();
+            
+            boolean flag = false;
+            for (Empleados e : emp) {
+                if (e.getDepartamentos().getNombre().trim().equals("compras")) {
+                    GestionarCompras dialog = new GestionarCompras(new javax.swing.JFrame(), true);
+                    dialog.setVisible(true);
+                    flag = false;
+                }else{
+                    flag = true;
+                }
+            }
+            
+            if (flag) {
+                JOptionPane.showMessageDialog(this, "No hay empleados en el departamento de compras,"
+                            + " por favor agregue uno o comuniquese con un administrador");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botonComprasActionPerformed
 
     /**
      * @param args the command line arguments
