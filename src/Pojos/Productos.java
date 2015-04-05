@@ -9,6 +9,7 @@ public class Productos {
     private String nombre;
     private CategoriaProd categoriaProd;
     private String marca;
+    private double precio;
     private double cantidad;
     private String unidadMedida;
 
@@ -45,6 +46,14 @@ public class Productos {
 
     public void setMarca(String marca) {
         this.marca = marca;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 
     public double getCantidad() {

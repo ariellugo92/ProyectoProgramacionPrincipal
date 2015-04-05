@@ -30,7 +30,7 @@ public class GestionarProductos extends javax.swing.JDialog {
     DefaultTableModel modelo;
 
     public void tabla() {
-        String[] cabecera = {"ID", "Nombre", "Categoria", "Cantidad", "Marca", "Medida"};
+        String[] cabecera = {"ID", "Nombre", "Categoria", "Cantidad", "Precio", "Marca", "Medida"};
         String datos[][] = {};
         modelo = new DefaultTableModel(datos, cabecera);
         TablaProductos.setModel(modelo);
@@ -89,6 +89,7 @@ public class GestionarProductos extends javax.swing.JDialog {
         }
         p.setCategoriaProd(cp);
         p.setMarca(txtMarcaProduct.getText());
+        p.setPrecio(0.0);
         p.setCantidad(0.00);
         p.setUnidadMedida(txtUnidadMedidaProduct.getText());
 
@@ -109,11 +110,12 @@ public class GestionarProductos extends javax.swing.JDialog {
             int id = pp.getId();
             String nombre = pp.getNombre().trim();
             String categ = pp.getCategoriaProd().getNombre().trim();
+            Double precio = pp.getPrecio();
             String marca = pp.getMarca().trim();
             double cant = pp.getCantidad();
             String unidMed = pp.getUnidadMedida();
 
-            Object datos[] = {id, nombre, categ, cant, marca, unidMed};
+            Object datos[] = {id, nombre, categ, cant, precio, marca, unidMed};
             modelo.addRow(datos);
         }
     }
@@ -168,6 +170,7 @@ public class GestionarProductos extends javax.swing.JDialog {
                     }
                     p.setCategoriaProd(cp);
                     p.setMarca(txtMarcaProduct_Modificar.getText());
+                    p.setPrecio(p.getPrecio());
                     p.setCantidad(p.getCantidad());
                     p.setUnidadMedida(txtUnidadMedidaProduct_Modificar.getText());
 
@@ -201,6 +204,7 @@ public class GestionarProductos extends javax.swing.JDialog {
                 limpiarTabla();
                 agregarTabla(cargar);
                 flag = false;
+                break;
             }else{
                 flag = true;
             }
@@ -262,6 +266,7 @@ public class GestionarProductos extends javax.swing.JDialog {
         btnRestaurarTabla = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gestionar Productos");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jcMousePanel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Fondos/fondoPrincipal.jpeg"))); // NOI18N
@@ -479,7 +484,7 @@ public class GestionarProductos extends javax.swing.JDialog {
 
     private void botonRegresarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarProductoActionPerformed
         this.dispose();
-        Interfaces.ProductosDialog dialog = new Interfaces.ProductosDialog(new javax.swing.JFrame(), true);
+        OpcionesDeProductos dialog = new OpcionesDeProductos(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
     }//GEN-LAST:event_botonRegresarProductoActionPerformed
 

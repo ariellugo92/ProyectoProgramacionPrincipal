@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +46,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     String foto = iconOriginal.toString();
     Path p = Paths.get(foto);
     Path p2 = Paths.get(foto);
-    
+
     DefaultTableModel modelo;
     private FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivo de imagen", "jpg");
     String ruta;
@@ -140,7 +142,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         txtTelefonoEmp.setText("");
         txtCelularEmp.setText("");
         txtSalarioEmp.setText("");
-        txtFechaIngresoEmp.setText("");
         comboListaDptos.setSelectedIndex(0);
         txtNombreEmp.requestFocus();
         sexoItem.clearSelection();
@@ -157,7 +158,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         txtCelularEmp_Modicando.setText("");
         comboDptoModifica.setSelectedIndex(0);
         txtSalarioEmp_Modicando.setText("");
-        txtFechaEmp_Modifica.setText("");
         ImageIcon iconOriginal = new ImageIcon("src/Imagenes/Iconos/fotoEmp.png");
         labelFotoEmp1.setIcon(iconOriginal);
     }
@@ -190,7 +190,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
             e.setCelular(txtCelularEmp.getText());
         }
         e.setSalario(Double.parseDouble(txtSalarioEmp.getText()));
-        
+
         Departamentos d = ddao.buscarNombre(this.comboListaDptos.getSelectedItem().toString().trim());
         if (comboListaDptos.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "Lo sentimos ese no es un departamento");
@@ -204,7 +204,19 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         } else if (itemMujerElegidoEmp.isSelected()) {
             e.setSexo(itemMujerElegidoEmp.getLabel());
         }
-        e.setFecha(txtFechaIngresoEmp.getText());
+        //----------------------------------------------------
+        if (txtFechaIngresoEmp.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fecha", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Date fecha = txtFechaIngresoEmp.getDate();
+        DateFormat df = DateFormat.getDateInstance();
+        String s = df.format(fecha);
+        //-------------------------------------------------------
+
+        e.setFecha(s);
 
         c.copy(p, txtCedulaEmp.getText());
 
@@ -320,7 +332,19 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                 } else if (itemMujerElegidoEmp_Modicando.isSelected()) {
                     e.setSexo(itemMujerElegidoEmp_Modicando.getLabel());
                 }
-                e.setFecha(txtFechaEmp_Modifica.getText());
+                //-----------------------------------------------
+                if (txtFechaEmp_Modifica.getDate() == null) {
+                    JOptionPane.showMessageDialog(this, "Seleccione una fecha", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Date fecha = txtFechaEmp_Modifica.getDate();
+                DateFormat df = DateFormat.getDateInstance();
+                String sModifica = df.format(fecha);
+                //-----------------------------------------------
+                
+                e.setFecha(sModifica);
 
                 c.copy(p2, txtCedulaEmp_Modifica.getText());
                 edao.modificar(e);
@@ -371,9 +395,9 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         txtSalarioEmp = new javax.swing.JTextField();
-        txtFechaIngresoEmp = new org.jdesktop.swingx.JXFormattedTextField();
         botonLimpiarAgrega = new org.edisoncor.gui.button.ButtonTask();
         labelInform = new javax.swing.JLabel();
+        txtFechaIngresoEmp = new com.toedter.calendar.JDateChooser();
         jPanel5 = new javax.swing.JPanel();
         labelFotoEmp = new javax.swing.JLabel();
         botonTomarFotoEmp = new javax.swing.JButton();
@@ -408,11 +432,12 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         txtSalarioEmp_Modicando = new javax.swing.JTextField();
-        txtFechaEmp_Modifica = new org.jdesktop.swingx.JXFormattedTextField();
         comboDptoModifica = new javax.swing.JComboBox();
         botonLimpiarModifica = new org.edisoncor.gui.button.ButtonTask();
+        txtFechaEmp_Modifica = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gestionar Empleados");
         setMinimumSize(new java.awt.Dimension(810, 700));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -428,7 +453,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(TablaEmpleados);
 
-        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 790, 210));
+        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 790, 210));
 
         botonReporte.setForeground(new java.awt.Color(255, 255, 255));
         botonReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
@@ -546,14 +571,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         txtSalarioEmp.setToolTipText("Ingrese el salario en moneda nacional");
         jPanel4.add(txtSalarioEmp, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 200, 25));
 
-        txtFechaIngresoEmp.setToolTipText("");
-        try {
-            txtFechaIngresoEmp.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        jPanel4.add(txtFechaIngresoEmp, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 200, 25));
-
         botonLimpiarAgrega.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
         botonLimpiarAgrega.setText("Limpiar");
         botonLimpiarAgrega.setDescription("Ventanas");
@@ -568,6 +585,9 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         labelInform.setForeground(new java.awt.Color(204, 0, 0));
         labelInform.setText("Dato incorrecto");
         jPanel4.add(labelInform, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 100, 120, 20));
+
+        txtFechaIngresoEmp.setDateFormatString("dd-MM-yyyy");
+        jPanel4.add(txtFechaIngresoEmp, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 200, 25));
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 520, 150));
 
@@ -729,9 +749,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         txtSalarioEmp_Modicando.setToolTipText("Ingrese el salario en moneda nacional");
         jPanel9.add(txtSalarioEmp_Modicando, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 200, 25));
 
-        txtFechaEmp_Modifica.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
-        jPanel9.add(txtFechaEmp_Modifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 200, 25));
-
         comboDptoModifica.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-- Departamentos --" }));
         jPanel9.add(comboDptoModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 200, 25));
 
@@ -745,11 +762,14 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         });
         jPanel9.add(botonLimpiarModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 50, 140, -1));
 
+        txtFechaEmp_Modifica.setDateFormatString("dd-MM-yyyy");
+        jPanel9.add(txtFechaEmp_Modifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 200, 25));
+
         jPanel6.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 520, 150));
 
         jScrollPane2.setViewportView(jPanel6);
 
-        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 350));
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 340));
 
         jTabbedPane1.addTab("Modificar Empleados", jPanel2);
 
@@ -764,13 +784,13 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private void TablaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaEmpleadosMouseClicked
 
         try {
-            
+
             if (this.TablaEmpleados.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(this, "Esta tabla no contiene ningun empleado",
-                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            
+
             ArchivoEmpleados edao = new ArchivoEmpleados();
             List<Empleados> emp = edao.encontrar();
 
@@ -793,7 +813,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                         itemMujerElegidoEmp_Modicando.getSelectedIcon();
                     }
                     txtSalarioEmp_Modicando.setText(Double.toString(e.getSalario()));
-                    txtFechaEmp_Modifica.setText(e.getFecha());
                     mostrarFotoEmp();
                     botonModificarEmp.setVisible(true);
                     botonLimpiarModifica.setVisible(true);
@@ -847,6 +866,40 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
     private void botonAgregarEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarEmpActionPerformed
         try {
+            if (txtNombreEmp.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue un nombre al empleado");
+                txtNombreEmp.requestFocus();
+                return;
+            }
+            if (txtApellidoEmp.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue un apellido al empleado");
+                txtApellidoEmp.requestFocus();
+                return;
+            }
+            if (txtCedulaEmp.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue la cedula del empleado");
+                txtCedulaEmp.requestFocus();
+                return;
+            }
+            if (txtTelefonoEmp.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue el telefono al empleado");
+                txtTelefonoEmp.requestFocus();
+                return;
+            }
+            if (txtCelularEmp.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue el celular al empleado");
+                txtCelularEmp.requestFocus();
+                return;
+            }
+            if (!itemHombreElegidoEmp.isSelected() && !itemMujerElegidoEmp.isSelected()) {
+                JOptionPane.showMessageDialog(this, "Seleccione el sexo del empleado");
+                return;
+            }
+            if (txtSalarioEmp.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue el salario del ampleado");
+                txtSalarioEmp.requestFocus();
+                return;
+            }
             agregarEmpleados();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Error " + ex);
@@ -883,6 +936,40 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
     private void botonModificarEmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonModificarEmpActionPerformed
         try {
+            if (txtNombreEmp_Modicando.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue un nombre al empleado");
+                txtNombreEmp_Modicando.requestFocus();
+                return;
+            }
+            if (txtApellidoEmp_Modicando.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue un apellido al empleado");
+                txtApellidoEmp_Modicando.requestFocus();
+                return;
+            }
+            if (txtCedulaEmp_Modifica.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue la cedula del empleado");
+                txtCedulaEmp_Modifica.requestFocus();
+                return;
+            }
+            if (txtTelefonoEmp_Modicando.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue el telefono al empleado");
+                txtTelefonoEmp_Modicando.requestFocus();
+                return;
+            }
+            if (txtCelularEmp_Modicando.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue el celular al empleado");
+                txtCelularEmp_Modicando.requestFocus();
+                return;
+            }
+            if (!itemHombreElegidoEmp_Modicando.isSelected() && !itemMujerElegidoEmp_Modicando.isSelected()) {
+                JOptionPane.showMessageDialog(this, "Seleccione el sexo del empleado");
+                return;
+            }
+            if (txtSalarioEmp_Modicando.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue el salario del ampleado");
+                txtSalarioEmp_Modicando.requestFocus();
+                return;
+            }
             modificarEmp();
             limpiarTabla();
             ArchivoEmpleados edao = new ArchivoEmpleados();
@@ -921,7 +1008,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -1016,8 +1103,8 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private org.jdesktop.swingx.JXFormattedTextField txtCedulaEmp_Modifica;
     private javax.swing.JTextField txtCelularEmp;
     private javax.swing.JTextField txtCelularEmp_Modicando;
-    private org.jdesktop.swingx.JXFormattedTextField txtFechaEmp_Modifica;
-    private org.jdesktop.swingx.JXFormattedTextField txtFechaIngresoEmp;
+    private com.toedter.calendar.JDateChooser txtFechaEmp_Modifica;
+    private com.toedter.calendar.JDateChooser txtFechaIngresoEmp;
     private javax.swing.JTextField txtNombreEmp;
     private javax.swing.JTextField txtNombreEmp_Modicando;
     private javax.swing.JTextField txtSalarioEmp;

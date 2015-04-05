@@ -158,6 +158,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         botonVentas.setBorder(null);
         botonVentas.setPreferredSize(new java.awt.Dimension(170, 70));
         botonVentas.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/ventas_precionado.png"))); // NOI18N
+        botonVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonVentasActionPerformed(evt);
+            }
+        });
         wPanel1.add(botonVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 290, 250, 80));
 
         botonRRHH.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/rrhh.png"))); // NOI18N
@@ -165,6 +170,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         botonRRHH.setBorder(null);
         botonRRHH.setPreferredSize(new java.awt.Dimension(170, 70));
         botonRRHH.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/rrhh_precionado.png"))); // NOI18N
+        botonRRHH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRRHHActionPerformed(evt);
+            }
+        });
         wPanel1.add(botonRRHH, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 290, 250, 80));
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -237,7 +247,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEmpleadosActionPerformed
 
     private void botonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonProductosActionPerformed
-        ProductosDialog dialog = new ProductosDialog(new javax.swing.JFrame(), true);
+        OpcionesDeProductos dialog = new OpcionesDeProductos(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
     }//GEN-LAST:event_botonProductosActionPerformed
 
@@ -274,6 +284,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     GestionarCompras dialog = new GestionarCompras(new javax.swing.JFrame(), true);
                     dialog.setVisible(true);
                     flag = false;
+                    break;
                 }else{
                     flag = true;
                 }
@@ -287,6 +298,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonComprasActionPerformed
+
+    private void botonVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVentasActionPerformed
+        JOptionPane.showMessageDialog(this, "Todavia no esta, esta opcion... Esperala muy pronto");
+    }//GEN-LAST:event_botonVentasActionPerformed
+
+    private void botonRRHHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRRHHActionPerformed
+        JOptionPane.showMessageDialog(this, "Todavia no esta, esta opcion... Esperala muy pronto");
+    }//GEN-LAST:event_botonRRHHActionPerformed
 
     /**
      * @param args the command line arguments

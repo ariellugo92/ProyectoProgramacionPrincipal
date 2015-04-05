@@ -33,6 +33,7 @@ public class ArchivoProductos {
         raf.writeUTF(limitString(p.getNombre(),20));
         raf.writeInt(p.getCategoriaProd().getId());
         raf.writeUTF(limitString(p.getMarca(), 20));
+        raf.writeDouble(p.getPrecio());
         raf.writeDouble(p.getCantidad());
         raf.writeUTF(p.getUnidadMedida());
         
@@ -65,6 +66,7 @@ public class ArchivoProductos {
             CategoriaProd cp = cpdao.buscarId(raf.readInt());
             p.setCategoriaProd(cp);
             p.setMarca(raf.readUTF());
+            p.setPrecio(raf.readDouble());
             p.setCantidad(raf.readDouble());
             p.setUnidadMedida(raf.readUTF());
             
@@ -83,6 +85,7 @@ public class ArchivoProductos {
         raf.writeUTF(limitString(p.getNombre(),20));
         raf.writeInt(p.getCategoriaProd().getId());
         raf.writeUTF(limitString(p.getMarca(), 20));
+        raf.writeDouble(p.getPrecio());
         raf.writeDouble(p.getCantidad());
         raf.writeUTF(p.getUnidadMedida());
     }
@@ -115,6 +118,7 @@ public class ArchivoProductos {
         CategoriaProd cp = cpdao.buscarId(raf.readInt());
         p.setCategoriaProd(cp);
         p.setMarca(raf.readUTF());
+        p.setPrecio(raf.readDouble());
         p.setCantidad(raf.readDouble());
         p.setUnidadMedida(raf.readUTF());
         

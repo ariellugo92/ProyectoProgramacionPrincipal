@@ -12,6 +12,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.edisoncor.gui.util.Avatar;
 
 /**
  *
@@ -25,21 +26,16 @@ public class ProductosDialog extends javax.swing.JDialog {
     public ProductosDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        agregarProd_avatar();
-    }
-
-    public final void agregarProd_avatar() {
-
-        panelAvatarChooser1.setAmount(3);
+        panelAvatarChooser1.setAmount(2);
         panelAvatarChooser1.getTitulos().add("Gestionar Productos");
         panelAvatarChooser1.getTitulos().add("Gestionar Categorias");
         panelAvatarChooser1.getTitulos().add("Control de productos");
         
-        List<org.edisoncor.gui.util.Avatar> avatares = new ArrayList<>();
+        List<Avatar> avatares = new ArrayList<>();
 
-        avatares.add(new org.edisoncor.gui.util.Avatar("Acerca del manejo de los productos", loadImage("/imagenes/Iconos/gestionProducts.png")));
-        avatares.add(new org.edisoncor.gui.util.Avatar("Acerca de las categorias de los productos", loadImage("/imagenes/Iconos/categoriasProd.png")));
-        avatares.add(new org.edisoncor.gui.util.Avatar("Niveles del stock de los productos", loadImage("/imagenes/Iconos/stock.png")));
+        avatares.add(new Avatar("Acerca del manejo de los productos", loadImage("/imagenes/Iconos/gestionProducts.png")));
+        avatares.add(new Avatar("Acerca de las categorias de los productos", loadImage("/imagenes/Iconos/categoriasProd.png")));
+        avatares.add(new Avatar("Niveles del stock de los productos", loadImage("/imagenes/Iconos/stock.png")));
 
         this.panelAvatarChooser1.setAvatars(avatares);
     }
@@ -60,17 +56,11 @@ public class ProductosDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelAvatarChooser1 = new org.edisoncor.gui.panel.PanelAvatarChooser();
         jLabel1 = new javax.swing.JLabel();
         btnRegresar = new javax.swing.JButton();
+        panelAvatarChooser1 = new org.edisoncor.gui.panel.PanelAvatarChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        panelAvatarChooser1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelAvatarChooser1MouseClicked(evt);
-            }
-        });
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -83,19 +73,27 @@ public class ProductosDialog extends javax.swing.JDialog {
             }
         });
 
+        panelAvatarChooser1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelAvatarChooser1MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelAvatarChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(230, 230, 230)
+                        .addComponent(btnRegresar)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(230, 230, 230)
-                .addComponent(btnRegresar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(panelAvatarChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,23 +115,22 @@ public class ProductosDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void panelAvatarChooser1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelAvatarChooser1MouseClicked
-        int i = this.panelAvatarChooser1.getAvatarIndex();
+        int sel = panelAvatarChooser1.getAvatarIndex();
         
-        if(i==0){
+        if (sel == 0) {
+            CategoriasDeProductos dialog = new CategoriasDeProductos(new javax.swing.JFrame(), true);
+            dialog.setVisible(true);
+            this.dispose();
+        }
+        
+        if (sel == 1) {
             GestionarProductos dialog = new GestionarProductos(new javax.swing.JFrame(), true);
             dialog.setVisible(true);
-            this.dispose();  
-            System.out.println(i);
-        }
-        
-        if(i==1){
-            new CategoriaProductos().setVisible(true);
             this.dispose();
-            System.out.println(i);
         }
         
-        if(i==2){
-            System.out.println(i);
+        if (sel == 2) {
+            JOptionPane.showMessageDialog(this, "Todavia no esta esta opcion");
         }
     }//GEN-LAST:event_panelAvatarChooser1MouseClicked
 

@@ -88,14 +88,34 @@ public final class GestionarDptos extends javax.swing.JDialog {
         d.setNombre(txtNombreDpto.getText());
         d.setDescripcion(txtDescripcionDpto.getText());
 
-        ddao.guardar(d);
-        ddao.cerrar();
-        
-        List<Departamentos> mandar = new ArrayList<>();
+        boolean flag = false;
+        for (Departamentos dd : dpto) {
+            String nombre = dd.getNombre().trim();
+            if (d.getNombre().equals(nombre)) {
+                JOptionPane.showMessageDialog(this, "Ya existe un departamento con ese nombre",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                txtNombreDpto.requestFocus();
+                flag = false;
+                break;
+            } else {
+                flag = true;
+            }
+        }
+
+        if (flag) {
+
+            ddao.guardar(d);
+            ddao.cerrar();
+            
+            JOptionPane.showMessageDialog(this, "El departamento se agrego correctamente", "Mensaje",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+            List<Departamentos> mandar = new ArrayList<>();
             mandar.add(d);
 
-        this.agregarDatostabla(mandar);
-        ddao.cerrar();
+            this.agregarDatostabla(mandar);
+            ddao.cerrar();
+        }
     }
 
     public void limpiar() {
@@ -111,7 +131,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
     public void limpiarMod() {
         if (txtIdModifica.getText().length() == 0 && txtNombre_a_ModificarDpto.getText().length() == 0
-            && txtDescripcion_a_ModificarDpto.getText().length() == 0) {
+                && txtDescripcion_a_ModificarDpto.getText().length() == 0) {
             JOptionPane.showMessageDialog(null, "Los campos ya estan vacios");
             return;
         }
@@ -123,9 +143,9 @@ public final class GestionarDptos extends javax.swing.JDialog {
     public void agregarDatostabla(List<Departamentos> dpto) throws IOException {
 
         ArchivoDepartamentos ddao = new ArchivoDepartamentos();
-        
+
         for (Departamentos d : dpto) {
-            
+
             int id = d.getId();
             String nombre = d.getNombre().trim();
             String descripcion = d.getDescripcion().trim();
@@ -134,39 +154,39 @@ public final class GestionarDptos extends javax.swing.JDialog {
         }
         ddao.cerrar();
     }
-    
-    public void generarReporte() throws IOException{
-    
+
+    public void generarReporte() throws IOException {
+
         try {
             ArchivoDepartamentos ddao = new ArchivoDepartamentos();
             List<Departamentos> dpto = ddao.encontrar();
-            
-            JDialog verReporte = new JDialog(new javax.swing.JFrame(),"Visualizando reportes", true);
+
+            JDialog verReporte = new JDialog(new javax.swing.JFrame(), "Visualizando reportes", true);
             verReporte.setSize(1000, 750);
             verReporte.setLocationRelativeTo(null);
-            
+
             JasperReport reporte = (JasperReport) JRLoader.loadObject(new File("src/Reportes/ReporteDepartamentos.jasper"));
             JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, new JRBeanCollectionDataSource(dpto));
             JasperViewer ventana = new JasperViewer(jasperPrint, false);
             ventana.setTitle("Reporte de departamentos");
             verReporte.getContentPane().add(ventana.getContentPane());
             verReporte.setVisible(true);
-            
+
 //            Exporter exporter = new JRPdfExporter();
 //            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 //            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("Reporte de departamentos.pdf"));
 //            exporter.exportReport();
             ddao.cerrar();
-                    } catch (JRException ex) {
+        } catch (JRException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void modificarDpto() throws IOException{
-    
+
+    public void modificarDpto() throws IOException {
+
         ArchivoDepartamentos ddao = new ArchivoDepartamentos();
         List<Departamentos> dpto = ddao.encontrar();
-        
+
         for (Departamentos d : dpto) {
             int tablaClick = this.TablaPrincipal.getSelectedRow();
             DefaultTableModel mod = (DefaultTableModel) this.TablaPrincipal.getModel();
@@ -176,34 +196,34 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 d.setId(d.getId());
                 d.setNombre(txtNombre_a_ModificarDpto.getText());
                 d.setDescripcion(txtDescripcion_a_ModificarDpto.getText());
-                
+
                 ddao.modificar(d);
 //                List<Departamentos> mandar = new ArrayList<>();
 //                mandar.add(d);
 //
 //                this.agregarDatostabla(mandar);
-                JOptionPane.showMessageDialog(null, "Se ha modificado el Departamento, por favor actualize la tabla");
+                JOptionPane.showMessageDialog(null, "Se ha modificado el Departamento correctamente");
             }
         }
         ddao.cerrar();
     }
-    
-    public void agregarCombobox(){
-        
-        try{
-            
+
+    public void agregarCombobox() {
+
+        try {
+
             ArchivoDepartamentos ddao = new ArchivoDepartamentos();
             List<Departamentos> dpto = ddao.encontrar();
-            
-            for (Departamentos d:dpto) {
+
+            for (Departamentos d : dpto) {
                 AgregarBusqueda.addItem(d.getNombre());
             }
-                ddao.cerrar();
-        }catch(Exception ex){}
-        
-        
+            ddao.cerrar();
+        } catch (Exception ex) {
+        }
+
     }
-    
+
 ////    public void borrarDpto() throws IOException{
 ////   
 ////        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
@@ -224,13 +244,12 @@ public final class GestionarDptos extends javax.swing.JDialog {
 ////            List<Departamentos> dpto2 = dpto;
 ////        }
 ////    }
-    
-    private void limpiarTabla(){
-       for (int i = 0; i < TablaPrincipal.getRowCount(); i++) {
-           modelo.removeRow(i);
-           i-=1;
-             }
-   }
+    private void limpiarTabla() {
+        for (int i = 0; i < TablaPrincipal.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i -= 1;
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -243,30 +262,28 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
         jcMousePanel1 = new jcMousePanel.jcMousePanel();
         tabbedSelector21 = new org.edisoncor.gui.tabbedPane.TabbedSelector2();
-        PanelAgrega = new org.edisoncor.gui.panel.PanelNice();
+        jPanel1 = new javax.swing.JPanel();
         labelTask1 = new org.edisoncor.gui.label.LabelTask();
+        jLabel3 = new javax.swing.JLabel();
+        txtIdAgrega = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         txtNombreDpto = new org.edisoncor.gui.textField.TextFieldRectBackground();
+        jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtDescripcionDpto = new org.jdesktop.swingx.JXTextArea();
         botonAgregarDpto = new org.edisoncor.gui.button.ButtonTask();
         botonLimpiarVtnaAgregar = new org.edisoncor.gui.button.ButtonTask();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtIdAgrega = new javax.swing.JTextField();
-        panelNice2 = new org.edisoncor.gui.panel.PanelNice();
-        PanelModifica = new org.edisoncor.gui.panel.PanelNice();
+        jPanel2 = new javax.swing.JPanel();
         labelTask2 = new org.edisoncor.gui.label.LabelTask();
-        txtNombre_a_ModificarDpto = new org.edisoncor.gui.textField.TextFieldRectBackground();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        txtDescripcion_a_ModificarDpto = new org.jdesktop.swingx.JXTextArea();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        botonModificar = new org.edisoncor.gui.button.ButtonTask();
         jLabel6 = new javax.swing.JLabel();
         txtIdModifica = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtNombre_a_ModificarDpto = new org.edisoncor.gui.textField.TextFieldRectBackground();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtDescripcion_a_ModificarDpto = new org.jdesktop.swingx.JXTextArea();
         botonLimpiar = new org.edisoncor.gui.button.ButtonTask();
-        botonActualizarTabla = new org.edisoncor.gui.button.ButtonTask();
+        botonModificar = new org.edisoncor.gui.button.ButtonTask();
         PanelBorrar = new org.edisoncor.gui.panel.PanelNice();
         PanelModifica1 = new org.edisoncor.gui.panel.PanelNice();
         labelTask3 = new org.edisoncor.gui.label.LabelTask();
@@ -288,6 +305,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         botonExportarExcel = new org.edisoncor.gui.button.ButtonTask();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gestionar Departamentos");
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -298,27 +316,45 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
         tabbedSelector21.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
-        PanelAgrega.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        labelTask1.setForeground(new java.awt.Color(255, 255, 255));
+        labelTask1.setForeground(new java.awt.Color(0, 0, 0));
         labelTask1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/add departamento.png"))); // NOI18N
         labelTask1.setText("Agregando Departamentos");
         labelTask1.setDescription("Llene los datos del nuevo departamento");
-        PanelAgrega.add(labelTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 60));
+        jPanel1.add(labelTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 60));
+
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("ID");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 80, 20));
+
+        txtIdAgrega.setEditable(false);
+        jPanel1.add(txtIdAgrega, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 30));
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Nombre");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 100, 25));
 
         txtNombreDpto.setColorDeTextoBackground(new java.awt.Color(0, 0, 0));
         txtNombreDpto.setDescripcion("Ingrese el nombre del departamento");
         txtNombreDpto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        PanelAgrega.add(txtNombreDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 270, 30));
+        jPanel1.add(txtNombreDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 270, 30));
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Descripcion");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
 
         txtDescripcionDpto.setColumns(20);
         txtDescripcionDpto.setRows(5);
         jScrollPane2.setViewportView(txtDescripcionDpto);
 
-        PanelAgrega.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 270, 70));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 270, 70));
 
         botonAgregarDpto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        botonAgregarDpto.setForeground(new java.awt.Color(255, 255, 255));
+        botonAgregarDpto.setForeground(new java.awt.Color(0, 0, 0));
         botonAgregarDpto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/agregarBoton.png"))); // NOI18N
         botonAgregarDpto.setText("Agregar");
         botonAgregarDpto.setDescription("Departamento");
@@ -327,10 +363,10 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonAgregarDptoActionPerformed(evt);
             }
         });
-        PanelAgrega.add(botonAgregarDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 100, 180, -1));
+        jPanel1.add(botonAgregarDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 100, 180, -1));
 
         botonLimpiarVtnaAgregar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        botonLimpiarVtnaAgregar.setForeground(new java.awt.Color(255, 255, 255));
+        botonLimpiarVtnaAgregar.setForeground(new java.awt.Color(0, 0, 0));
         botonLimpiarVtnaAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
         botonLimpiarVtnaAgregar.setText("Limpiar");
         botonLimpiarVtnaAgregar.setDescription("Ventanas");
@@ -339,77 +375,48 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonLimpiarVtnaAgregarActionPerformed(evt);
             }
         });
-        PanelAgrega.add(botonLimpiarVtnaAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 170, 180, -1));
+        jPanel1.add(botonLimpiarVtnaAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 170, 180, -1));
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Nombre");
-        PanelAgrega.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 100, 25));
+        tabbedSelector21.addTab("Agregar", jPanel1);
 
-        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Descripcion");
-        PanelAgrega.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("ID");
-        PanelAgrega.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 80, 20));
-
-        txtIdAgrega.setEditable(false);
-        PanelAgrega.add(txtIdAgrega, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 30));
-
-        tabbedSelector21.addTab("Agregar", PanelAgrega);
-
-        PanelModifica.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        labelTask2.setForeground(new java.awt.Color(255, 255, 255));
+        labelTask2.setForeground(new java.awt.Color(0, 0, 0));
         labelTask2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/update departamentos.png"))); // NOI18N
         labelTask2.setText("Modificar Departamentos");
         labelTask2.setDescription("Seleccione en la tabla el departamento a modificar");
-        PanelModifica.add(labelTask2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 60));
+        jPanel2.add(labelTask2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 400, 60));
+
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("ID");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 80, 20));
+
+        txtIdModifica.setEditable(false);
+        jPanel2.add(txtIdModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 30));
+
+        jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("Nombre");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 100, 25));
 
         txtNombre_a_ModificarDpto.setColorDeTextoBackground(new java.awt.Color(0, 0, 0));
         txtNombre_a_ModificarDpto.setDescripcion("Ingrese el nombre del departamento");
         txtNombre_a_ModificarDpto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        PanelModifica.add(txtNombre_a_ModificarDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 270, 30));
+        jPanel2.add(txtNombre_a_ModificarDpto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 270, 30));
+
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Descripcion");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
 
         txtDescripcion_a_ModificarDpto.setColumns(20);
         txtDescripcion_a_ModificarDpto.setRows(5);
         jScrollPane3.setViewportView(txtDescripcion_a_ModificarDpto);
 
-        PanelModifica.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 270, 70));
+        jPanel2.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 270, 70));
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Nombre");
-        PanelModifica.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 100, 25));
-
-        jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Descripcion");
-        PanelModifica.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 100, 25));
-
-        botonModificar.setForeground(new java.awt.Color(255, 255, 255));
-        botonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/modificarDpto.png"))); // NOI18N
-        botonModificar.setText("Modificar");
-        botonModificar.setDescription("Departamentos");
-        botonModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonModificarActionPerformed(evt);
-            }
-        });
-        PanelModifica.add(botonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 20, 180, -1));
-
-        jLabel6.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("ID");
-        PanelModifica.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 80, 20));
-
-        txtIdModifica.setEditable(false);
-        PanelModifica.add(txtIdModifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 30, 30));
-
-        botonLimpiar.setForeground(new java.awt.Color(255, 255, 255));
+        botonLimpiar.setForeground(new java.awt.Color(0, 0, 0));
         botonLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
         botonLimpiar.setText("Limpiar");
         botonLimpiar.setDescription("Ventana");
@@ -418,22 +425,20 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonLimpiarActionPerformed(evt);
             }
         });
-        PanelModifica.add(botonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 100, 180, -1));
+        jPanel2.add(botonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, 180, -1));
 
-        botonActualizarTabla.setForeground(new java.awt.Color(255, 255, 255));
-        botonActualizarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/Modificar.png"))); // NOI18N
-        botonActualizarTabla.setText("Actualizar");
-        botonActualizarTabla.setDescription("Tabla");
-        botonActualizarTabla.addActionListener(new java.awt.event.ActionListener() {
+        botonModificar.setForeground(new java.awt.Color(0, 0, 0));
+        botonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/modificarDpto.png"))); // NOI18N
+        botonModificar.setText("Modificar");
+        botonModificar.setDescription("Departamentos");
+        botonModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonActualizarTablaActionPerformed(evt);
+                botonModificarActionPerformed(evt);
             }
         });
-        PanelModifica.add(botonActualizarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 180, 180, -1));
+        jPanel2.add(botonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 180, -1));
 
-        panelNice2.add(PanelModifica, java.awt.BorderLayout.CENTER);
-
-        tabbedSelector21.addTab("Modificar", panelNice2);
+        tabbedSelector21.addTab("Modificar", jPanel2);
 
         PanelModifica1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -571,9 +576,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                     txtDescripcionDpto.requestFocus();
                 } else {
                     agregarDpto();
-                    JOptionPane.showMessageDialog(this, "El departamento se agrego correctamente", "Mensaje",
-                            JOptionPane.INFORMATION_MESSAGE);
-                            txtNombreDpto.requestFocus();
+                    txtNombreDpto.requestFocus();
                 }
             }
         } catch (IOException ex) {
@@ -586,12 +589,25 @@ public final class GestionarDptos extends javax.swing.JDialog {
     }//GEN-LAST:event_botonLimpiarVtnaAgregarActionPerformed
 
     private void botonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonModificarActionPerformed
-        
-        try {  
-            
-            modificarDpto();          
+
+        try {
+            if (txtNombre_a_ModificarDpto.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue un nombre al departamento");
+                txtNombre_a_ModificarDpto.requestFocus();
+                return;
+            }
+            if (txtDescripcion_a_ModificarDpto.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue una descripcion al departamento");
+                txtDescripcion_a_ModificarDpto.requestFocus();
+                return;
+            }
+            modificarDpto();
+            limpiarTabla();
+            ArchivoDepartamentos edao = new ArchivoDepartamentos();
+            List<Departamentos> dept = edao.encontrar();
+            agregarDatostabla(dept);
             botonModificar.setVisible(false);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -600,9 +616,13 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private void TablaPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaPrincipalMouseClicked
         try {
             // TODO add your handling code here:
+            if (this.TablaPrincipal.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Esta tabla todavia no tiene departamentos");
+                return;
+            }
             ArchivoDepartamentos ddao = new ArchivoDepartamentos();
             List<Departamentos> dpto = ddao.encontrar();
-            
+
             if (dpto.isEmpty()) {
                 return;
             }
@@ -654,16 +674,17 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private void botonLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarActionPerformed
         limpiarMod();
         this.botonModificar.setVisible(false);
+        this.botonLimpiar.setVisible(false);
     }//GEN-LAST:event_botonLimpiarActionPerformed
 
     private void botonReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonReporteActionPerformed
         try {
             ArchivoDepartamentos ddao = new ArchivoDepartamentos();
             List<Departamentos> dpto = ddao.encontrar();
-            
+
             if (dpto.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Lo sentimos, el reporte no se puede generar ya que no hay departamentos toadavia",
-                        "Error",JOptionPane.ERROR_MESSAGE);
+                        "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             generarReporte();
@@ -674,36 +695,36 @@ public final class GestionarDptos extends javax.swing.JDialog {
     }//GEN-LAST:event_botonReporteActionPerformed
 
     private void botonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBorrarActionPerformed
-        
-        try{
-            
+
+        try {
+
             ArchivoDepartamentos ddao = new ArchivoDepartamentos();
             List<Departamentos> dpto = ddao.encontrar();
             ddao.cerrar();
-            
+
             File f = new File("departamentos.dat");
-          
-            int i=0;//buscar el indice
-            
-            for (Departamentos d:dpto) {
-                
-                if(d.getId() == Integer.parseInt(txtIdBorrar.getText().trim())){   //ver los ids               
+
+            int i = 0;//buscar el indice
+
+            for (Departamentos d : dpto) {
+
+                if (d.getId() == Integer.parseInt(txtIdBorrar.getText().trim())) {   //ver los ids               
                     dpto.remove(i); //remover el q este en el indice i 
                     System.out.println("entro");
                     break;//salir dl bucle
                 }
-                
+
                 i++;//incremetar
             }
-            
-            if(f.delete()){
+
+            if (f.delete()) {
                 System.out.println("yaaa");
                 System.out.println(f.length());
             }
-            
+
             ArchivoDepartamentos dd = new ArchivoDepartamentos();
-            
-            for (Departamentos d:dpto) {               
+
+            for (Departamentos d : dpto) {
                 dd.guardar(d);     //guardar la nueva lista con los objetos        
             }
 //            
@@ -711,11 +732,11 @@ public final class GestionarDptos extends javax.swing.JDialog {
             limpiarTabla();
             agregarDatostabla(dpto);
             //actualizar
-            
-            JOptionPane.showMessageDialog(this, "Borrado departamento","BORRADO"
-                    ,JOptionPane.INFORMATION_MESSAGE);
-            
-        }catch(Exception ex){}
+
+            JOptionPane.showMessageDialog(this, "Borrado departamento", "BORRADO", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+        }
     }//GEN-LAST:event_botonBorrarActionPerformed
 
     private void botonLimpiarBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarBorrarActionPerformed
@@ -724,17 +745,6 @@ public final class GestionarDptos extends javax.swing.JDialog {
         txtNombre_a_Borrar.setText("");
         txtDescripcion_a_Borrar.setText("");
     }//GEN-LAST:event_botonLimpiarBorrarActionPerformed
-
-    private void botonActualizarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActualizarTablaActionPerformed
-        try {
-            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
-            List<Departamentos> dpto = ddao.encontrar();
-            limpiarTabla();
-            agregarDatostabla(dpto);
-        } catch (IOException ex) {
-            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_botonActualizarTablaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -780,12 +790,9 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.edisoncor.gui.comboBox.ComboBoxRect AgregarBusqueda;
-    private org.edisoncor.gui.panel.PanelNice PanelAgrega;
     private org.edisoncor.gui.panel.PanelNice PanelBorrar;
-    private org.edisoncor.gui.panel.PanelNice PanelModifica;
     private org.edisoncor.gui.panel.PanelNice PanelModifica1;
     private org.jdesktop.swingx.JXTable TablaPrincipal;
-    private org.edisoncor.gui.button.ButtonTask botonActualizarTabla;
     private org.edisoncor.gui.button.ButtonTask botonAgregarDpto;
     private org.edisoncor.gui.button.ButtonTask botonBorrar;
     private org.edisoncor.gui.button.ButtonTask botonExportarExcel;
@@ -805,6 +812,8 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -813,7 +822,6 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private org.edisoncor.gui.label.LabelTask labelTask1;
     private org.edisoncor.gui.label.LabelTask labelTask2;
     private org.edisoncor.gui.label.LabelTask labelTask3;
-    private org.edisoncor.gui.panel.PanelNice panelNice2;
     private org.edisoncor.gui.tabbedPane.TabbedSelector2 tabbedSelector21;
     private org.jdesktop.swingx.JXTextArea txtDescripcionDpto;
     private org.jdesktop.swingx.JXTextArea txtDescripcion_a_Borrar;
