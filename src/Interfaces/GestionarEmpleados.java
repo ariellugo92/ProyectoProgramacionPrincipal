@@ -15,6 +15,7 @@ import UpperEssential.UpperEssentialLookAndFeel;
 import Validaciones.Validador;
 import Validaciones.limitarCaracter;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -262,8 +263,6 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
     public void agregarDatostabla(List<Empleados> emp) throws IOException {
 
-        ArchivoEmpleados edao = new ArchivoEmpleados();
-
         for (Empleados e : emp) {
 
             int id = e.getId();
@@ -435,6 +434,11 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         comboDptoModifica = new javax.swing.JComboBox();
         botonLimpiarModifica = new org.edisoncor.gui.button.ButtonTask();
         txtFechaEmp_Modifica = new com.toedter.calendar.JDateChooser();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel20 = new javax.swing.JLabel();
+        txtBuscarTabla = new javax.swing.JTextField();
+        btnBuscarTabla = new javax.swing.JButton();
+        btnRestaurarTabla = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestionar Empleados");
@@ -453,7 +457,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(TablaEmpleados);
 
-        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 790, 210));
+        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 790, 210));
 
         botonReporte.setForeground(new java.awt.Color(255, 255, 255));
         botonReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
@@ -464,7 +468,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                 botonReporteActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 620, 170, -1));
+        jcMousePanel1.add(botonReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 690, 170, -1));
 
         botonRegresar.setForeground(new java.awt.Color(255, 255, 255));
         botonRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/regresar.png"))); // NOI18N
@@ -475,7 +479,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                 botonRegresarActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 620, 170, -1));
+        jcMousePanel1.add(botonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 690, 170, -1));
 
         botonExportarExcel.setForeground(new java.awt.Color(255, 255, 255));
         botonExportarExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/excel.png"))); // NOI18N
@@ -486,7 +490,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
                 botonExportarExcelActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonExportarExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 620, 180, -1));
+        jcMousePanel1.add(botonExportarExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 690, 180, -1));
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -775,9 +779,41 @@ public class GestionarEmpleados extends javax.swing.JDialog {
 
         jcMousePanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 790, 370));
 
-        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 700));
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Buscar"));
+        jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        setSize(new java.awt.Dimension(826, 739));
+        jLabel20.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel20.setText("Nombre del empleado");
+        jPanel10.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, 25));
+
+        txtBuscarTabla.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBuscarTablaKeyPressed(evt);
+            }
+        });
+        jPanel10.add(txtBuscarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, 200, 25));
+
+        btnBuscarTabla.setText("Buscar");
+        btnBuscarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarTablaActionPerformed(evt);
+            }
+        });
+        jPanel10.add(btnBuscarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, -1, -1));
+
+        btnRestaurarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/atras.png"))); // NOI18N
+        btnRestaurarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestaurarTablaActionPerformed(evt);
+            }
+        });
+        jPanel10.add(btnRestaurarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 20, 33, 25));
+
+        jcMousePanel1.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 390, 500, 70));
+
+        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 760));
+
+        setSize(new java.awt.Dimension(826, 801));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1004,6 +1040,59 @@ public class GestionarEmpleados extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_botonElegirFotoModificandoActionPerformed
 
+    private void txtBuscarTablaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarTablaKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            buscarTabla();
+        }
+    }//GEN-LAST:event_txtBuscarTablaKeyPressed
+
+    public void buscarTabla(){
+        try {
+            ArchivoEmpleados edao = new ArchivoEmpleados();
+            List<Empleados> emp = edao.encontrar();
+            String buscar = txtBuscarTabla.getText();
+            boolean flag = false;
+            for (Empleados e : emp) {
+                String nombre = e.getNombre().trim();
+                if (buscar.equals(nombre)) {
+                    List<Empleados> ee = new ArrayList<>();
+                    ee.add(e);
+                    
+                    limpiarTabla();
+                    agregarDatostabla(ee);
+                    flag = false;
+                    break;
+                }else{
+                    flag = true;
+                }
+            }
+            
+            if (flag) {
+                JOptionPane.showMessageDialog(this, "El empleado que busca no existe");
+                txtBuscarTabla.setText("");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarEmpleados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void btnBuscarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarTablaActionPerformed
+        buscarTabla();
+    }//GEN-LAST:event_btnBuscarTablaActionPerformed
+
+    private void btnRestaurarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurarTablaActionPerformed
+        try {
+            ArchivoEmpleados edao = new ArchivoEmpleados();
+            List<Empleados> emp = edao.encontrar();
+
+            limpiarTabla();
+            agregarDatostabla(emp);
+            txtBuscarTabla.setText("");
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnRestaurarTablaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1053,6 +1142,8 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonTask botonReporte;
     private javax.swing.JButton botonSubirFotoEmp;
     private javax.swing.JButton botonTomarFotoEmp;
+    private javax.swing.JButton btnBuscarTabla;
+    private javax.swing.JButton btnRestaurarTabla;
     private javax.swing.JComboBox comboDptoModifica;
     private javax.swing.JComboBox comboListaDptos;
     private javax.swing.JRadioButton itemHombreElegidoEmp;
@@ -1072,6 +1163,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1080,6 +1172,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1099,6 +1192,7 @@ public class GestionarEmpleados extends javax.swing.JDialog {
     private javax.swing.ButtonGroup sexoItem;
     private javax.swing.JTextField txtApellidoEmp;
     private javax.swing.JTextField txtApellidoEmp_Modicando;
+    private javax.swing.JTextField txtBuscarTabla;
     private org.jdesktop.swingx.JXFormattedTextField txtCedulaEmp;
     private org.jdesktop.swingx.JXFormattedTextField txtCedulaEmp_Modifica;
     private javax.swing.JTextField txtCelularEmp;

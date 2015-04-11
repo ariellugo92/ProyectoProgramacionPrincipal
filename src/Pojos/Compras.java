@@ -7,13 +7,14 @@ package Pojos;
 public class Compras {
     private int id;
     private Productos productos;
-    private Proveedores proveedores;
+    private String proveedores;
     private Empleados empleados;
     private String fechaCompra;
     private double cantidadCompra;
     private double precioCompra;
     private String tipoCompra;
     private String factura;
+    private double totalCompra;
 
     public Compras() {
     }
@@ -34,11 +35,11 @@ public class Compras {
         this.productos = productos;
     }
 
-    public Proveedores getProveedores() {
+    public String getProveedores() {
         return proveedores;
     }
 
-    public void setProveedores(Proveedores proveedores) {
+    public void setProveedores(String proveedores) {
         this.proveedores = proveedores;
     }
 
@@ -88,5 +89,13 @@ public class Compras {
 
     public void setFactura(String factura) {
         this.factura = factura;
+    }
+
+    public double getTotalCompra() {
+        return totalCompra;
+    }
+
+    public void setTotalCompra(double totalCompra) {
+        this.totalCompra = totalCompra;
     }
 }

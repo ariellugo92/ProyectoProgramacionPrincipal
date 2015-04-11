@@ -37,13 +37,14 @@ public class ArchivoCompras {
         raf.seek(pos);
         raf.writeInt(n + 1);
         raf.writeInt(c.getProductos().getId());
-        raf.writeInt(c.getProveedores().getId());
+        raf.writeUTF(c.getProveedores());
         raf.writeInt(c.getEmpleados().getId());
         raf.writeUTF(c.getFechaCompra());
         raf.writeDouble(c.getCantidadCompra());
         raf.writeDouble(c.getPrecioCompra());
         raf.writeUTF(c.getTipoCompra());
         raf.writeUTF(c.getFactura());
+        raf.writeDouble(c.getTotalCompra());
         
         raf.seek(0);
         raf.writeInt(n + 1);
@@ -61,8 +62,7 @@ public class ArchivoCompras {
             c.setId(raf.readInt());
             Productos p = pdao.buscarId(raf.readInt());
             c.setProductos(p);
-            Proveedores pp = ppdao.buscarId(raf.readInt());
-            c.setProveedores(pp);
+            c.setProveedores(raf.readUTF());
             Empleados e = edao.buscarId(raf.readInt());
             c.setEmpleados(e);
             c.setFechaCompra(raf.readUTF());
@@ -70,6 +70,7 @@ public class ArchivoCompras {
             c.setPrecioCompra(raf.readDouble());
             c.setTipoCompra(raf.readUTF());
             c.setFactura(raf.readUTF());
+            c.setTotalCompra(raf.readDouble());
             
             compras.add(c);
         }
@@ -84,13 +85,14 @@ public class ArchivoCompras {
         raf.seek(pos);
         raf.writeInt(c.getId());
         raf.writeInt(c.getProductos().getId());
-        raf.writeInt(c.getProveedores().getId());
+        raf.writeUTF(c.getProveedores());
         raf.writeInt(c.getEmpleados().getId());
         raf.writeUTF(c.getFechaCompra());
         raf.writeDouble(c.getCantidadCompra());
         raf.writeDouble(c.getPrecioCompra());
         raf.writeUTF(c.getTipoCompra());
         raf.writeUTF(c.getFactura());
+        raf.writeDouble(c.getTotalCompra());
     }
     
     public Compras buscarId(int id) throws IOException {
@@ -107,8 +109,7 @@ public class ArchivoCompras {
         c.setId(raf.readInt());
         Productos p = pdao.buscarId(raf.readInt());
         c.setProductos(p);
-        Proveedores pp = ppdao.buscarId(raf.readInt());
-        c.setProveedores(pp);
+        c.setProveedores(raf.readUTF());
         Empleados e = edao.buscarId(raf.readInt());
         c.setEmpleados(e);
         c.setFechaCompra(raf.readUTF());
@@ -116,6 +117,7 @@ public class ArchivoCompras {
         c.setPrecioCompra(raf.readDouble());
         c.setTipoCompra(raf.readUTF());
         c.setFactura(raf.readUTF());
+        c.setTotalCompra(raf.readDouble());
         
         return c;
     }

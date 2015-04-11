@@ -8,6 +8,7 @@ package Interfaces;
 import Archivos.ArchivoDepartamentos;
 import Pojos.Departamentos;
 import Pojos.ExportarExcel;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,56 +78,73 @@ public final class GestionarDptos extends javax.swing.JDialog {
 
     boolean flag = false;
 
-    public void agregarDpto() throws IOException {
+    public void agregarDpto() {
 
-        ArchivoDepartamentos ddao = new ArchivoDepartamentos();
-        List<Departamentos> dpto = ddao.encontrar();
+        try {
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
 
-        Departamentos d = new Departamentos();
+            Departamentos d = new Departamentos();
 
-        d.setId(dpto.size() + 1);
-        d.setNombre(txtNombreDpto.getText());
-        d.setDescripcion(txtDescripcionDpto.getText());
+            d.setId(dpto.size() + 1);
+            d.setNombre(txtNombreDpto.getText());
+            d.setDescripcion(txtDescripcionDpto.getText());
 
-        boolean flag = false;
-        for (Departamentos dd : dpto) {
-            String nombre = dd.getNombre().trim();
-            if (d.getNombre().equals(nombre)) {
-                JOptionPane.showMessageDialog(this, "Ya existe un departamento con ese nombre",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                txtNombreDpto.requestFocus();
-                flag = false;
-                break;
-            } else {
+            boolean flag = false;
+            for (Departamentos dd : dpto) {
+                String nombre = dd.getNombre().trim();
+                if (d.getNombre().equals(nombre)) {
+                    JOptionPane.showMessageDialog(this, "Ya existe un departamento con ese nombre",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    txtNombreDpto.requestFocus();
+                    flag = false;
+                    break;
+                } else {
+                    flag = true;
+                }
+            }
+
+            if (dpto.isEmpty()) {
                 flag = true;
             }
-        }
 
-        if (flag) {
+            if (flag) {
 
-            ddao.guardar(d);
-            ddao.cerrar();
-            
-            JOptionPane.showMessageDialog(this, "El departamento se agrego correctamente", "Mensaje",
-                            JOptionPane.INFORMATION_MESSAGE);
+                ddao.guardar(d);
+                ddao.cerrar();
 
-            List<Departamentos> mandar = new ArrayList<>();
-            mandar.add(d);
+                JOptionPane.showMessageDialog(this, "El departamento se agrego correctamente", "Mensaje",
+                        JOptionPane.INFORMATION_MESSAGE);
 
-            this.agregarDatostabla(mandar);
-            ddao.cerrar();
+                List<Departamentos> mandar = new ArrayList<>();
+                mandar.add(d);
+
+                this.agregarDatostabla(mandar);
+                ddao.cerrar();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void limpiar() {
-        if (txtNombreDpto.getText().length() == 0 && txtDescripcionDpto.getText().length() == 0) {
-            JOptionPane.showMessageDialog(this, "Los campos ya estan vacios", "Aviso",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } else {
+        try {
+            if (txtNombreDpto.getText().length() == 0 && txtDescripcionDpto.getText().length() == 0) {
+                JOptionPane.showMessageDialog(this, "Los campos ya estan vacios", "Aviso",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dept = ddao.encontrar();
+            txtIdAgrega.setText((dept.size() + 1) + "");
             txtNombreDpto.setText("");
             txtDescripcionDpto.setText("");
             txtNombreDpto.requestFocus();
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     public void limpiarMod() {
@@ -303,6 +321,11 @@ public final class GestionarDptos extends javax.swing.JDialog {
         botonReporte = new org.edisoncor.gui.button.ButtonTask();
         botonRegresar = new org.edisoncor.gui.button.ButtonTask();
         botonExportarExcel = new org.edisoncor.gui.button.ButtonTask();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        txtBuscarTabla = new javax.swing.JTextField();
+        btnBuscarTabla = new javax.swing.JButton();
+        btnRestaurarTabla = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestionar Departamentos");
@@ -518,7 +541,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(TablaPrincipal);
 
-        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 780, 210));
+        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 780, 210));
 
         botonReporte.setForeground(new java.awt.Color(255, 255, 255));
         botonReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
@@ -529,7 +552,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonReporteActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 170, -1));
+        jcMousePanel1.add(botonReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 600, 170, -1));
 
         botonRegresar.setForeground(new java.awt.Color(255, 255, 255));
         botonRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/regresar.png"))); // NOI18N
@@ -540,7 +563,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonRegresarActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 540, 170, -1));
+        jcMousePanel1.add(botonRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 600, 170, -1));
 
         botonExportarExcel.setForeground(new java.awt.Color(255, 255, 255));
         botonExportarExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/excel.png"))); // NOI18N
@@ -551,9 +574,41 @@ public final class GestionarDptos extends javax.swing.JDialog {
                 botonExportarExcelActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonExportarExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 540, 180, -1));
+        jcMousePanel1.add(botonExportarExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 600, 180, -1));
 
-        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 620));
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Buscar"));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel11.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel11.setText("Departamento");
+        jPanel5.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, 25));
+
+        txtBuscarTabla.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBuscarTablaKeyPressed(evt);
+            }
+        });
+        jPanel5.add(txtBuscarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, 200, 25));
+
+        btnBuscarTabla.setText("Buscar");
+        btnBuscarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarTablaActionPerformed(evt);
+            }
+        });
+        jPanel5.add(btnBuscarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, -1, -1));
+
+        btnRestaurarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/atras.png"))); // NOI18N
+        btnRestaurarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestaurarTablaActionPerformed(evt);
+            }
+        });
+        jPanel5.add(btnRestaurarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 20, 33, 25));
+
+        jcMousePanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 310, 500, 60));
+
+        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 800, 670));
 
         pack();
         setLocationRelativeTo(null);
@@ -562,27 +617,6 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private void botonRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegresarActionPerformed
         this.dispose();
     }//GEN-LAST:event_botonRegresarActionPerformed
-
-    private void botonAgregarDptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarDptoActionPerformed
-        try {
-            if (txtNombreDpto.getText().length() == 0 && txtDescripcionDpto.getText().length() == 0) {
-                JOptionPane.showMessageDialog(null, "No ha agregado ningun dato");
-            } else {
-                if (txtNombreDpto.getText().length() == 0) {
-                    JOptionPane.showMessageDialog(null, "No ha ingresado un nombre al departamento");
-                    txtNombreDpto.requestFocus();
-                } else if (txtDescripcionDpto.getText().length() == 0) {
-                    JOptionPane.showMessageDialog(null, "No ha ingresado una descripcion al departamento");
-                    txtDescripcionDpto.requestFocus();
-                } else {
-                    agregarDpto();
-                    txtNombreDpto.requestFocus();
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_botonAgregarDptoActionPerformed
 
     private void botonLimpiarVtnaAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLimpiarVtnaAgregarActionPerformed
         limpiar();
@@ -746,6 +780,78 @@ public final class GestionarDptos extends javax.swing.JDialog {
         txtDescripcion_a_Borrar.setText("");
     }//GEN-LAST:event_botonLimpiarBorrarActionPerformed
 
+    private void botonAgregarDptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarDptoActionPerformed
+        if (txtNombreDpto.getText().length() == 0 && txtDescripcionDpto.getText().length() == 0) {
+            JOptionPane.showMessageDialog(null, "No ha agregado ningun dato");
+            return;
+        }
+        if (txtNombreDpto.getText().length() == 0) {
+            JOptionPane.showMessageDialog(null, "No ha ingresado un nombre al departamento");
+            txtNombreDpto.requestFocus();
+            return;
+        }
+        if (txtDescripcionDpto.getText().length() == 0) {
+            JOptionPane.showMessageDialog(null, "No ha ingresado una descripcion al departamento");
+            txtDescripcionDpto.requestFocus();
+            return;
+        }
+
+        agregarDpto();
+    }//GEN-LAST:event_botonAgregarDptoActionPerformed
+
+    public void buscarTabla() {
+        try {
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+            String buscar = txtBuscarTabla.getText();
+            boolean flags = false;
+            for (Departamentos d : dpto) {
+                String depto = d.getNombre().trim();
+                if (buscar.equals(depto)) {
+                    List<Departamentos> dptos = new ArrayList<>();
+                    dptos.add(d);
+
+                    limpiarTabla();
+                    agregarDatostabla(dptos);
+                    flags = false;
+                    break;
+                } else {
+                    flags = true;
+                }
+            }
+
+            if (flags == true) {
+                JOptionPane.showMessageDialog(this, "El departamento que busca no existe");
+                txtBuscarTabla.setText("");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarDptos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void txtBuscarTablaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarTablaKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            buscarTabla();
+        }
+    }//GEN-LAST:event_txtBuscarTablaKeyPressed
+
+    private void btnBuscarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarTablaActionPerformed
+        buscarTabla();
+    }//GEN-LAST:event_btnBuscarTablaActionPerformed
+
+    private void btnRestaurarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurarTablaActionPerformed
+        try {
+            ArchivoDepartamentos ddao = new ArchivoDepartamentos();
+            List<Departamentos> dpto = ddao.encontrar();
+
+            limpiarTabla();
+            agregarDatostabla(dpto);
+            txtBuscarTabla.setText("");
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarProductos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnRestaurarTablaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -802,8 +908,11 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonTask botonModificar;
     private org.edisoncor.gui.button.ButtonTask botonRegresar;
     private org.edisoncor.gui.button.ButtonTask botonReporte;
+    private javax.swing.JButton btnBuscarTabla;
+    private javax.swing.JButton btnRestaurarTabla;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -814,6 +923,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -823,6 +933,7 @@ public final class GestionarDptos extends javax.swing.JDialog {
     private org.edisoncor.gui.label.LabelTask labelTask2;
     private org.edisoncor.gui.label.LabelTask labelTask3;
     private org.edisoncor.gui.tabbedPane.TabbedSelector2 tabbedSelector21;
+    private javax.swing.JTextField txtBuscarTabla;
     private org.jdesktop.swingx.JXTextArea txtDescripcionDpto;
     private org.jdesktop.swingx.JXTextArea txtDescripcion_a_Borrar;
     private org.jdesktop.swingx.JXTextArea txtDescripcion_a_ModificarDpto;

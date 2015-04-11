@@ -8,9 +8,11 @@ package Interfaces;
 import Archivos.ArchivoCategoriaProd;
 import Archivos.ArchivoDepartamentos;
 import Archivos.ArchivoProductos;
+import Archivos.ArchivoProveedores;
 import Pojos.CategoriaProd;
 import Pojos.Departamentos;
 import Pojos.Productos;
+import Pojos.Proveedores;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class GestionarProductos extends javax.swing.JDialog {
     DefaultTableModel modelo;
 
     public void tabla() {
-        String[] cabecera = {"ID", "Nombre", "Categoria", "Cantidad", "Precio", "Marca", "Medida"};
+        String[] cabecera = {"ID", "Nombre", "Categoria", "Proveesdor", "Cantidad", "Precio", "Marca", "Medida"};
         String datos[][] = {};
         modelo = new DefaultTableModel(datos, cabecera);
         TablaProductos.setModel(modelo);
@@ -42,6 +44,19 @@ public class GestionarProductos extends javax.swing.JDialog {
 
         for (CategoriaProd cp : catg) {
             jcombo.addItem(cp.getNombre().trim());
+        }
+    }
+    
+    public void cargarProveedores(JComboBox jcombo){
+        try {
+            ArchivoProveedores pdao = new ArchivoProveedores();
+            List<Proveedores> prov = pdao.encontrar();
+            
+            for (Proveedores p : prov) {
+                jcombo.addItem(p.getRazon_social().trim());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GestionarProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -59,6 +74,8 @@ public class GestionarProductos extends javax.swing.JDialog {
         try {
             cargar(this.comboCatgProductos);
             cargar(this.comboCatgProducto_Modificar);
+            cargarProveedores(comboProveedoresProd);
+            cargarProveedores(comboProveedoresProd_Modifica);
         } catch (IOException ex) {
             Logger.getLogger(GestionarProductos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -77,6 +94,7 @@ public class GestionarProductos extends javax.swing.JDialog {
 
         ArchivoProductos pdao = new ArchivoProductos();
         ArchivoCategoriaProd cpdao = new ArchivoCategoriaProd();
+        ArchivoProveedores ppdao = new ArchivoProveedores();
         List<Productos> prod = pdao.encontrar();
         Productos p = new Productos();
 
@@ -88,6 +106,12 @@ public class GestionarProductos extends javax.swing.JDialog {
             return;
         }
         p.setCategoriaProd(cp);
+        Proveedores pp = ppdao.buscarRazon_Social(this.comboProveedoresProd.getSelectedItem().toString());
+        if (this.comboProveedoresProd.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Elija un proveedor");
+            return;
+        }
+        p.setProveedores(pp);
         p.setMarca(txtMarcaProduct.getText());
         p.setPrecio(0.0);
         p.setCantidad(0.00);
@@ -110,12 +134,13 @@ public class GestionarProductos extends javax.swing.JDialog {
             int id = pp.getId();
             String nombre = pp.getNombre().trim();
             String categ = pp.getCategoriaProd().getNombre().trim();
+            String prov = pp.getProveedores().getRazon_social().trim();
             Double precio = pp.getPrecio();
             String marca = pp.getMarca().trim();
             double cant = pp.getCantidad();
             String unidMed = pp.getUnidadMedida();
 
-            Object datos[] = {id, nombre, categ, cant, precio, marca, unidMed};
+            Object datos[] = {id, nombre, categ, prov, cant, precio, marca, unidMed};
             modelo.addRow(datos);
         }
     }
@@ -125,6 +150,7 @@ public class GestionarProductos extends javax.swing.JDialog {
         txtIDProduct.setText("");
         txtNombreProduct.setText("");
         comboCatgProductos.setSelectedIndex(0);
+        comboProveedoresProd.setSelectedIndex(0);
         txtMarcaProduct.setText("");
         txtUnidadMedidaProduct.setText("");
     }
@@ -150,6 +176,7 @@ public class GestionarProductos extends javax.swing.JDialog {
         try {
             ArchivoProductos pdao = new ArchivoProductos();
             ArchivoCategoriaProd cpdao = new ArchivoCategoriaProd();
+            ArchivoProveedores ppdao = new ArchivoProveedores();
             List<Productos> prod = pdao.encontrar();
 
             int sel = this.TablaProductos.getSelectedRow();
@@ -169,6 +196,12 @@ public class GestionarProductos extends javax.swing.JDialog {
                         return;
                     }
                     p.setCategoriaProd(cp);
+                    Proveedores pp = ppdao.buscarRazon_Social(this.comboProveedoresProd_Modifica.getSelectedItem().toString());
+                    if (this.comboProveedoresProd_Modifica.getSelectedIndex() == 0) {
+                        JOptionPane.showMessageDialog(this, "Elija un proveedor");
+                        return;
+                    }
+                    p.setProveedores(pp);
                     p.setMarca(txtMarcaProduct_Modificar.getText());
                     p.setPrecio(p.getPrecio());
                     p.setCantidad(p.getCantidad());
@@ -210,7 +243,7 @@ public class GestionarProductos extends javax.swing.JDialog {
             }
         }
         if (flag) {
-            JOptionPane.showMessageDialog(this, "El producta que busca no existe o lo ingreso incorrectamente");
+            JOptionPane.showMessageDialog(this, "El producto que busca no existe o lo ingreso incorrectamente");
         }
     }
 
@@ -234,6 +267,8 @@ public class GestionarProductos extends javax.swing.JDialog {
         jLabel14 = new javax.swing.JLabel();
         txtUnidadMedidaProduct = new javax.swing.JTextField();
         comboCatgProductos = new javax.swing.JComboBox();
+        jLabel13 = new javax.swing.JLabel();
+        comboProveedoresProd = new javax.swing.JComboBox();
         jScrollPane3 = new javax.swing.JScrollPane();
         treeProductos = new javax.swing.JTree();
         jPanel2 = new javax.swing.JPanel();
@@ -252,6 +287,8 @@ public class GestionarProductos extends javax.swing.JDialog {
         jLabel24 = new javax.swing.JLabel();
         txtUnidadMedidaProduct_Modificar = new javax.swing.JTextField();
         comboCatgProducto_Modificar = new javax.swing.JComboBox();
+        jLabel15 = new javax.swing.JLabel();
+        comboProveedoresProd_Modifica = new javax.swing.JComboBox();
         labelTask1 = new org.edisoncor.gui.label.LabelTask();
         botonBorrar = new org.edisoncor.gui.button.ButtonTask();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -280,24 +317,24 @@ public class GestionarProductos extends javax.swing.JDialog {
 
         jLabel9.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel9.setText("Nombre");
-        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 115, 25));
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 115, 25));
 
         jLabel10.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel10.setText("Categoria");
-        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 115, 25));
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 115, 25));
 
         jLabel11.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel11.setText("Marca del producto");
-        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 115, 25));
+        jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 115, 25));
 
         jLabel12.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel12.setText("ID");
-        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 115, 25));
-        jPanel4.add(txtMarcaProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 150, 200, 25));
-        jPanel4.add(txtNombreProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, 200, 25));
+        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 115, 25));
+        jPanel4.add(txtMarcaProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 180, 200, 25));
+        jPanel4.add(txtNombreProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 200, 25));
 
         txtIDProduct.setEditable(false);
-        jPanel4.add(txtIDProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, 40, 25));
+        jPanel4.add(txtIDProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, 40, 25));
 
         botonAgregarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/NuevoProducto.png"))); // NOI18N
         botonAgregarProducto.setText("Agregar");
@@ -321,13 +358,20 @@ public class GestionarProductos extends javax.swing.JDialog {
 
         jLabel14.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel14.setText("Unidad de medida");
-        jPanel4.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 115, 25));
-        jPanel4.add(txtUnidadMedidaProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, 200, 25));
+        jPanel4.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 115, 25));
+        jPanel4.add(txtUnidadMedidaProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, 200, 25));
 
         comboCatgProductos.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "---- Seleccione la categoria ----" }));
-        jPanel4.add(comboCatgProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 200, 25));
+        jPanel4.add(comboCatgProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 200, 25));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 550, 230));
+        jLabel13.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel13.setText("Proveedores");
+        jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 115, 25));
+
+        comboProveedoresProd.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "---- Seleccione la proveedores ----" }));
+        jPanel4.add(comboProveedoresProd, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 200, 25));
+
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 550, 260));
 
         jScrollPane3.setViewportView(treeProductos);
 
@@ -353,12 +397,12 @@ public class GestionarProductos extends javax.swing.JDialog {
 
         jLabel22.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel22.setText("Marca del producto");
-        jPanel7.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 115, 25));
+        jPanel7.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 115, 25));
 
         jLabel23.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel23.setText("ID");
         jPanel7.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 115, 25));
-        jPanel7.add(txtMarcaProduct_Modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 150, 200, 25));
+        jPanel7.add(txtMarcaProduct_Modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, 200, 25));
         jPanel7.add(txtNombreProduct_Modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, 200, 25));
 
         txtIDProduct_Modificar.setEditable(false);
@@ -386,13 +430,20 @@ public class GestionarProductos extends javax.swing.JDialog {
 
         jLabel24.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel24.setText("Unidad de medida");
-        jPanel7.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 115, 25));
-        jPanel7.add(txtUnidadMedidaProduct_Modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, 200, 25));
+        jPanel7.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 115, 25));
+        jPanel7.add(txtUnidadMedidaProduct_Modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 230, 200, 25));
 
         comboCatgProducto_Modificar.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "---- Seleccione una categoria ----" }));
         jPanel7.add(comboCatgProducto_Modificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 200, 25));
 
-        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 550, 230));
+        jLabel15.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel15.setText("Proveedores");
+        jPanel7.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 115, 25));
+
+        comboProveedoresProd_Modifica.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "---- Seleccione la proveedores ----" }));
+        jPanel7.add(comboProveedoresProd_Modifica, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 150, 200, 25));
+
+        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 550, 260));
 
         labelTask1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/updateProd.png"))); // NOI18N
         labelTask1.setText("Modificar Productos");
@@ -401,7 +452,7 @@ public class GestionarProductos extends javax.swing.JDialog {
 
         jScrollPane2.setViewportView(jPanel6);
 
-        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 740, 230));
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 740, 250));
 
         jTabbedPane1.addTab("Modificar Productos", jPanel2);
 
@@ -416,7 +467,7 @@ public class GestionarProductos extends javax.swing.JDialog {
         });
         jTabbedPane1.addTab("tab3", botonBorrar);
 
-        jcMousePanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 770, 280));
+        jcMousePanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 770, 300));
 
         TablaProductos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -425,19 +476,19 @@ public class GestionarProductos extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(TablaProductos);
 
-        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 380, 510, 270));
+        jcMousePanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 770, 270));
 
         botonReporteProductos.setForeground(new java.awt.Color(255, 255, 255));
         botonReporteProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/reportes.png"))); // NOI18N
         botonReporteProductos.setText("Reporte");
         botonReporteProductos.setDescription("de productos");
-        jcMousePanel1.add(botonReporteProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, 200, -1));
+        jcMousePanel1.add(botonReporteProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 670, 200, -1));
 
         botonExportar_a_ExcelProduct.setForeground(new java.awt.Color(255, 255, 255));
         botonExportar_a_ExcelProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/excel.png"))); // NOI18N
         botonExportar_a_ExcelProduct.setText("Exportar");
         botonExportar_a_ExcelProduct.setDescription("a Miscrosoft Excel");
-        jcMousePanel1.add(botonExportar_a_ExcelProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, 200, -1));
+        jcMousePanel1.add(botonExportar_a_ExcelProduct, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 670, 200, -1));
 
         botonRegresarProducto.setForeground(new java.awt.Color(255, 255, 255));
         botonRegresarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/regresar.png"))); // NOI18N
@@ -448,7 +499,7 @@ public class GestionarProductos extends javax.swing.JDialog {
                 botonRegresarProductoActionPerformed(evt);
             }
         });
-        jcMousePanel1.add(botonRegresarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 510, 200, -1));
+        jcMousePanel1.add(botonRegresarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 670, 200, -1));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Buscar"));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -474,9 +525,9 @@ public class GestionarProductos extends javax.swing.JDialog {
         });
         jPanel3.add(btnRestaurarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 20, 33, 25));
 
-        jcMousePanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 310, 510, 60));
+        jcMousePanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 320, 510, 60));
 
-        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 660));
+        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 730));
 
         pack();
         setLocationRelativeTo(null);
@@ -654,11 +705,15 @@ public class GestionarProductos extends javax.swing.JDialog {
     private javax.swing.JButton btnRestaurarTabla;
     private javax.swing.JComboBox comboCatgProducto_Modificar;
     private javax.swing.JComboBox comboCatgProductos;
+    private javax.swing.JComboBox comboProveedoresProd;
+    private javax.swing.JComboBox comboProveedoresProd_Modifica;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;

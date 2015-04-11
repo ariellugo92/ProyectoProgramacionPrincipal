@@ -32,7 +32,7 @@ public class GestionarCompras extends javax.swing.JDialog {
     DefaultTableModel modelo;
     
     public void tabla() {
-        String encabezados[] = {"id", "Factura", "Producto", "Proveedor", "Empleado", "Fecha", "Cantidad", "Precio", "Tipo"};
+        String encabezados[] = {"id", "Factura", "Producto", "Proveedor", "Empleado", "Fecha", "Cantidad", "Precio", "Total", "Tipo"};
         String datos[][] = {};
         modelo = new DefaultTableModel(datos, encabezados);
         TablaCompras.setModel(modelo);
@@ -83,18 +83,6 @@ public class GestionarCompras extends javax.swing.JDialog {
         return pro;
     }
 
-    public void cargarProveedores(JComboBox jcombo) {
-        try {
-            ArchivoProveedores pdao = new ArchivoProveedores();
-            List<Proveedores> prov = pdao.encontrar();
-            for (Proveedores p : prov) {
-                jcombo.addItem(p.getRazon_social().trim());
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(GestionarCompras.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     public void cargarEmp(JComboBox jcombo) {
         try {
             ArchivoEmpleados edao = new ArchivoEmpleados();
@@ -112,8 +100,8 @@ public class GestionarCompras extends javax.swing.JDialog {
     public GestionarCompras(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.comboProductos.setEnabled(false);
         cargarCategorias(comboCategoriasProd);
-        cargarProveedores(comboProveedores);
         cargarEmp(comboEmpleados);
         tabla();
         try {
@@ -130,25 +118,30 @@ public class GestionarCompras extends javax.swing.JDialog {
         try {
             ArchivoCompras cdao = new ArchivoCompras();
             ArchivoProductos pdao = new ArchivoProductos();
-            ArchivoProveedores ppdao = new ArchivoProveedores();
             ArchivoEmpleados edao = new ArchivoEmpleados();
             List<Compras> compras = cdao.encontrar();
             Compras c = new Compras();
 
             c.setId(compras.size() + 1);
             Productos p = pdao.buscarNombre(this.comboProductos.getSelectedItem().toString().trim());
-            c.setProductos(p);
-            if (this.comboProveedores.getSelectedIndex() == 0) {
-                JOptionPane.showMessageDialog(this, "Elija un proveedor");
-                return;
+            if (comboCategoriasProd.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Por favor seleccione un producto",
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            return;
             }
-            Proveedores pp = ppdao.buscarRazon_Social(this.comboProveedores.getSelectedItem().toString());
-            c.setProveedores(pp);
+            c.setProductos(p);
+            List<Productos> prod = pdao.encontrar();
+            for (Productos pp : prod) {
+                String produts = pp.getNombre().trim();
+                if (this.comboProductos.getSelectedItem().toString().trim().equals(produts)) {
+                    c.setProveedores(pp.getProveedores().getRazon_social().trim());
+                }
+            }
+            Empleados e = edao.buscarNombre(this.comboEmpleados.getSelectedItem().toString());
             if (this.comboEmpleados.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Elija un empleado");
                 return;
             }
-            Empleados e = edao.buscarNombre(this.comboEmpleados.getSelectedItem().toString());
             c.setEmpleados(e);
             //----------------------------------------------------------
             if (this.calendarFecha.getDate() == null) {
@@ -162,7 +155,8 @@ public class GestionarCompras extends javax.swing.JDialog {
             String fechaCompra = df.format(fecha);
             //-----------------------------------------------------------
             c.setFechaCompra(fechaCompra);
-            c.setCantidadCompra(Double.parseDouble(txtCantidad.getText()));
+            txtCantidad.getValue();
+            c.setCantidadCompra((double) txtCantidad.getValue());
             c.setPrecioCompra(Double.parseDouble(txtPrecio.getText()));
             if (radioCredito.isSelected()) {
                 c.setTipoCompra(radioCredito.getLabel());
@@ -170,6 +164,8 @@ public class GestionarCompras extends javax.swing.JDialog {
                 c.setTipoCompra(radioContado.getLabel());
             }
             c.setFactura(txtFactura.getText());
+            double total = c.getCantidadCompra() * c.getPrecioCompra();
+            c.setTotalCompra(total);
             
             cdao.guardar(c);
             cdao.cerrar();
@@ -182,14 +178,15 @@ public class GestionarCompras extends javax.swing.JDialog {
             
             agregarTabla(cargar);
             
-            List<Productos> prod = pdao.encontrar();
-            for (Productos pr : prod) {
+            List<Productos> prods = pdao.encontrar();
+            for (Productos pr : prods) {
                 String products = pr.getNombre().trim();
                 
                 if (c.getProductos().getNombre().trim().equals(products)) {
                     pr.setId(pr.getId());
                     pr.setNombre(pr.getNombre());
                     pr.setCategoriaProd(pr.getCategoriaProd());
+                    pr.setProveedores(pr.getProveedores());
                     pr.setMarca(pr.getMarca());
                     pr.setPrecio(c.getPrecioCompra());
                     double cantidad = pr.getCantidad() + c.getCantidadCompra();
@@ -209,35 +206,44 @@ public class GestionarCompras extends javax.swing.JDialog {
         for (Compras c : comp) {
             int id = c.getId();
             String prod = c.getProductos().getNombre().trim();
-            String prov = c.getProveedores().getRazon_social().trim();
+            String prov = c.getProveedores().trim();
             String emp  = c.getEmpleados().getNombre().trim();
             String fecha = c.getFechaCompra();
             double cant = c.getCantidadCompra();
             double precio = c.getPrecioCompra();
             String tipo = c.getTipoCompra();
             String fact = c.getFactura();
+            double total = c.getTotalCompra();
             
-            Object datos [] = {id, fact, prod, prov, emp, fecha, cant, precio, tipo};
+            Object datos [] = {id, fact, prod, prov, emp, fecha, cant, precio, total, tipo};
             modelo.addRow(datos);
         }
     }
     
-    public void limpiarAgrega(){} 
+    public void limpiarAgrega(){
+        comboCategoriasProd.setSelectedIndex(0);
+        comboProductos.setEnabled(false);
+        txtCantidad.setValue(1);
+        txtPrecio.setText("");
+        RadioTIpoDeCompra.clearSelection();
+        txtProveedor.setText("");
+        txtRuc.setText("");
+        txtFactura.setText("");
+        comboEmpleados.setSelectedIndex(0);
+    } 
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         RadioTIpoDeCompra = new javax.swing.ButtonGroup();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         jcMousePanel1 = new jcMousePanel.jcMousePanel();
         jPanel1 = new javax.swing.JPanel();
-        buttonTask1 = new org.edisoncor.gui.button.ButtonTask();
+        btnLimprar = new org.edisoncor.gui.button.ButtonTask();
         jPanel5 = new javax.swing.JPanel();
         comboCategoriasProd = new javax.swing.JComboBox();
         comboProductos = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
-        txtCantidad = new javax.swing.JTextField();
         labelUnidad = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         txtPrecio = new javax.swing.JTextField();
@@ -246,9 +252,9 @@ public class GestionarCompras extends javax.swing.JDialog {
         radioContado = new javax.swing.JRadioButton();
         calendarFecha = new com.toedter.calendar.JDateChooser();
         jLabel7 = new javax.swing.JLabel();
-        buttonTask3 = new org.edisoncor.gui.button.ButtonTask();
+        txtCantidad = new javax.swing.JSpinner();
+        btnAgregar = new org.edisoncor.gui.button.ButtonTask();
         jPanel2 = new javax.swing.JPanel();
-        comboProveedores = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtFactura = new javax.swing.JTextField();
@@ -256,13 +262,14 @@ public class GestionarCompras extends javax.swing.JDialog {
         jPanel4 = new javax.swing.JPanel();
         comboEmpleados = new javax.swing.JComboBox();
         btnNuevoProveedor = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        txtProveedor = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaCompras = new org.jdesktop.swingx.JXTable();
         botonRegresarProducto = new org.edisoncor.gui.button.ButtonTask();
         botonExportar_a_ExcelProduct = new org.edisoncor.gui.button.ButtonTask();
         botonReporteProductos = new org.edisoncor.gui.button.ButtonTask();
-        jcMousePanel2 = new jcMousePanel.jcMousePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestionar compras");
@@ -274,14 +281,15 @@ public class GestionarCompras extends javax.swing.JDialog {
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        buttonTask1.setText("Limpiar");
-        buttonTask1.setDescription("Ventana");
-        buttonTask1.addActionListener(new java.awt.event.ActionListener() {
+        btnLimprar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/limpiarBoton.png"))); // NOI18N
+        btnLimprar.setText("Limpiar");
+        btnLimprar.setDescription("Ventana");
+        btnLimprar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonTask1ActionPerformed(evt);
+                btnLimprarActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 260, 176, -1));
+        jPanel1.add(btnLimprar, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 260, 176, -1));
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Agregue los datos de la compra"));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -306,7 +314,6 @@ public class GestionarCompras extends javax.swing.JDialog {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Fecha de compra");
         jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 90, 100, 25));
-        jPanel5.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 75, 25));
         jPanel5.add(labelUnidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 120, 65, 25));
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -336,43 +343,39 @@ public class GestionarCompras extends javax.swing.JDialog {
         jLabel7.setText("Cantidad");
         jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 100, 25));
 
+        txtCantidad.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(1.0d), Double.valueOf(1.0d), null, Double.valueOf(1.0d)));
+        jPanel5.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 90, 25));
+
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 420, 240));
 
-        buttonTask3.setText("Agregar");
-        buttonTask3.setDescription("a la factura");
-        buttonTask3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Iconos/agregar compra.png"))); // NOI18N
+        btnAgregar.setText("Agregar");
+        btnAgregar.setDescription("a la factura");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonTask3ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonTask3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, 176, -1));
+        jPanel1.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, 176, -1));
 
         jcMousePanel1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 450, 330));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del proveedor"));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        comboProveedores.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Proveedor" }));
-        comboProveedores.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                comboProveedoresMouseClicked(evt);
-            }
-        });
-        jPanel2.add(comboProveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(47, 40, 230, 25));
-
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("Factura");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 100, 25));
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 100, 25));
 
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("Numero Ruc");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 100, 25));
-        jPanel2.add(txtFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, 150, 25));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 100, 25));
+        jPanel2.add(txtFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 150, 25));
 
         txtRuc.setEditable(false);
-        jPanel2.add(txtRuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 90, 150, 25));
+        jPanel2.add(txtRuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 150, 25));
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Empleado que realizo la compra"));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -382,8 +385,21 @@ public class GestionarCompras extends javax.swing.JDialog {
 
         jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 310, 80));
 
-        btnNuevoProveedor.setText("Si es un nuevo proveedor, por favor presione aqui");
+        btnNuevoProveedor.setText("Si el producto es nuevo, presione aqui");
+        btnNuevoProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoProveedorActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnNuevoProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 290, -1));
+
+        jLabel3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel3.setText("Proveedor");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 100, 25));
+
+        txtProveedor.setEditable(false);
+        jPanel2.add(txtProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 150, 25));
 
         jcMousePanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(473, 12, 330, 330));
 
@@ -419,29 +435,15 @@ public class GestionarCompras extends javax.swing.JDialog {
         botonReporteProductos.setDescription("de productos");
         jcMousePanel1.add(botonReporteProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 590, 200, -1));
 
-        jTabbedPane1.addTab("tab1", jcMousePanel1);
+        getContentPane().add(jcMousePanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 690));
 
-        javax.swing.GroupLayout jcMousePanel2Layout = new javax.swing.GroupLayout(jcMousePanel2);
-        jcMousePanel2.setLayout(jcMousePanel2Layout);
-        jcMousePanel2Layout.setHorizontalGroup(
-            jcMousePanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 815, Short.MAX_VALUE)
-        );
-        jcMousePanel2Layout.setVerticalGroup(
-            jcMousePanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 663, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("tab2", jcMousePanel2);
-
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 820, 690));
-
-        setSize(new java.awt.Dimension(835, 729));
+        setSize(new java.awt.Dimension(835, 697));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void comboCategoriasProdItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboCategoriasProdItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
+            this.comboProductos.setEnabled(true);
             if (this.comboCategoriasProd.getSelectedIndex() > 0) {
                 this.comboProductos.setModel(new DefaultComboBoxModel(getCategorias(this.comboCategoriasProd.getSelectedItem().toString())));
             }
@@ -462,6 +464,8 @@ public class GestionarCompras extends javax.swing.JDialog {
                     } else if (p.getUnidadMedida().equals("libras")) {
                         this.labelUnidad.setText(p.getUnidadMedida().trim());
                     }
+                    txtProveedor.setText(p.getProveedores().getRazon_social().trim());
+                    txtRuc.setText(p.getProveedores().getRuc().trim());
                 }
             }
         } catch (IOException ex) {
@@ -473,31 +477,34 @@ public class GestionarCompras extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_botonRegresarProductoActionPerformed
 
-    private void comboProveedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboProveedoresMouseClicked
-        try {
-            ArchivoProveedores pdao = new ArchivoProveedores();
-            List<Proveedores> prov = pdao.encontrar();
-            String proveedor = this.comboProveedores.getSelectedItem().toString();
-            if (this.comboProveedores.getSelectedIndex() > 0) {
-                for (Proveedores p : prov) {
-                    String provee = p.getRazon_social().trim();
-                    if (proveedor.equals(provee)) {
-                        this.txtRuc.setText(p.getRuc().trim());
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(GestionarCompras.class.getName()).log(Level.SEVERE, null, ex);
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        if (txtPrecio.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese el precio del producto",
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_comboProveedoresMouseClicked
-
-    private void buttonTask3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTask3ActionPerformed
-        agregarCompras();
-    }//GEN-LAST:event_buttonTask3ActionPerformed
-
-    private void buttonTask1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTask1ActionPerformed
+        if (!radioCredito.isSelected() && !radioContado.isSelected()) {
+            JOptionPane.showMessageDialog(this, "Por favor seleccione el tipo de la compra",
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        if (txtFactura.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese el numero de factura que le proporciono su proveedor",
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         
-    }//GEN-LAST:event_buttonTask1ActionPerformed
+        agregarCompras();
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnLimprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimprarActionPerformed
+        limpiarAgrega();
+    }//GEN-LAST:event_btnLimprarActionPerformed
+
+    private void btnNuevoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProveedorActionPerformed
+        OpcionesDeProductos dialog = new OpcionesDeProductos(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btnNuevoProveedorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -547,17 +554,17 @@ public class GestionarCompras extends javax.swing.JDialog {
     private org.edisoncor.gui.button.ButtonTask botonExportar_a_ExcelProduct;
     private org.edisoncor.gui.button.ButtonTask botonRegresarProducto;
     private org.edisoncor.gui.button.ButtonTask botonReporteProductos;
+    private org.edisoncor.gui.button.ButtonTask btnAgregar;
+    private org.edisoncor.gui.button.ButtonTask btnLimprar;
     private javax.swing.JButton btnNuevoProveedor;
-    private org.edisoncor.gui.button.ButtonTask buttonTask1;
-    private org.edisoncor.gui.button.ButtonTask buttonTask3;
     private com.toedter.calendar.JDateChooser calendarFecha;
     private javax.swing.JComboBox comboCategoriasProd;
     private javax.swing.JComboBox comboEmpleados;
     private javax.swing.JComboBox comboProductos;
-    private javax.swing.JComboBox comboProveedores;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -567,15 +574,14 @@ public class GestionarCompras extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private jcMousePanel.jcMousePanel jcMousePanel1;
-    private jcMousePanel.jcMousePanel jcMousePanel2;
     private javax.swing.JLabel labelUnidad;
     private javax.swing.JRadioButton radioContado;
     private javax.swing.JRadioButton radioCredito;
-    private javax.swing.JTextField txtCantidad;
+    private javax.swing.JSpinner txtCantidad;
     private javax.swing.JTextField txtFactura;
     private javax.swing.JTextField txtPrecio;
+    private javax.swing.JTextField txtProveedor;
     private javax.swing.JTextField txtRuc;
     // End of variables declaration//GEN-END:variables
 }

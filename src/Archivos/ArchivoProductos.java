@@ -2,6 +2,7 @@ package Archivos;
 
 import Pojos.CategoriaProd;
 import Pojos.Productos;
+import Pojos.Proveedores;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -17,10 +18,12 @@ public class ArchivoProductos {
     private final RandomAccessFile raf;
     private static final int LENGTH = 1024;
     private final ArchivoCategoriaProd cpdao;
+    private final ArchivoProveedores pdao;
     
     public ArchivoProductos() throws IOException{
         raf = RandomConector.buildRandom("productos.dat").getRandomAccessFile();
         cpdao = new ArchivoCategoriaProd();
+        pdao = new ArchivoProveedores();
     }
     
     public void guardar(Productos p) throws IOException{
@@ -32,6 +35,7 @@ public class ArchivoProductos {
         raf.writeInt(n + 1);
         raf.writeUTF(limitString(p.getNombre(),20));
         raf.writeInt(p.getCategoriaProd().getId());
+        raf.writeInt(p.getProveedores().getId());
         raf.writeUTF(limitString(p.getMarca(), 20));
         raf.writeDouble(p.getPrecio());
         raf.writeDouble(p.getCantidad());
@@ -65,6 +69,8 @@ public class ArchivoProductos {
             p.setNombre(raf.readUTF());
             CategoriaProd cp = cpdao.buscarId(raf.readInt());
             p.setCategoriaProd(cp);
+            Proveedores pp = pdao.buscarId(raf.readInt());
+            p.setProveedores(pp);
             p.setMarca(raf.readUTF());
             p.setPrecio(raf.readDouble());
             p.setCantidad(raf.readDouble());
@@ -84,6 +90,7 @@ public class ArchivoProductos {
         raf.writeInt(p.getId());
         raf.writeUTF(limitString(p.getNombre(),20));
         raf.writeInt(p.getCategoriaProd().getId());
+        raf.writeInt(p.getProveedores().getId());
         raf.writeUTF(limitString(p.getMarca(), 20));
         raf.writeDouble(p.getPrecio());
         raf.writeDouble(p.getCantidad());
@@ -117,6 +124,8 @@ public class ArchivoProductos {
         p.setNombre(raf.readUTF());
         CategoriaProd cp = cpdao.buscarId(raf.readInt());
         p.setCategoriaProd(cp);
+        Proveedores pp = pdao.buscarId(raf.readInt());
+        p.setProveedores(pp);
         p.setMarca(raf.readUTF());
         p.setPrecio(raf.readDouble());
         p.setCantidad(raf.readDouble());

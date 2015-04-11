@@ -8,6 +8,7 @@ public class Productos {
     private int id;
     private String nombre;
     private CategoriaProd categoriaProd;
+    private Proveedores proveedores;
     private String marca;
     private double precio;
     private double cantidad;
@@ -38,6 +39,14 @@ public class Productos {
 
     public void setCategoriaProd(CategoriaProd categoriaProd) {
         this.categoriaProd = categoriaProd;
+    }
+
+    public Proveedores getProveedores() {
+        return proveedores;
+    }
+
+    public void setProveedores(Proveedores proveedores) {
+        this.proveedores = proveedores;
     }
     
     public String getMarca() {

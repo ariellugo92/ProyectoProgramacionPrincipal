@@ -6,7 +6,9 @@
 package Interfaces;
 
 import Archivos.ArchivoCategoriaProd;
+import Archivos.ArchivoProveedores;
 import Pojos.CategoriaProd;
+import Pojos.Proveedores;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -46,6 +48,8 @@ public class OpcionesDeProductos extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Panel de productos");
@@ -93,8 +97,8 @@ public class OpcionesDeProductos extends javax.swing.JDialog {
 
         jLabel2.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Stock");
-        panelPrin.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 130, -1, -1));
+        jLabel2.setText("Proveedores");
+        panelPrin.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Comic Sans MS", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
@@ -117,31 +121,49 @@ public class OpcionesDeProductos extends javax.swing.JDialog {
 
         jcMousePanel1.add(panelPrin, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 50, 470, 400));
 
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Para agregar un producto primero agregue una categoria y su proveedor para poder registrarlo correctamente");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 710, -1));
+
+        jcMousePanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, 740, 40));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jcMousePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 765, Short.MAX_VALUE)
+            .addComponent(jcMousePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jcMousePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+            .addComponent(jcMousePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(781, 542));
+        setSize(new java.awt.Dimension(794, 554));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        JOptionPane.showMessageDialog(this, "Todavia no esta, esta opcion... Esperala muy pronto");
+        ProveedoresDialog dialog = new ProveedoresDialog(new javax.swing.JFrame(), true);
+        dialog.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             ArchivoCategoriaProd cpdao = new ArchivoCategoriaProd();
+            ArchivoProveedores pdao = new ArchivoProveedores();
             List<CategoriaProd> catgProd = cpdao.encontrar();
+            List<Proveedores> prov = pdao.encontrar();
             if (catgProd.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Primero agregue categorias para ubicar sus productos",
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            if (prov.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Agregue los proveedores de los productos",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
@@ -209,7 +231,9 @@ public class OpcionesDeProductos extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private jcMousePanel.jcMousePanel jcMousePanel1;
     private javax.swing.JPanel panelPrin;
     // End of variables declaration//GEN-END:variables

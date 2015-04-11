@@ -30,6 +30,14 @@ public class ArchivoVentas {
     
         raf.seek(pos);
         raf.writeInt(n + 1);
+        raf.writeUTF(v.getCliente());
+        raf.writeUTF(v.getTelfCliente());
+        raf.writeUTF(v.getTipoCliente());
+        raf.writeUTF(v.getFactura());
+        raf.writeUTF(v.getFechaVenta());
+        raf.writeUTF(v.getTipoVenta());
+        raf.writeUTF(v.getEstadoIVA());
+        raf.write(v.getProductos());
         raf.writeInt(v.getProductos().getId());
         raf.writeUTF(v.getFechaVenta());
         raf.writeDouble(v.getCantidadVenta());
