@@ -6,11 +6,20 @@
 package Interfaces;
 
 import Archivos.ArchivoCategoriaProd;
+import Archivos.ArchivoClientes;
 import Archivos.ArchivoProductos;
+import Archivos.ArchivoVentaDetalle;
+import Archivos.ArchivoVentas;
 import Pojos.CategoriaProd;
+import Pojos.Cliente;
 import Pojos.Productos;
+import Pojos.Ventas;
+import Pojos.detalleVenta;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,8 +35,9 @@ import javax.swing.table.DefaultTableModel;
 public class VentasDialog extends javax.swing.JDialog {
 
     DefaultTableModel modelo;
-    
-    public void cargarCategorias(JComboBox jcombo){
+    Ventas v;
+
+    public void cargarCategorias(JComboBox jcombo) {
         try {
             ArchivoCategoriaProd pdao = new ArchivoCategoriaProd();
             List<CategoriaProd> catgProd = pdao.encontrar();
@@ -38,10 +48,17 @@ public class VentasDialog extends javax.swing.JDialog {
             Logger.getLogger(VentasDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public VentasDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        try {
+            ArchivoVentas vdao = new ArchivoVentas();
+            txtClienteVenta.setText((vdao.encontrar().size() + 1) + "");
+        } catch (IOException ex) {
+            Logger.getLogger(VentasDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         cargarCategorias(this.comboCategortiaProd);
         this.comboProducto.setEnabled(false);
         spinnerCantidad.setEnabled(false);
@@ -57,7 +74,7 @@ public class VentasDialog extends javax.swing.JDialog {
         modelo = new DefaultTableModel(datos, cabecera);
         TablaVentas.setModel(modelo);
     }
-    
+
     public String[] getCategorias(String categoria) {
         String[] pro = null;
         try {
@@ -83,11 +100,11 @@ public class VentasDialog extends javax.swing.JDialog {
         }
         return pro;
     }
-    
-    public void agregarFactura() throws IOException{
+
+    public void agregarFactura() throws IOException {
         ArchivoProductos pdao = new ArchivoProductos();
         List<Productos> prod = pdao.encontrar();
-        
+
         //------- Agregar producto a la tabla -------------------
         String producto = this.comboProducto.getSelectedItem().toString();
         double cant = (double) spinnerCantidad.getValue();
@@ -95,11 +112,11 @@ public class VentasDialog extends javax.swing.JDialog {
         double desc;
         if (txtDescuento.getText().isEmpty()) {
             desc = 0.0;
-        }else{
-        desc = Double.parseDouble(txtDescuento.getText());
+        } else {
+            desc = Double.parseDouble(txtDescuento.getText());
         }
         double total = (precio * cant) - desc;
-        
+
         //----- VALIDAR CANTIDAD Y PRECIO ------------------------
         String prodVender = this.comboProducto.getSelectedItem().toString().trim();
         for (Productos p : prod) {
@@ -125,43 +142,43 @@ public class VentasDialog extends javax.swing.JDialog {
                 double cantidad = p.getCantidad() - cant;
                 p.setCantidad(cantidad);
                 p.setUnidadMedida(p.getUnidadMedida());
-                
+
 //                pdao.modificar(p);
                 //--------------------------------------------
             }
         }
         pdao.cerrar();
         //--------------------------------------------------------
-        
-        Object datos [] = {producto, cant, precio, desc, total};
+
+        Object datos[] = {producto, cant, precio, desc, total};
         modelo.addRow(datos);
         //---------------------------------------------------------
-        
+
         //----------- Pasar el subtotal al textfield -----------------
         DefaultTableModel mod = (DefaultTableModel) this.TablaVentas.getModel();
         double cont = 0, celdaTotal = 0;
         for (int i = 0; i < this.TablaVentas.getRowCount(); i++) {
             celdaTotal = (double) mod.getValueAt(i, 4);
-            cont+=celdaTotal;
+            cont += celdaTotal;
         }
-        
+
         String textTotal = Double.toString(cont);
         txtTotalFact.setText(textTotal);
         //---------------------------------------------------------
-        
+
         //----------- Pasar la info a los label -------------------
         labelSubTotal.setText(textTotal);
         double cont2 = 0, descnt = 0;
         for (int i = 0; i < TablaVentas.getRowCount(); i++) {
             descnt = (double) mod.getValueAt(i, 3);
-            cont2+=descnt;
+            cont2 += descnt;
         }
         String totalDesct = Double.toString(cont2);
         labelDescuento.setText(totalDesct);
         double iva = 0;
         if (radioIVASI.isSelected()) {
             iva = 0.0;
-        }else if (radioIVANO.isSelected()) {
+        } else if (radioIVANO.isSelected()) {
             iva = cont * 0.15;
         }
         String textIVA = Double.toString(iva);
@@ -171,7 +188,44 @@ public class VentasDialog extends javax.swing.JDialog {
         labelTotal.setText(text_TotalNeto);
         //--------------------------------------------------------
     }
-    
+
+    public void agregarVenta() {
+        try {
+            ArchivoVentas vdao = new ArchivoVentas();
+            ArchivoClientes cdao = new ArchivoClientes();
+            List<Ventas> vts = vdao.encontrar();
+            Ventas v = new Ventas();
+
+            v.setId(vts.size() + 1);
+            if (calendarFecha.getDate() == null) {
+                JOptionPane.showMessageDialog(this, "Seleccione una fecha", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            Date fecha = calendarFecha.getDate();
+            DateFormat df = DateFormat.getDateInstance();
+            String f = df.format(fecha);
+            v.setFechaVenta(f);
+            if (radioCredito.isSelected()) {
+                v.setTipoVenta(radioCredito.getLabel());
+            } else if (radioContado.isSelected()) {
+                v.setTipoVenta(radioContado.getLabel());
+            }
+            if (radioIVASI.isSelected()) {
+                v.setTipoVenta(radioIVASI.getLabel());
+            } else if (radioIVANO.isSelected()) {
+                v.setTipoVenta(radioIVANO.getLabel());
+            }
+            Cliente c = cdao.buscarNombre(txtCliente.getText());
+            v.setCliente(c);
+
+            vdao.guardar(v);
+            vdao.cerrar();
+        } catch (IOException ex) {
+            Logger.getLogger(VentasDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -187,15 +241,15 @@ public class VentasDialog extends javax.swing.JDialog {
         txtCliente = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtTelfCliente = new javax.swing.JTextField();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        radioNormal = new javax.swing.JRadioButton();
+        radioJuridiico = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         calendarFecha = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        radioCredito = new javax.swing.JRadioButton();
+        radioContado = new javax.swing.JRadioButton();
         txtFactura = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         radioIVASI = new javax.swing.JRadioButton();
@@ -209,9 +263,10 @@ public class VentasDialog extends javax.swing.JDialog {
         txtPrecio = new javax.swing.JTextField();
         txtDescuento = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        txtClienteVenta = new javax.swing.JTextField();
         btnLimpiar = new javax.swing.JButton();
-        btnAgregarFact = new javax.swing.JButton();
         btnRegistrarFact = new javax.swing.JButton();
+        btnAgregarFact = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaVentas = new org.jdesktop.swingx.JXTable();
         jLabel11 = new javax.swing.JLabel();
@@ -248,7 +303,7 @@ public class VentasDialog extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Tipo");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 130, 25));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 130, 25));
         jPanel2.add(txtCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, 200, 25));
 
         jLabel3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -257,15 +312,15 @@ public class VentasDialog extends javax.swing.JDialog {
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 130, 25));
         jPanel2.add(txtTelfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 70, 200, 25));
 
-        grupoTipoPersona.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButton1.setText("Natural");
-        jPanel2.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 110, -1, -1));
+        grupoTipoPersona.add(radioNormal);
+        radioNormal.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        radioNormal.setText("Natural");
+        jPanel2.add(radioNormal, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 100, -1, -1));
 
-        grupoTipoPersona.add(jRadioButton2);
-        jRadioButton2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButton2.setText("Juridica");
-        jPanel2.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 110, -1, -1));
+        grupoTipoPersona.add(radioJuridiico);
+        radioJuridiico.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        radioJuridiico.setText("Juridica");
+        jPanel2.add(radioJuridiico, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, -1, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 370, 160));
 
@@ -288,15 +343,15 @@ public class VentasDialog extends javax.swing.JDialog {
         jLabel4.setText("Tipo de venta");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 100, 25));
 
-        grupoTipoFactura.add(jRadioButton4);
-        jRadioButton4.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButton4.setText("Credito");
-        jPanel3.add(jRadioButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, -1, -1));
+        grupoTipoFactura.add(radioCredito);
+        radioCredito.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        radioCredito.setText("Credito");
+        jPanel3.add(radioCredito, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, -1, -1));
 
-        grupoTipoFactura.add(jRadioButton3);
-        jRadioButton3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButton3.setText("Contado");
-        jPanel3.add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 90, -1, -1));
+        grupoTipoFactura.add(radioContado);
+        radioContado.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        radioContado.setText("Contado");
+        jPanel3.add(radioContado, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 90, -1, -1));
         jPanel3.add(txtFactura, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 30, 150, 25));
 
         jLabel9.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -348,21 +403,34 @@ public class VentasDialog extends javax.swing.JDialog {
         jLabel10.setText("Descuento");
         jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 75, 25));
 
+        txtClienteVenta.setText("jTextField1");
+        jPanel4.add(txtClienteVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 110, -1, -1));
+
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 470, 170));
 
         btnLimpiar.setText("Limprar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 310, 130, -1));
 
-        btnAgregarFact.setText("Agregar a la factura");
+        btnRegistrarFact.setText("Registrar factura");
+        btnRegistrarFact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarFactActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnRegistrarFact, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 260, 130, -1));
+
+        btnAgregarFact.setText("Agregar Factura");
         btnAgregarFact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarFactActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAgregarFact, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 210, -1, -1));
-
-        btnRegistrarFact.setText("Registrar factura");
-        jPanel1.add(btnRegistrarFact, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 260, 130, -1));
+        jPanel1.add(btnAgregarFact, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 215, 120, -1));
 
         jcMousePanel1.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 730, 370));
 
@@ -455,15 +523,105 @@ public class VentasDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_comboCategortiaProdItemStateChanged
 
     private void btnAgregarFactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarFactActionPerformed
+//        try {
+//            if (!radioIVANO.isSelected() && !radioIVASI.isSelected()) {
+//                JOptionPane.showMessageDialog(this, "Seleccione si la factura llevara IVA");
+//                return;
+//            }
+//            agregarFactura();
+//        } catch (IOException ex) {
+//            Logger.getLogger(VentasDialog.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
         try {
-            if (!radioIVANO.isSelected() && !radioIVASI.isSelected()) {
-                JOptionPane.showMessageDialog(this, "Seleccione si la factura llevara IVA");
-                return;
+
+//            ArchivoClientes ac = new ArchivoClientes();
+//            Cliente cliente = null;
+//            Ventas v = new Ventas();
+//            ArchivoVentas venta = new ArchivoVentas();
+//            detalleVenta dv = new detalleVenta();
+//            ArchivoVentaDetalle av = new ArchivoVentaDetalle();
+//            ArchivoProductos pdao = new ArchivoProductos();
+//            List<Cliente> clientes = ac.encontrar();
+//            
+//            for (Cliente c:clientes) {
+//                if(c.getNombre().trim().equals(txtCliente.getText().trim())){
+//                    cliente = ac.buscarNombre(c.getNombre().trim());
+//                }
+//            }
+//            
+//            //----------------------------------------------------------
+//            v.setId(venta.encontrar().size() + 1);
+//            v.setCliente(cliente);
+//            if (calendarFecha.getDate() == null) {
+//                JOptionPane.showMessageDialog(this, "Seleccione una fecha", "Error",
+//                        JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//            Date fecha = calendarFecha.getDate();
+//            DateFormat df = DateFormat.getDateInstance();
+//            String f = df.format(fecha);
+//            v.setFechaVenta(f);
+//
+//            if (radioCredito.isSelected()) {
+//                v.setTipoVenta(radioCredito.getLabel());
+//            } else if (radioContado.isSelected()) {
+//                v.setTipoVenta(radioContado.getLabel());
+//            }
+//            if (radioIVASI.isSelected()) {
+//                v.setEstadoIVA(radioIVASI.getLabel());
+//            } else if (radioIVANO.isSelected()) {
+//                v.setEstadoIVA(radioIVANO.getLabel());
+//            }
+//
+//            venta.guardar(v);
+//
+//            ///--------------------------------------------
+//            dv.setId(av.encontrar().size() + 1);
+//            dv.setVentas(v);
+//            dv.setCantidad(Double.parseDouble(spinnerCantidad.getValue().toString()));
+//            dv.setDescuento(Double.parseDouble(txtDescuento.getText()));
+//            Productos p = pdao.buscarNombre(this.comboProducto.getSelectedItem().toString().trim());
+//            dv.setProductos(p);
+//            dv.setPrecio(Double.parseDouble(txtPrecio.getText()));
+//
+//            av.guardar(dv);
+            ArchivoVentaDetalle vddao = new ArchivoVentaDetalle();
+            ArchivoVentas vdao = new ArchivoVentas();
+            ArchivoProductos pdao = new ArchivoProductos();
+            List<detalleVenta> detv = vddao.encontrar();
+            List<Ventas> vts = vdao.encontrar();
+            detalleVenta dv = new detalleVenta();
+            
+            dv.setId(vts.size() + 1);
+            Productos p = pdao.buscarNombre(this.comboProducto.getSelectedItem().toString().trim());
+            dv.setProductos(p);
+            dv.setPrecio(Double.parseDouble(txtPrecio.getText()));
+            dv.setCantidad(Double.parseDouble(spinnerCantidad.getValue().toString()));
+            dv.setDescuento(Double.parseDouble(txtDescuento.getText()));
+            
+            vddao.guardar(dv);
+            vddao.cerrar();
+
+            String producto = this.comboProducto.getSelectedItem().toString();
+            double cant = (double) spinnerCantidad.getValue();
+            double precio = Double.parseDouble(txtPrecio.getText());
+            double desc;
+            if (txtDescuento.getText().isEmpty()) {
+                desc = 0.0;
+            } else {
+                desc = Double.parseDouble(txtDescuento.getText());
             }
-            agregarFactura();
+            double total = (precio * cant) - desc;
+
+            Object datos[] = {producto, cant, precio, desc, total};
+            modelo.addRow(datos);//ya cn eso agrega a la tabla.
         } catch (IOException ex) {
             Logger.getLogger(VentasDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+            
+
     }//GEN-LAST:event_btnAgregarFactActionPerformed
 
     private void TablaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaVentasMouseClicked
@@ -477,39 +635,129 @@ public class VentasDialog extends javax.swing.JDialog {
         try {
             ArchivoProductos pdao = new ArchivoProductos();
             List<Productos> prod = pdao.encontrar();
-            
+
             int sel = this.TablaVentas.getSelectedRow();
             DefaultTableModel mod = (DefaultTableModel) this.TablaVentas.getModel();
-            
+
             //--- Removiendo el prod seleccionado --------------
             mod.removeRow(this.TablaVentas.getSelectedRow());
-            
+
             //--- Actualizando el prod seleccionado ------------
             String seleccion = mod.getValueAt(sel, 0).toString();
             for (Productos p : prod) {
                 String products = p.getNombre().trim();
                 if (seleccion.equals(products)) {
                     p.setId(p.getId());
-                p.setNombre(p.getNombre());
-                p.setCategoriaProd(p.getCategoriaProd());
-                p.setProveedores(p.getProveedores());
-                p.setMarca(p.getMarca());
-                p.setPrecio(p.getPrecio());
-                double cantTable = Double.parseDouble(mod.getValueAt(sel, 1).toString());
-                double cantidad = p.getCantidad() + cantTable;
-                p.setCantidad(cantidad);
-                p.setUnidadMedida(p.getUnidadMedida());
-                
+                    p.setNombre(p.getNombre());
+                    p.setCategoriaProd(p.getCategoriaProd());
+                    p.setProveedores(p.getProveedores());
+                    p.setMarca(p.getMarca());
+                    p.setPrecio(p.getPrecio());
+                    double cantTable = Double.parseDouble(mod.getValueAt(sel, 1).toString());
+                    double cantidad = p.getCantidad() + cantTable;
+                    p.setCantidad(cantidad);
+                    p.setUnidadMedida(p.getUnidadMedida());
+
 //                pdao.modificar(p);
                 }
             }
             pdao.cerrar();
-            
+
             btnEliminarProd.setVisible(false);
         } catch (IOException ex) {
             Logger.getLogger(VentasDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarProdActionPerformed
+
+    private void btnRegistrarFactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarFactActionPerformed
+        try {
+            ArchivoClientes cdao = new ArchivoClientes();
+            List<Cliente> clnt = cdao.encontrar();
+            Cliente c = new Cliente();
+            
+            c.setId(clnt.size() + 1);
+            c.setNombre(txtCliente.getText());
+            c.setTelefono(txtTelfCliente.getText());
+            if (radioJuridiico.isSelected()) {
+                c.setTipoCliente(radioJuridiico.getLabel());
+            }else if (radioNormal.isSelected()) {
+                c.setTipoCliente(radioNormal.getLabel());
+            }
+            
+            cdao.guardar(c);
+            cdao.cerrar();
+            
+            //---------------------------------------------------
+            
+            ArchivoVentas vdao = new ArchivoVentas();
+            ArchivoVentaDetalle vddao = new ArchivoVentaDetalle();
+            List<Ventas> vts = vdao.encontrar();
+            v = new Ventas();
+            
+            v.setId(vts.size() + 1);
+            v.setCliente(c);
+            int idvd = Integer.parseInt(txtClienteVenta.getText());
+            detalleVenta dv = vddao.buscarId(idvd);
+            v.setDventa(dv);
+            if (calendarFecha.getDate() == null) {
+                JOptionPane.showMessageDialog(this, "Seleccione una fecha", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            Date fecha = calendarFecha.getDate();
+            DateFormat df = DateFormat.getDateInstance();
+            String f = df.format(fecha);
+            v.setFechaVenta(f);
+
+            if (radioCredito.isSelected()) {
+                v.setTipoVenta(radioCredito.getLabel());
+            } else if (radioContado.isSelected()) {
+                v.setTipoVenta(radioContado.getLabel());
+            }
+            if (radioIVASI.isSelected()) {
+                v.setEstadoIVA(radioIVASI.getLabel());
+            } else if (radioIVANO.isSelected()) {
+                v.setEstadoIVA(radioIVANO.getLabel());
+            }
+            
+            vdao.guardar(v);
+            vdao.cerrar();
+            
+            JOptionPane.showMessageDialog(this, "Su venta se registro correctamete");
+        } catch (IOException ex) {
+            Logger.getLogger(VentasDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnRegistrarFactActionPerformed
+
+    public void limpiarTabla() {
+        for (int i = 0; i < this.TablaVentas.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i -= 1;
+        }
+    }
+    
+    public void limpiarTodo(){
+        txtCliente.setText("");
+        txtTelfCliente.setText("");
+        grupoTipoPersona.clearSelection();
+        txtFactura.setText("");
+        grupoTipoFactura.clearSelection();
+        grupoIVA.clearSelection();
+        spinnerCantidad.setValue(1);
+        txtPrecio.setText("");
+        txtDescuento.setText("");
+        try {
+            ArchivoVentas vdao = new ArchivoVentas();
+            txtClienteVenta.setText((vdao.encontrar().size()+1) + "");
+        } catch (IOException ex) {
+            Logger.getLogger(VentasDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        limpiarTabla();
+    }
+    
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        limpiarTodo();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -586,20 +834,21 @@ public class VentasDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane1;
     private jcMousePanel.jcMousePanel jcMousePanel1;
     private javax.swing.JLabel labelDescuento;
     private javax.swing.JLabel labelIVA;
     private javax.swing.JLabel labelSubTotal;
     private javax.swing.JLabel labelTotal;
+    private javax.swing.JRadioButton radioContado;
+    private javax.swing.JRadioButton radioCredito;
     private javax.swing.JRadioButton radioIVANO;
     private javax.swing.JRadioButton radioIVASI;
+    private javax.swing.JRadioButton radioJuridiico;
+    private javax.swing.JRadioButton radioNormal;
     private javax.swing.JSpinner spinnerCantidad;
     private javax.swing.JTextField txtCliente;
+    private javax.swing.JTextField txtClienteVenta;
     private javax.swing.JTextField txtDescuento;
     private javax.swing.JTextField txtFactura;
     private javax.swing.JTextField txtPrecio;

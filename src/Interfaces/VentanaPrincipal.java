@@ -74,7 +74,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jDesktopPane1 = new javax.swing.JDesktopPane();
         wPanel1 = new suavena.WPanel();
@@ -98,7 +97,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setTitle("Ventana Principal");
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/Iconos/iconoPrin.png")).getImage());
 
-        jDesktopPane1.setLayout(new java.awt.GridBagLayout());
+        jDesktopPane1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         wPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         wPanel1.add(labelLogeo, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 30, 290, 30));
@@ -177,14 +176,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         });
         wPanel1.add(botonRRHH, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 290, 250, 80));
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 70;
-        gridBagConstraints.ipady = 30;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(50, 200, 33, 165);
-        jDesktopPane1.add(wPanel1, gridBagConstraints);
+        jDesktopPane1.add(wPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 43, 660, 400));
 
         getContentPane().add(jDesktopPane1, java.awt.BorderLayout.CENTER);
 
